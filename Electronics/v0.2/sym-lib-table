@@ -15,4 +15,7 @@
   (lib (name FSM8JH)(type Legacy)(uri ${KIPRJMOD}/../additionalParts/FSM8JH/FSM8JH.lib)(options "")(descr ""))
   (lib (name ECS-200-20-23A-EN-TR)(type Legacy)(uri ${KIPRJMOD}/../additionalParts/ECS-200-20-23A-EN-TR/ECS-200-20-23A-EN-TR.lib)(options "")(descr ""))
   (lib (name MEM2075-00-140-01-A)(type Legacy)(uri ${KIPRJMOD}/../additionalParts/MEM2075-00-140-01-A/MEM2075-00-140-01-A.lib)(options "")(descr ""))
+  (lib (name 9C-8.000MEEJ-T)(type Legacy)(uri ${KIPRJMOD}/../additionalParts/9C-8.000MEEJ-T/9C-8.000MEEJ-T.lib)(options "")(descr ""))
+  (lib (name TPS73633DBVT)(type Legacy)(uri ${KIPRJMOD}/../additionalParts/TPS73633DBVT/TPS73633DBVT.lib)(options "")(descr ""))
+  (lib (name KS11R21CQD)(type Legacy)(uri ${KIPRJMOD}/../additionalParts/KS11R21CQD/KS11R21CQD.lib)(options "")(descr ""))
 )
