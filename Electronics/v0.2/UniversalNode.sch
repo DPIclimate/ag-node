@@ -802,10 +802,6 @@ F 3 "~" H 15650 10950 50  0001 C CNN
 $EndComp
 Text Notes 13950 10850 0    50   ~ 0
 Switch to \nDebug Mode (Interrupt)
-Wire Notes Line
-	13900 10500 16000 10500
-Wire Notes Line
-	15950 11300 13850 11300
 Text Notes 13950 10650 0    98   ~ 0
 Debug
 Connection ~ 14850 15700
@@ -1227,10 +1223,6 @@ F 6 "Manufacturer recommendations" H 16850 15450 50  0001 L BNN "STANDARD"
 	1    16850 15450
 	1    0    0    -1  
 $EndComp
-Wire Notes Line
-	15950 9550 15950 11300
-Wire Notes Line
-	13900 10500 13900 12250
 Wire Notes Line
 	12400 14000 15150 14000
 Wire Notes Line
@@ -4638,4 +4630,12 @@ F 3 "" H 9100 12200 50  0001 C CNN
 	1    9100 12200
 	1    0    0    -1  
 $EndComp
+Wire Notes Line
+	13900 10500 15950 10500
+Wire Notes Line
+	15950 10500 15950 11250
+Wire Notes Line
+	15950 11250 13900 11250
+Wire Notes Line
+	13900 11250 13900 10500
 $EndSCHEMATC
