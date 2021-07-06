@@ -6,6 +6,7 @@
 
 static const int chipSelect = 16;
 File root;
+SdFat SD;
 
 void MemoryCard::init(){
   Serial.println("[MEMORY]: Intialising Memory Card...");

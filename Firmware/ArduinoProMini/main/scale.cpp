@@ -16,7 +16,7 @@
  
 #include "scale.h"
 
-static const unsigned int WEIGHT_ARRAY_SIZE = 1000; // Sufficently sized array?
+const unsigned int WEIGHT_ARRAY_SIZE = 1000; // Sufficently sized array?
 static float weights[WEIGHT_ARRAY_SIZE]; 
 static float timeStamps[WEIGHT_ARRAY_SIZE];
 
@@ -125,7 +125,6 @@ void Scale::compile(float* weights, float* timeStamps, unsigned long captureTime
       break;
     }
   }
-
 
   // Get three positions in array
   unsigned int p1 = (float)reading * 0.25;

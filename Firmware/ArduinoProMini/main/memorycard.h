@@ -6,7 +6,7 @@
 #define MEMORY_CARD
 
 #include "Arduino.h"
-#include <SD.h>
+#include <SdFat.h>
 #include <SPI.h>
 
 class MemoryCard {
