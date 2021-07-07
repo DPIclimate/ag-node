@@ -2,24 +2,21 @@
 // User Imports
 
 #include "coms.h"
-//#include "memorycard.h"
-//#include "LowPower.h"
-
-//Scale scale; // Construct scale class, needed for HX711 library
+#include "memorycard.h"
 
 void setup(){
   Serial.begin(57600);
   Communications::init();
-//  MemoryCard::init();
+  MemoryCard::init();
 }
 
 void loop(){
   while(!Communications::state){
+    Serial.println("Request");
     os_runloop_once();
     delay(1000);
-    Communications::state = true;
   }
-  Communications::request_send("Hello");
-//  LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
-//  MemoryCard::read_data("test.txt");
+  Serial.println("R: file");
+  MemoryCard::read_data("test.txt");
+  delay(1000);
 }

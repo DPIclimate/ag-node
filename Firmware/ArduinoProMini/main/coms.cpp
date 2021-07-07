@@ -1,7 +1,7 @@
 /*
  * Static functions for communications between Feather M0 and node. 
  */
-
+ 
 #include "coms.h"
 
 
@@ -32,10 +32,8 @@ const lmic_pinmap lmic_pins = {
 
 
 void do_send(osjob_t* j, uint8_t* payload){
-    Communications::state = false;
-    
-    LMIC_setTxData2(1, payload, sizeof(payload)-1, 0); // TODO: Manually setting up array size, need to change this
-
+  LMIC_setTxData2(1, payload, sizeof(payload)-1, 0); // TODO: Manually setting up array size, need to change this
+  Communications::state = false;
 }
 
 
@@ -44,8 +42,11 @@ void onEvent (ev_t ev) {
         case EV_TXCOMPLETE:
             // Transmission was competed successfully 
             // TODO: This is proberbly blocking if the gateway cannot be reached
+            Serial.println("TC");
             Communications::state = true;
             break;
+        default:
+          Serial.println("UA");
     }
 }
 
@@ -70,7 +71,10 @@ void Communications::init(){
   // This mode optimises data rates for transmission 
   // See: https://www.thethingsnetwork.org/docs/lorawan/adaptive-data-rate.html 
   LMIC_setAdrMode(0);
-  do_send(&sendjob);
+  // Initial send starts coms
+  Serial.println("IL");
+  request_send("Test");
+  Serial.println("RS");
 }
 
 
