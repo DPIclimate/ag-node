@@ -5,13 +5,12 @@
 #include "scale.h"
 #include "memorycard.h"
 #include <Snooze.h>
-//
+
 //// Load drivers
 SnoozeTouch touch;
 SnoozeDigital digital;
 SnoozeTimer timer;
-//
-//// install drivers to a SnoozeBlock
+
 SnoozeBlock config(timer, digital);
 
 Scale scale; // Construct scale class, needed for HX711 library
