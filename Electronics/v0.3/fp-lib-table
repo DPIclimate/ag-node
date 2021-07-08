@@ -23,4 +23,5 @@
   (lib (name TDA04H0SB1)(type KiCad)(uri /Users/harveybates/DPI/GitHub/AgU-Node/Electronics/additionalParts/TDA04H0SB1)(options "")(descr ""))
   (lib (name teensyBoards)(type KiCad)(uri /Users/harveybates/DPI/GitHub/AgU-Node/Electronics/additionalParts/teensyBoards)(options "")(descr ""))
   (lib (name TPS73633DBVT)(type KiCad)(uri /Users/harveybates/DPI/GitHub/AgU-Node/Electronics/additionalParts/TPS73633DBVT)(options "")(descr ""))
+  (lib (name SilkscreenImages)(type KiCad)(uri /Users/harveybates/DPI/GitHub/AgU-Node/Electronics/SilkscreenImages)(options "")(descr ""))
 )
