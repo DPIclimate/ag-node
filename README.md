@@ -1,9 +1,16 @@
-# Universal Node for LoRaWAN Devices
+# AgU-Node
+
+<img src="Imgs/IMG_0173.GIF" style="display: flex; align-items: center; justify-content: space-around;"/>
 
 ## Description
-This universal node gives users the ability to adapt either a FeatherM0 (LoRaWAN) or a Teensy 3.6 microcontroller to a range of environmental sensors. The device aims to make it easier to setup and debug LoRaWAN nodes and to speed up the deployment of new sensors by integrating them into existing devices.
+The Universal Agriculture Node (AgU-Node) is a device aimed at providing a range of environmental and biological telemetry from a single device. It is capable of reading from three weigh stations simultaneously using dedicated low-powered micro-controllers (ATMega328) while maintaining expandability for external sensors such as trough level sensors, weather stations, soil moisture probes etc.
 
 ## Features
+- Teensy 3.6 as master controller
+- Three ATmega328 micro-controllers and dedicated HX711 weigh scale readers for asynchronous readings 
+- LoRaWAN communications
+- Onboard SD card storage
+- Debug mode
 - Solar charger:
 	- Fault and charging LED indicators
 	- Reverse polarity protection
@@ -16,11 +23,10 @@ This universal node gives users the ability to adapt either a FeatherM0 (LoRaWAN
 		- LED indicator (desolder for low-power mode)
 	- 9 volt:
 		- Programatically enabled (allowing shut-off when not in use)
-		- Adjustable output (9 - 12 V)
+		- Adjustable output (9 - 18 V)
 		- LED indicator
 - Battery:
 	- 3 x 18650
-	- Barrel jack input (4.2 V)
 	- Reverse polarity protection
 	- On PCB test points
 	- Protection:
@@ -30,14 +36,9 @@ This universal node gives users the ability to adapt either a FeatherM0 (LoRaWAN
 	- Screw terminal input
 	- Adjustable frequency (10 Hz default, 80 Hz with jumper cut)
 - SDI-12 inputs:
-	- Weather station (5 V always on)
-	- Soil moisture probe (9 V can turn off)
-- LoRaWAN external module (Teensy)
-- Onboard SD card storage (Teensy)
-- Power / data line isolation between devices (solder bridges and manual switches)
-- Debug mode switch
-
-## Schematic
-<img src="Electronics/Schematic.png"></img>
+	- 5 V always on
+	- 9 V can turn off
+	- Useful for weather stations, soil moisture probes, tank level sensors etc.
+- Power isolation for unneeded components
 
 
