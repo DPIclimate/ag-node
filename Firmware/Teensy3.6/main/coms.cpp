@@ -5,7 +5,6 @@
 #include "coms.h"
 
 static bool state = false;
-bool weightCaptured = false;
 
 void os_getArtEui (u1_t* buf) {
   // Application unique identifier to buffer
@@ -37,19 +36,19 @@ const lmic_pinmap lmic_pins = {
 
 
 void lorawan_send(osjob_t* j, uint8_t* payload){
-    Serial.println("Checking if job can be done");
+    Serial.print("Initalising send...");
     // Check if there is not a current TX/RX job running
     if (LMIC.opmode & OP_TXRXPEND) {
       Serial.println(F("OP_TXRXPEND, not sending"));
     }
     else {
-      Serial.println("Preparing Payload / Running Job");
+      Serial.print("preparing payload...");
 
       Communications::set_state(false);
       
       LMIC_setTxData2(1, payload, 12, 0); // TODO: Manually setting up array size, need to change this
       
-      Serial.println("Payload queued");
+      Serial.println("payload queued for send");
     }
 }
 

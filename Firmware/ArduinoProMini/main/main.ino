@@ -1,22 +1,31 @@
 
 // User Imports
+#include "scale.h"
+#include <Wire.h>
 
-#include "coms.h"
-#include "memorycard.h"
 
 void setup(){
+  Scale::init();
+  Wire.begin(8); // Specific to each device (1 = WS1, 2 = WS2, 3 = WS3)
+  Wire.onRequest(requestEvent);
   Serial.begin(57600);
-  Communications::init();
-  MemoryCard::init();
+  pinMode(13, OUTPUT);
 }
 
+
+void requestEvent(){
+  digitalWrite(13, HIGH);
+  byte arr[5];
+  arr[0] = 1;
+  arr[1] = 2;
+  arr[2] = 3;
+  arr[3] = 4;
+  arr[4] = 5;
+  Wire.write(arr, 5);
+  digitalWrite(13, LOW);
+}
+
+
 void loop(){
-  while(!Communications::state){
-    Serial.println("Request");
-    os_runloop_once();
-    delay(1000);
-  }
-  Serial.println("R: file");
-  MemoryCard::read_data("test.txt");
-  delay(1000);
+  delay(100);
 }

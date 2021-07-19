@@ -10,22 +10,22 @@
 #include <hal/hal.h>
 #include <SPI.h>
 
-#include "scale.h"
-#include "deviceid.h"
+// Application unique identifier (Format = LSB)
+static const u1_t PROGMEM APPEUI[8] = { 0x7C, 0x33, 0x04, 0xD0, 0x7E, 0xD5, 0xB3, 0x70 };
 
-// payload for things network gateway
+// Device unique identifier (Format = LSB)
+static const u1_t PROGMEM DEVEUI[8] = { 0x36, 0xF4, 0x1E, 0x45, 0x44, 0x45, 0xE8, 0x00 };
+
+// APP-KEY (Sensitive - Remove if going public) (Format = MSB)
+static const u1_t PROGMEM APPKEY[16] = { 0x22, 0x2B, 0x4C, 0x19, 0x68, 0x16, 0x7F, 0x44, 0x01, 0x41, 0x2A, 0x01, 0x4F, 0x37, 0x68, 0xCE };
+
+// payload for things network
 static osjob_t sendjob; 
-
-// Schedule TX (transmit) every this many seconds (might become longer due to duty
-// cycle limitations). If setTimedCalledBack() is run.
-// const unsigned TX_INTERVAL = 10; // Not used in this weigh scale setup, data is only send when recorded
 
 class Communications {
 
-//  inline static uint8_t* payload;
-  
 public:
-  
+
   static void init();
   static void request_send(uint8_t* payload);
   static void set_payload(uint8_t* payload);
