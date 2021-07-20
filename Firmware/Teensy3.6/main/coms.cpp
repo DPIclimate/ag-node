@@ -35,20 +35,16 @@ const lmic_pinmap lmic_pins = {
 };
 
 
-void lorawan_send(osjob_t* j, uint8_t* payload){
+void lorawan_send(osjob_t* j, byte* payload){
+    Communications::set_state(false);
     Serial.print("Initalising send...");
     // Check if there is not a current TX/RX job running
     if (LMIC.opmode & OP_TXRXPEND) {
       Serial.println(F("OP_TXRXPEND, not sending"));
     }
     else {
-      Serial.print("preparing payload...");
-
-      Communications::set_state(false);
-      
-      LMIC_setTxData2(1, payload, 12, 0); // TODO: Manually setting up array size, need to change this
-      
-      Serial.println("payload queued for send");
+      Serial.println("preparing payload...");
+      LMIC_setTxData2(1, payload, sizeof(payload), 0); // TODO: Manually setting up array size, need to change this
     }
 }
 
@@ -62,8 +58,6 @@ void printHex2(unsigned v) {
 
 
 void onEvent (ev_t ev) {
-    Serial.print(os_getTime());
-    Serial.print(": ");
     switch(ev) {
         case EV_SCAN_TIMEOUT:
             Serial.println(F("EV_SCAN_TIMEOUT"));
@@ -128,6 +122,7 @@ void onEvent (ev_t ev) {
               Serial.println(LMIC.dataLen);
               Serial.println(F(" bytes of payload"));
             }
+            Serial.println();
             // Transmission was competed successfully 
             // TODO: This is proberbly blocking if the gateway cannot be reached
             Communications::set_state(true);
@@ -190,7 +185,8 @@ void Communications::init(){
   LMIC_setAdrMode(0);
 
   Serial.println("Sending JOB");
-  lorawan_send(&sendjob, {0});
+  byte val[1] = {1};
+  Communications::request_send(val);
   Serial.println("Finished Sending JOB");
 }
 
@@ -205,6 +201,6 @@ void Communications::set_state(bool s){
 }
 
 
-void Communications::request_send(uint8_t* payload){
+void Communications::request_send(byte* payload){
   lorawan_send(&sendjob, payload);
 }

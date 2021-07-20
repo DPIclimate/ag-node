@@ -52,6 +52,18 @@ void MemoryCard::write_data(const char* fileName, float* xValues, float* yValues
 }
 
 
+void MemoryCard::write_parameters(const char* fileName, byte* values){
+  root = SD.open(fileName, FILE_WRITE);
+  if(root){
+    for(unsigned int i = 0; i < sizeof(values); i++){
+      root.print(values[i]);
+    }
+    root.println();
+    root.close();
+  }
+}
+
+
 void MemoryCard::read_data(const char* fileName){
   root = SD.open(fileName, FILE_READ);
   if(root){

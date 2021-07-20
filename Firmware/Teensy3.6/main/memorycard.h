@@ -14,6 +14,7 @@ class MemoryCard {
 public:
   static void init();
   static void write_data(const char* fileName, float* xValues, float* yValues, unsigned int size, unsigned long captureTime);
+  static void write_parameters(const char* fileName, byte* values);
   static void read_data(const char* fileName);
 };
 
