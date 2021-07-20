@@ -13,27 +13,21 @@
  *  4. Capture (record weight into two arrays (weights, timeStamps)
  *  5. Compile (compile data into LoRaWAN payload to sending to gateway)
  */
- 
+
 #include "scale.h"
 
-const unsigned int WEIGHT_ARRAY_SIZE = 1000; // Sufficently sized array?
-float weights[WEIGHT_ARRAY_SIZE]; // Array containing sheep weight profile
-float timeStamps[WEIGHT_ARRAY_SIZE]; // Timestamps for sheep weight profile
 unsigned long timer; // Timer for timeStamps
-uint8_t* payload; // Payload to be send over lorawan
 
 HX711 hx711;
 
 void Scale::init(){
   // Initalise and zero scale
   hx711.begin(DOUT, CLK);
-
-  if (hx711.is_ready()){
-    Serial.println("Scale found and initalised");
-  } else {
-    Serial.println("Unable to find HX711");
-  }
-  
+//  if (hx711.is_ready()){
+//    Serial.println("Scale found and initalised");
+//  } else {
+//    Serial.println("Unable to find HX711");
+//  }
   hx711.set_scale(CALIBRATION_FACTOR);
   hx711.tare(); // Reset hx711 to zero
   timer = millis(); // Start timer
@@ -50,30 +44,22 @@ void Scale::calibrate(){
 
 void Scale::scan(){
   // Scan weights until animal steps on scale
-  
   // Reset arrays to zeros
   for(unsigned int i = 0; i < WEIGHT_ARRAY_SIZE; i++){
-    weights[i] = 0.00;
-    timeStamps[i] = 0.00;
+    Scale::weights[i] = 0.00;
+    Scale::timeStamps[i] = 0.00;
   }
   
   calibrate(); // TODO: need to ensure this isn't interfering (its ment to prevent drifting)
 
   // Wait until slope is pos, indicating animal in on scale
-  while(calculate_slope(weights[0], weights[X_RESOLUTION], timeStamps[0], timeStamps[X_RESOLUTION]) < POS_ANGLE){
-    Serial.println("[SCALE]: Animal OFF");
-
+  while(calculate_slope(Scale::weights[0], Scale::weights[X_RESOLUTION], Scale::timeStamps[0], Scale::timeStamps[X_RESOLUTION]) < POS_ANGLE){
     unsigned long startTime = timer;
-
     // Get a few values to check if there is a change in slope
     for(unsigned int i = 0; i <= X_RESOLUTION; i++){
-      weights[i] = set_weight(SCALE_AVERAGES); // Change with desired averages
-      timeStamps[i] = (millis() - startTime) / 100.0;
-      Serial.println(weights[i]);
+      Scale::weights[i] = set_weight(SCALE_AVERAGES); // Change with desired averages
+      Scale::timeStamps[i] = (millis() - startTime) / 100.0;
     }
-
-    Serial.print("[SCALE]: Reading = ");
-    Serial.println(weights[X_RESOLUTION]);
   }
   capture(); // Animal is on scale begin capture
 }
@@ -82,75 +68,68 @@ void Scale::scan(){
 void Scale::capture(){
   // Capture the animals weight as an array of values
   // Also capture corresponding timestamps
-
-  Serial.println("[SCALE]: Animal ON (Capturing Data)");
-  
+  digitalWrite(13, HIGH);
   unsigned long startTime = timer; // Capture start time
   
   for(unsigned int i = X_RESOLUTION; i < WEIGHT_ARRAY_SIZE; i++){
-    if(calculate_slope(weights[i - X_RESOLUTION], weights[i - 1], timeStamps[i - X_RESOLUTION], timeStamps[i - 1]) < NEG_ANGLE){
+    // Check if animal has stepped off the scale
+    if(calculate_slope(Scale::weights[i - X_RESOLUTION], Scale::weights[i - 1], Scale::timeStamps[i - X_RESOLUTION], Scale::timeStamps[i - 1]) < NEG_ANGLE){
       break;
     }
+    // Animal is still on the scale, keep reading
     else{
-      weights[i] = set_weight(SCALE_AVERAGES); // Change with desired averages
-      timeStamps[i] = (millis() - startTime) / 100.0; // TODO: Convert to milliseconds
-      Serial.print("[SCALE]: Weight = ");
-      Serial.println(weights[i]);
-      Serial.print("[SCALE]: Time = ");
-      Serial.println(timeStamps[i]);
+      Scale::weights[i] = set_weight(SCALE_AVERAGES); // Change with desired averages
+      Scale::timeStamps[i] = (millis() - startTime) / 100.0; // TODO: Convert to milliseconds
+      delay(100);
     }
   }
+  digitalWrite(13, LOW);
 }
 
 
 float Scale::calculate_slope(float x1, float x2, float y1, float y2){
   // Calculate slope of recent capture
   float slope = ((float)x1 - (float)x2) / ((float)y1 - (float)y2);
-
-  Serial.print("[SCALE]: Slope = ");
   if(isnan(slope)){
-    Serial.println("0.00");
     return 0.00;
   }
   else{
-    Serial.println(slope);
     return slope;
   }
 }
 
 
-void Scale::compile(float* weights, float* timeStamps){
+void Scale::compile(){
   // Take array of floats and calc values for payload
-  // Sore weights array in SD card with timestamp and ID
-  // Return array of 8 byte ints for coms
 
-  byte pl[PAYLOAD_SIZE];
-
+  digitalWrite(13, HIGH);
+  
   // ----- Convert weight transient to byte array ----- //
 
-  byte plWeights[WEIGHT_ARRAY_SIZE * 2];
-  byte plTimes[WEIGHT_ARRAY_SIZE * 2];
-  int offset = 0;
-  for(unsigned int i = 0; i < WEIGHT_ARRAY_SIZE; i++){
-    offset = i + i;
-    int16_t value = weights[offset] * 100;
-    int16_t timestamp = timeStamps[offset] * 100;
-
-    plWeights[offset] = value >> 8;
-    plWeights[offset + 1] = value;
-
-    plTimes[offset] = timestamp >> 8;
-    plTimes[offset + 1] = timestamp;
-  }
+// Not used currently
+//  byte plWeights[WEIGHT_ARRAY_SIZE * 2];
+//  byte plTimes[WEIGHT_ARRAY_SIZE * 2];
+//  int offset = 0;
+//  for(unsigned int i = 0; i < WEIGHT_ARRAY_SIZE; i++){
+//    offset = i + i;
+//    int16_t value = weights[offset] * 100;
+//    int16_t timestamp = timeStamps[offset] * 100;
+//
+//    plWeights[offset] = value >> 8;
+//    plWeights[offset + 1] = value;
+//
+//    plTimes[offset] = timestamp >> 8;
+//    plTimes[offset + 1] = timestamp;
+//  }
 
   // ----- Calcualte parameters and convert to byte array ----- //
 
   // Put array in context (i.e. search for datapoints that are non-zero)
   // Need to do this to calc start and finishing weight
   unsigned int reading = 0;
-  while(weights[reading] != 0){
+  while(Scale::weights[reading] != 0){
     reading++;
-    if(reading == WEIGHT_ARRAY_SIZE){
+    if(reading == Scale::WEIGHT_ARRAY_SIZE){
       break;
     }
   }
@@ -159,29 +138,31 @@ void Scale::compile(float* weights, float* timeStamps){
   unsigned int p1 = (float)reading * 0.25;
   unsigned int p2 = (float)reading * 0.50;
   unsigned int p3 = (float)reading * 0.75;
-  
-  int16_t startWeight = (float)weights[p1] * 100;
-  int16_t midWeight = (float)weights[p2] * 100;
-  int16_t endWeight = (float)weights[p3] * 100;
-  int16_t changeInWeight = (float)(weights[p3] - weights[p1]) * 100;
 
-  pl[0] = startWeight >> 8;
-  pl[1] = startWeight;
+  // Get weights at three positions and convert to 16-bit int
+  Scale::startWeight = (float)Scale::weights[p1] * 100;
+  Scale::midWeight = (float)Scale::weights[p2] * 100;
+  Scale::endWeight = (float)Scale::weights[p3] * 100;
+  int sum = 0;
+  Scale::nReadings = 0; // Number of values (indication of time on scale)
+  for(int i = p1; i < p3; i++){
+    sum += Scale::weights[i];
+    Scale::nReadings++;
+  }
+  Scale::avWeight = (sum / Scale::nReadings) * 100;
+  digitalWrite(13, LOW);
 
-  pl[2] = midWeight >> 8;
-  pl[3] = midWeight;
-
-  pl[4] = endWeight >> 8;
-  pl[5] = endWeight;
-
-  pl[6] = changeInWeight >> 8;
-  pl[7] = changeInWeight;
-
-  payload = pl;
-}
-
-byte* Scale::get_payload(){
-  return payload;
+  Serial.print("Start: ");
+  Serial.println(Scale::startWeight);
+  Serial.print("Mid: ");
+  Serial.println(Scale::midWeight);
+  Serial.print("End: ");
+  Serial.println(Scale::endWeight);
+  Serial.print("Av: ");
+  Serial.println(Scale::avWeight);
+  Serial.print("N: ");
+  Serial.println(Scale::nReadings);
+  Serial.println();
 }
 
 void Scale::set_cal_factor(const int cf){
@@ -199,6 +180,5 @@ int Scale::get_cal_factor(){
 float Scale::set_weight(byte times){
   // Read and return weight
   weight = hx711.get_units(times);
-//  Serial.println(weight);
 	return weight;
 }
