@@ -8,14 +8,17 @@
 #include "Arduino.h"
 #include <SD.h>
 #include <SPI.h>
+#include "config.h"
 
-class MemoryCard {
+class Memory {
   
 public:
   static void init();
-  static void write_data(const char* fileName, float* xValues, float* yValues, unsigned int size, unsigned long captureTime);
-  static void write_parameters(const char* fileName, byte* values);
+  static void write_data(uint16_t* timeStamps, uint16_t* weights, uint16_t* parameters);
+  static void write_data(uint16_t* timeStamps, float* weights, float* parameters);
   static void read_data(const char* fileName);
+
+  //
 };
 
 #endif

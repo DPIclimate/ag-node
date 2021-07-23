@@ -2,7 +2,7 @@
  * Static functions for communications between Feather M0 and node. 
  */
 
-#include "coms.h"
+#include "lora.h"
 
 static bool state = false;
 
@@ -35,8 +35,8 @@ const lmic_pinmap lmic_pins = {
 };
 
 
-void lorawan_send(osjob_t* j, byte* payload){
-    Communications::set_state(false);
+void lorawan_send(osjob_t* j, uint8_t* payload){
+    Lora::set_state(false);
     Serial.print("Initalising send...");
     // Check if there is not a current TX/RX job running
     if (LMIC.opmode & OP_TXRXPEND) {
@@ -44,7 +44,7 @@ void lorawan_send(osjob_t* j, byte* payload){
     }
     else {
       Serial.println("preparing payload...");
-      LMIC_setTxData2(1, payload, sizeof(payload), 0); // TODO: Manually setting up array size, need to change this
+      LMIC_setTxData2(1, payload, sizeof(payload), 0); // Send payload
     }
 }
 
@@ -125,7 +125,7 @@ void onEvent (ev_t ev) {
             Serial.println();
             // Transmission was competed successfully 
             // TODO: This is proberbly blocking if the gateway cannot be reached
-            Communications::set_state(true);
+            Lora::set_state(true);
             
             break;
         case EV_LOST_TSYNC:
@@ -162,7 +162,7 @@ void onEvent (ev_t ev) {
 }
 
 
-void Communications::init(){
+void Lora::init(){
   Serial.println("Sending JOB");
   // LoRaMAC-in-C (LMIC) init
   os_init();
@@ -184,23 +184,22 @@ void Communications::init(){
   // See: https://www.thethingsnetwork.org/docs/lorawan/adaptive-data-rate.html 
   LMIC_setAdrMode(0);
 
-  Serial.println("Sending JOB");
-  byte val[1] = {1};
-  Communications::request_send(val);
+  uint8_t val[1] = {1};
+  Lora::request_send(val);
   Serial.println("Finished Sending JOB");
 }
 
 
-bool Communications::check_state(){
+bool Lora::check_state(){
   return state;
 }
 
 
-void Communications::set_state(bool s){
+void Lora::set_state(bool s){
   state = s;
 }
 
 
-void Communications::request_send(byte* payload){
+void Lora::request_send(uint8_t* payload){
   lorawan_send(&sendjob, payload);
 }
