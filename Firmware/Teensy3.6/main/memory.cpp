@@ -20,11 +20,12 @@ void Memory::init(){
 }
 
 
-void Memory::write_data(uint16_t* timeStamps, uint16_t* weights, uint16_t* parameters){
+void Memory::write_data(uint16_t* timeStamps, uint16_t* weights, uint16_t* parameters, uint8_t devId){
   root = SD.open(FILENAME, FILE_WRITE);
   if(root){
     // Concatenate a single line string of data
     String concatData;
+    concatData += (String)devId;
     for(uint16_t i = 0; i < (RESPONSE_SIZE / 2); i++){
       concatData += (String)(timeStamps[i] / 1000.0);
       concatData += ",";
@@ -46,11 +47,12 @@ void Memory::write_data(uint16_t* timeStamps, uint16_t* weights, uint16_t* param
 }
 
 
-void Memory::write_data(uint16_t* timeStamps, float* weights, float* parameters){
+void Memory::write_data(uint16_t* timeStamps, float* weights, float* parameters, uint8_t devId){
   root = SD.open(FILENAME, FILE_WRITE);
   if(root){
     // Concatenate a single line string of data
     String concatData;
+    concatData += (String)devId;
     for(uint16_t i = 0; i < (RESPONSE_SIZE / 2); i++){
       concatData += (String)(timeStamps[i] / 1000.0);
       concatData += ",";

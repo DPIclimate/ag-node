@@ -10,15 +10,41 @@ static uint8_t byteParameters[8]; // Stores parameters as uint8_t for LoRaWAN
 
 void Scale::init(){
   Wire.begin();
-  attachInterrupt(WEIGH_SCALE_1, request_event, RISING);
-//  attachInterrupt(WEIGH_SCALE_2, weigh_scale_2, RISING);
-//  attachInterrupt(WEIGH_SCALE_3, weigh_scale_3, RISING);
+  attachInterrupt(WEIGH_SCALE_1, one, RISING);
+  attachInterrupt(WEIGH_SCALE_2, two, RISING);
+  attachInterrupt(WEIGH_SCALE_3, three, RISING);
 }
 
 
-void Scale::request_event(){
+void Scale::one(){
+  detachInterrupt(digitalPinToInterrupt(WEIGH_SCALE_2));
+  detachInterrupt(digitalPinToInterrupt(WEIGH_SCALE_3));
+  request_event(1);
+  attachInterrupt(WEIGH_SCALE_2, two, RISING);
+  attachInterrupt(WEIGH_SCALE_3, three, RISING);
+}
+
+
+void Scale::two(){
+  detachInterrupt(digitalPinToInterrupt(WEIGH_SCALE_1));
+  detachInterrupt(digitalPinToInterrupt(WEIGH_SCALE_3));
+  request_event(2);
+  attachInterrupt(WEIGH_SCALE_1, one, RISING);
+  attachInterrupt(WEIGH_SCALE_3, three, RISING);
+}
+
+
+void Scale::three(){
+  detachInterrupt(digitalPinToInterrupt(WEIGH_SCALE_1));
+  detachInterrupt(digitalPinToInterrupt(WEIGH_SCALE_2));
+  request_event(3);
+  attachInterrupt(WEIGH_SCALE_1, one, RISING);
+  attachInterrupt(WEIGH_SCALE_2, two, RISING);
+}
+
+
+void Scale::request_event(uint8_t devId){
   Serial.println("==== Response ====");
-  uint8_t devId = 1;
   const uint8_t PACKET_SIZE = 20;
   uint8_t packet[RESPONSE_SIZE * 2];
 
@@ -56,10 +82,10 @@ void Scale::request_event(){
 
   #if HIGH_PRECSION
     Scale::extract_parameters(fweights);
-    Memory::write_data(timeStamps, fweights, parameters);
+    Memory::write_data(timeStamps, fweights, parameters, devId);
   #else
     Scale::extract_parameters(weights);
-    Memory::write_data(timeStamps, weights, parameters);
+    Memory::write_data(timeStamps, weights, parameters, devId);
   #endif
   Lora::request_send(byteParameters);
 }

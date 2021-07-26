@@ -16,7 +16,10 @@
 class Scale {
   public:
     static void init();
-    static void request_event();
+    static void one();
+    static void two();
+    static void three();
+    static void request_event(uint8_t devId);
     static void extract_parameters(uint16_t* weights);
     static void extract_parameters(float* weights);
 };
