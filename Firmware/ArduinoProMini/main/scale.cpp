@@ -19,11 +19,13 @@ HX711 hx711;
 void Scale::init(){
   // Initalise and zero scale
   hx711.begin(DOUT, CLK);
-  if (hx711.is_ready()){
-    Serial.println("Scale found and initalised");
-  } else {
-    Serial.println("Unable to find HX711");
-  }
+  #if DEBUG == 1
+    if (hx711.is_ready()){
+      Serial.println("Scale found and initalised");
+    } else {
+      Serial.println("Unable to find HX711");
+    }
+  #endif
   hx711.set_scale(CALIBRATION_FACTOR);
   hx711.tare(); // Reset hx711 to zero
   Scale::timer = millis(); // Start timer
@@ -44,8 +46,7 @@ void Scale::scan(){
   memset(Scale::weights, 0, sizeof(Scale::weights));
   memset(Scale::timeStamps, 0, sizeof(Scale::timeStamps));
 
-  // Reset timer to zero
-  Scale::timer = millis(); // Start timer
+  Scale::timer = millis(); // Reset timer to zero
   
   Scale::calibrate(); // TODO: need to ensure this isn't interfering (its meant to prevent drifting)
 
@@ -54,7 +55,7 @@ void Scale::scan(){
     int16_t startTime = Scale::timer;
     // Get a few values to check if there is a change in slope
     for(uint16_t i = 0; i <= X_RESOLUTION; i++){
-      #if defined(HIGH_PRECISION)
+      #if HIGH_PRECISION
         Scale::weights[i] = (uint16_t)read_weight(SCALE_AVERAGES) * 100; // Change with desired averages
       #else
         Scale::weights[i] = (uint16_t)read_weight(SCALE_AVERAGES); // Change with desired averages
@@ -70,8 +71,9 @@ void Scale::capture(){
   // Capture the animals weight and corresponding timestamps
   digitalWrite(13, HIGH);
   int16_t startTime = Scale::timer; // Capture start time
-
-  Serial.println("==== Capture ====");
+  #if DEBUG == 1
+    Serial.println("==== Capture ====");
+  #endif
   for(unsigned int i = X_RESOLUTION; i < WEIGHT_ARRAY_SIZE; i++){
     // Check if animal has stepped off the scale
     if(calculate_slope(Scale::weights[i - X_RESOLUTION], Scale::weights[i - 1], Scale::timeStamps[i - X_RESOLUTION], Scale::timeStamps[i - 1]) < NEG_ANGLE){
@@ -85,9 +87,11 @@ void Scale::capture(){
         Scale::weights[i] = (uint16_t)read_weight(SCALE_AVERAGES); // Change with desired averages
       #endif
       Scale::timeStamps[i] = millis() - startTime;
-      Serial.print(Scale::timeStamps[i]);
-      Serial.print("\t");
-      Serial.println(Scale::weights[i]);
+      #if DEBUG == 1
+        Serial.print(Scale::timeStamps[i]);
+        Serial.print("\t");
+        Serial.println(Scale::weights[i]);
+      #endif
       delay(100);
     }
   }

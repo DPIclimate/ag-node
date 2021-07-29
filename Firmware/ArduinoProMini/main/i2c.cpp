@@ -10,7 +10,7 @@ void ISquaredC::init(){
 void ISquaredC::request_transmission(){
   // Request teensy to accept read weights and timestamps
   weightsPosition = 0; // Reset to prevent overflow
-  timeStampsPosition = 0;
+  timeStampsPosition = 0; // Reset to prevent overflow
   digitalWrite(WAKE_UP, HIGH);
 }
 

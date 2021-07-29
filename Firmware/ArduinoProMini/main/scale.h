@@ -7,10 +7,7 @@
 
 #include "Arduino.h"
 #include "HX711.h"
-
-//#ifndef HIGH_PRECISION
-//#define HIGH_PRECISION
-//#endif
+#include "config.h"
 
 
 class Scale {
@@ -27,14 +24,11 @@ class Scale {
 
   inline static const unsigned int SCALE_AVERAGES = 1; // Number of readings to create an average 
 
-  inline static unsigned long captureTime = 0;
-
 public: 
   inline static int16_t timer; // Timer for timeStamps
   inline static const unsigned int WEIGHT_ARRAY_SIZE = 200; // Sufficently sized array?
   inline static uint16_t weights[WEIGHT_ARRAY_SIZE]; // Array containing weight profile
   inline static uint16_t timeStamps[WEIGHT_ARRAY_SIZE]; // Timestamps for weight profile
-
   
   static void init();
   static float read_weight(byte times = 1);
