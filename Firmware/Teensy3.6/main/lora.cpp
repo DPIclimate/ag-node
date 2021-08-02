@@ -44,7 +44,7 @@ void lorawan_send(osjob_t* j, uint8_t* payload){
     }
     else {
       Serial.println("preparing payload...");
-      LMIC_setTxData2(1, payload, sizeof(payload), 0); // Send payload
+      LMIC_setTxData2(1, payload, 8, 0); // Send payload
     }
 }
 

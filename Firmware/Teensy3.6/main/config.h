@@ -11,6 +11,12 @@
 #endif
 
 
+// Interrupts 
+#define WEIGH_SCALE_1 21
+#define WEIGH_SCALE_2 20
+#define WEIGH_SCALE_3 17
+
+
 /* HIGH_PRECISION uses floats rather than ints for weights. 
  * If no scale is connected or values are greater than 655.36 kg this will overflow.
  * Needs to be defined on both the ATMega328 and the Teensy

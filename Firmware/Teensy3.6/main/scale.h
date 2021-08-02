@@ -7,11 +7,6 @@
 #include "memory.h"
 #include "lora.h"
 
-// Interrupts 
-#define WEIGH_SCALE_1 21
-#define WEIGH_SCALE_2 20
-#define WEIGH_SCALE_3 17
-
 
 class Scale {
   public:

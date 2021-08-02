@@ -4,7 +4,10 @@
 #include "lora.h"
 #include "scale.h"
 #include "memory.h"
+#include <Snooze.h>
 
+SnoozeDigital digital;
+SnoozeBlock config(digital);
 
 void setup(){
   Serial.begin(57600);
@@ -15,6 +18,7 @@ void setup(){
   }
   Scale::init();
   Memory::init();
+  delay(100);
 }
 
 
@@ -22,5 +26,5 @@ void loop(){
   while(!Lora::check_state()){
     os_runloop_once();
   }
-  delay(1000);
+//  int who = Snooze.sleep(config);
 }

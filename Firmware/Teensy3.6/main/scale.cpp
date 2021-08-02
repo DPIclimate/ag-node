@@ -17,33 +17,22 @@ void Scale::init(){
 
 
 void Scale::one(){
-  detachInterrupt(digitalPinToInterrupt(WEIGH_SCALE_2));
-  detachInterrupt(digitalPinToInterrupt(WEIGH_SCALE_3));
   request_event(1);
-  attachInterrupt(WEIGH_SCALE_2, two, RISING);
-  attachInterrupt(WEIGH_SCALE_3, three, RISING);
 }
 
 
 void Scale::two(){
-  detachInterrupt(digitalPinToInterrupt(WEIGH_SCALE_1));
-  detachInterrupt(digitalPinToInterrupt(WEIGH_SCALE_3));
   request_event(2);
-  attachInterrupt(WEIGH_SCALE_1, one, RISING);
-  attachInterrupt(WEIGH_SCALE_3, three, RISING);
 }
 
 
 void Scale::three(){
-  detachInterrupt(digitalPinToInterrupt(WEIGH_SCALE_1));
-  detachInterrupt(digitalPinToInterrupt(WEIGH_SCALE_2));
   request_event(3);
-  attachInterrupt(WEIGH_SCALE_1, one, RISING);
-  attachInterrupt(WEIGH_SCALE_2, two, RISING);
 }
 
 
 void Scale::request_event(uint8_t devId){
+  noInterrupts();
   Serial.println("==== Response ====");
   const uint8_t PACKET_SIZE = 20;
   uint8_t packet[RESPONSE_SIZE * 2];
@@ -78,7 +67,7 @@ void Scale::request_event(uint8_t devId){
       }
     } else {
       Serial.println("Device not found...");
-  }
+  }  
 
   #if HIGH_PRECSION
     Scale::extract_parameters(fweights);
@@ -87,14 +76,44 @@ void Scale::request_event(uint8_t devId){
     Scale::extract_parameters(weights);
     Memory::write_data(timeStamps, weights, parameters, devId);
   #endif
-  Lora::request_send(byteParameters);
+
+   Lora::request_send(byteParameters);
+
+  #if DEBUG == 2
+    for(int i = 0; i < (RESPONSE_SIZE / 2); i++){
+      Serial.print(timeStamps[i]);
+      Serial.print(": \t");
+      Serial.println(weights[i]);
+    }
+  #endif
+
+  interrupts();
 }
 
 
 void Scale::extract_parameters(uint16_t* weights){
-  uint16_t oneQuarter = weights[uint16_t((RESPONSE_SIZE / 2) * 0.25)];
-  uint16_t halve = weights[uint16_t((RESPONSE_SIZE / 2) * 0.50)];
-  uint16_t threeQuarters = weights[uint16_t((RESPONSE_SIZE / 2) * 0.75)];
+
+  /* Put array in context (i.e. search for datapoints that are non-zero) 
+   * Need to do this to calc start and finishing weight
+   * Small buffer added at start to ignore 0's
+   */
+  unsigned int reading = 0;
+  while(weights[reading] != 0 || reading <= 5){
+    reading++;
+    if(reading == (RESPONSE_SIZE / 2)){
+      break;
+    }
+  }
+  
+  uint16_t oneQuarter = weights[uint16_t((float)reading * 0.25)];
+  uint16_t halve = weights[uint16_t((float)reading * 0.50)];
+  uint16_t threeQuarters = weights[uint16_t((float)reading * 0.75)];
+
+  #if DEBUG == 1
+    oneQuarter = 10;
+    halve = 20;
+    threeQuarters = 30;
+  #endif
 
   parameters[0] = oneQuarter;
   byteParameters[0] = oneQuarter >> 8;
@@ -109,11 +128,17 @@ void Scale::extract_parameters(uint16_t* weights){
   byteParameters[5] = threeQuarters;
 
   unsigned long sum = 0;
-  for(uint16_t i = 0; i < (RESPONSE_SIZE / 2); i++){
+  for(uint16_t i = (int)((float)reading * 0.25); i < (int)((float)reading * 0.75); i++){
     sum += weights[i];
   }
 
-  uint16_t average = (sum / (RESPONSE_SIZE / 2));
+  uint16_t average = (sum / (((float)reading * 0.75 - (float)reading * 0.25)));
+
+  #if DEBUG == 1
+    Serial.println(reading);
+    average = 40;
+  #endif
+  
   parameters[3] = average;
   byteParameters[6] = average >> 8;
   byteParameters[7] = average;
@@ -121,9 +146,17 @@ void Scale::extract_parameters(uint16_t* weights){
 
 
 void Scale::extract_parameters(float* fweights){
-  uint16_t oneQuarter = (weights[uint16_t((RESPONSE_SIZE / 2) * 0.25)]);
-  uint16_t halve = (weights[uint16_t((RESPONSE_SIZE / 2) * 0.50)]);
-  uint16_t threeQuarters = (weights[uint16_t((RESPONSE_SIZE / 2) * 0.75)]);
+  unsigned int reading = 0;
+  while((int)fweights[reading] != 0 || reading <= 5){
+    reading++;
+    if(reading == (RESPONSE_SIZE / 2)){
+      break;
+    }
+  }
+  
+  uint16_t oneQuarter = fweights[uint16_t((float)reading * 0.25)];
+  uint16_t halve = fweights[uint16_t((float)reading * 0.50)];
+  uint16_t threeQuarters = fweights[uint16_t((float)reading * 0.75)];
 
   floatParameters[0] = oneQuarter;
   byteParameters[0] = oneQuarter >> 8;
@@ -142,7 +175,8 @@ void Scale::extract_parameters(float* fweights){
     sum += weights[i];
   }
 
-  uint16_t average = ((sum / (RESPONSE_SIZE / 2)) * 100);
+  uint16_t average = (sum / (((float)reading * 0.75 - (float)reading * 0.25)));
+  
   floatParameters[3] = average;
   byteParameters[6] = average >> 8;
   byteParameters[7] = average;

@@ -17,8 +17,6 @@ public:
   static void write_data(uint16_t* timeStamps, uint16_t* weights, uint16_t* parameters, uint8_t devId);
   static void write_data(uint16_t* timeStamps, float* weights, float* parameters, uint8_t devId);
   static void read_data(const char* fileName);
-
-  //
 };
 
 #endif
