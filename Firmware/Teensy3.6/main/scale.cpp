@@ -10,9 +10,6 @@ static uint8_t byteParameters[8]; // Stores parameters as uint8_t for LoRaWAN
 
 void Scale::init(){
   Wire.begin();
-  attachInterrupt(WEIGH_SCALE_1, one, RISING);
-  attachInterrupt(WEIGH_SCALE_2, two, RISING);
-  attachInterrupt(WEIGH_SCALE_3, three, RISING);
 }
 
 

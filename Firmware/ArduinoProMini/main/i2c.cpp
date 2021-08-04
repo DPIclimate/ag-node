@@ -35,8 +35,6 @@ void ISquaredC::respond(){
       packet[shift+1] = timeStamp;
       timeStampsPosition++;
     }
-    
-    
   }
   Wire.write(packet, packetSize);
 }
