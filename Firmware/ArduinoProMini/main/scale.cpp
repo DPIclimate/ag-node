@@ -45,22 +45,31 @@ void Scale::scan(){
   // Reset arrays to zeros
   memset(Scale::weights, 0, sizeof(Scale::weights));
   memset(Scale::timeStamps, 0, sizeof(Scale::timeStamps));
-
-  Scale::timer = millis(); // Reset timer to zero
   
   Scale::calibrate(); // TODO: need to ensure this isn't interfering (its meant to prevent drifting)
 
   // Wait until slope is positive, indicating animal in on scale
   while(calculate_slope(Scale::weights[0], Scale::weights[X_RESOLUTION], Scale::timeStamps[0], Scale::timeStamps[X_RESOLUTION]) < POS_ANGLE){
+    Scale::timer = millis(); // Reset timer to zero
     int16_t startTime = Scale::timer;
     // Get a few values to check if there is a change in slope
     for(uint16_t i = 0; i <= X_RESOLUTION; i++){
-      #if HIGH_PRECISION
-        Scale::weights[i] = (uint16_t)read_weight(SCALE_AVERAGES) * 100; // Change with desired averages
+      #ifdef HIGH_PRECISION
+        Scale::weights[i] = (uint16_t)((uint16_t)read_weight(SCALE_AVERAGES) * 100); // Change with desired averages
       #else
         Scale::weights[i] = (uint16_t)read_weight(SCALE_AVERAGES); // Change with desired averages
       #endif
       Scale::timeStamps[i] = millis() - startTime;
+
+      #if DEBUG == 1
+        Serial.print(Scale::timeStamps[i]);
+        Serial.print("\t");
+        #ifdef HIGH_PRECISION
+          Serial.println((float)Scale::weights[i] / 100.0);
+        #else
+          Serial.println(Scale::weights[i]);
+        #endif
+      #endif
     }
   }
   capture(); // Animal is on scale begin capture
@@ -81,8 +90,8 @@ void Scale::capture(){
     }
     // Animal is still on the scale, keep reading
     else{
-      #if defined(HIGH_PRECISION)
-        Scale::weights[i] = (uint16_t)read_weight(SCALE_AVERAGES) * 100; // Change with desired averages
+      #ifdef HIGH_PRECISION
+        Scale::weights[i] = (uint16_t)((uint16_t)read_weight(SCALE_AVERAGES) * 100); // Change with desired averages
       #else
         Scale::weights[i] = (uint16_t)read_weight(SCALE_AVERAGES); // Change with desired averages
       #endif
@@ -90,7 +99,11 @@ void Scale::capture(){
       #if DEBUG == 1
         Serial.print(Scale::timeStamps[i]);
         Serial.print("\t");
-        Serial.println(Scale::weights[i]);
+        #ifdef HIGH_PRECISION
+          Serial.println((float)Scale::weights[i] / 100.0);
+        #else
+          Serial.println(Scale::weights[i]);
+        #endif
       #endif
       delay(100);
     }

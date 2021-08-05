@@ -11,12 +11,12 @@
 
 
 class Scale {
-  inline static int16_t CALIBRATION_FACTOR = -1760;
+  inline static int16_t CALIBRATION_FACTOR = 420; // Default: -1760
 	inline static unsigned int DOUT = 2; // SDA
 	inline static unsigned int CLK = 3; // SCL
 
-  inline static const uint8_t POS_ANGLE = 4.0; // Positive angle of slope (i.e. when animal steps on scale)
-  inline static const int8_t NEG_ANGLE = -4.0; // Negitive angle of slope (i.e. when animal steps off scale)
+  inline static const uint8_t POS_ANGLE = 4; // Default 4 - positive angle of slope (i.e. when animal steps on scale)
+  inline static const int8_t NEG_ANGLE = -4; // Default -4 - negitive angle of slope (i.e. when animal steps off scale)
 
   inline static const float ZERO_THRESHOLD = 0.5; // Reset to zero when weight is over or under this
 
