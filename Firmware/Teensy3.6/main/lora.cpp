@@ -37,14 +37,26 @@ const lmic_pinmap lmic_pins = {
 
 void lorawan_send(osjob_t* j, uint8_t* payload){
     Lora::set_state(false);
-    Serial.print("Initalising send...");
     // Check if there is not a current TX/RX job running
     if (LMIC.opmode & OP_TXRXPEND) {
       Serial.println(F("OP_TXRXPEND, not sending"));
     }
     else {
-      Serial.println("preparing payload...");
-      LMIC_setTxData2(1, payload, 8, 0); // Send payload
+      #if DEBUG == 1
+        Serial.println("=== Payload to send ===");
+        Serial.print("Start_weight: ");
+        Serial.println((payload[0] << 8) | payload[1]);
+        Serial.print("Middle_weight: ");
+        Serial.println((payload[2] << 8) | payload[3]);
+        Serial.print("End_weight: ");
+        Serial.println((payload[4] << 8) | payload[5]);
+        Serial.print("Average: ");
+        Serial.println((payload[6] << 8) | payload[7]);
+        Serial.print("Device ID: ");
+        Serial.println(payload[8]);
+      #endif
+      
+      LMIC_setTxData2(1, payload, 9, 0); // Send payload
     }
 }
 
@@ -178,13 +190,13 @@ void Lora::init(){
   // in the US, with TTN, it saves join time if we start on subband 1 (channels 8-15). This will
   // get overridden after the join by parameters from the network. If working with other
   // networks or in other regions, this will need to be changed.
-  LMIC_selectSubBand(1);
+//  LMIC_selectSubBand(1);
   // Disable data rate adaptation
   // This mode optimises data rates for transmission 
   // See: https://www.thethingsnetwork.org/docs/lorawan/adaptive-data-rate.html 
   LMIC_setAdrMode(0);
 
-  uint8_t val[1] = {1};
+  uint8_t val[9] = {0, 0, 0, 0, 0, 0, 0, 0};
   Lora::request_send(val);
   Serial.println("Finished Sending JOB");
 }

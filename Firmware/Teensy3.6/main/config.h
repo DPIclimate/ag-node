@@ -4,7 +4,7 @@
 
 /* DEBUG mode
  * 0 = off
- * 1 = on
+ * 1 = on (verbose)
  */
 #ifndef DEBUG
 #define DEBUG 0
@@ -21,9 +21,9 @@
  * If no scale is connected or values are greater than 655.36 kg this will overflow.
  * Needs to be defined on both the ATMega328 and the Teensy
  */
-//#ifndef HIGH_PRECISION
-//#define HIGH_PRECISION
-//#endif
+#ifndef HIGH_PRECISION
+#define HIGH_PRECISION
+#endif
 
 
 /* RESPONSE_SIZE is the expected array size from the weigh scale
@@ -39,13 +39,13 @@
 /* LoRaWAN route identifiers
  */
 // Application unique identifier (Format = LSB)
-const u1_t PROGMEM APPEUI[8] = { 0x22, 0xFD, 0x03, 0xD0, 0x7E, 0xD5, 0xB3, 0x70 };
+const u1_t PROGMEM APPEUI[8] = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
 // Device unique identifier (Format = LSB)
-const u1_t PROGMEM DEVEUI[8] = { 0x47, 0xC1, 0x11, 0x00, 0x00, 0xB6, 0x76, 0x98 };
+const u1_t PROGMEM DEVEUI[8] = { 0x13, 0x39, 0x04, 0xD0, 0x7E, 0xD5, 0xB3, 0x70 };
 
 // APP-KEY (Sensitive - Remove if going public) (Format = MSB)
-const u1_t PROGMEM APPKEY[16] = { 0x07, 0x8A, 0x1B, 0x85, 0x64, 0x33, 0x25, 0xC5, 0xCD, 0x47, 0x02, 0xD6, 0x04, 0x26, 0x97, 0x84 };
+const u1_t PROGMEM APPKEY[16] = { 0x40, 0xF2, 0xC2, 0x46, 0x39, 0x41, 0x8A, 0x3D, 0xA8, 0xCB, 0x99, 0xD5, 0x1C, 0x3A, 0x32, 0x50 };
 
 
 /* SD-card filename must have a .txt file extension

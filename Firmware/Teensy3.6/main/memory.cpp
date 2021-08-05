@@ -47,7 +47,7 @@ void Memory::write_data(uint16_t* timeStamps, uint16_t* weights, uint16_t* param
 }
 
 
-void Memory::write_data(uint16_t* timeStamps, float* weights, float* parameters, uint8_t devId){
+void Memory::write_data_precise(uint16_t* timeStamps, uint16_t* weights, float* parameters, uint8_t devId){
   root = SD.open(FILENAME, FILE_WRITE);
   if(root){
     // Concatenate a single line string of data
@@ -56,7 +56,7 @@ void Memory::write_data(uint16_t* timeStamps, float* weights, float* parameters,
     for(uint16_t i = 0; i < (RESPONSE_SIZE / 2); i++){
       concatData += (String)(timeStamps[i] / 1000.0);
       concatData += ",";
-      concatData += (String)weights[i];
+      concatData += (String)((float)weights[i] / 100.0) ;
       concatData += ";";
     }
     concatData += "Start: " + (String)parameters[0];
