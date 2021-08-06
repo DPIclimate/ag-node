@@ -16,7 +16,6 @@ class Scale {
     static void three();
     static void request_event(uint8_t devId);
     static void extract_parameters(uint16_t* weights, uint8_t devId);
-    static void extract_parameters(float* weights, uint8_t devId);
 };
 
 

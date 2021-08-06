@@ -1,10 +1,8 @@
 #include "scale.h"
 
 static uint16_t weights[(RESPONSE_SIZE / 2)];
-static uint16_t fweights[(RESPONSE_SIZE / 2)];
 static uint16_t timeStamps[(RESPONSE_SIZE / 2)];
 static uint16_t parameters[5]; // Stores parameters as uint16_t
-static float floatParameters[5]; // Stores parameters as uint16_t
 static uint8_t byteParameters[9]; // Stores parameters as uint8_t for LoRaWAN
 
 
@@ -60,11 +58,7 @@ void Scale::request_event(uint8_t devId){
       for(uint16_t i = 0; i < (sizeof(packet) / 2); i++){
         shift = i + i;
         if(i < (RESPONSE_SIZE / 2)){
-          #ifdef HIGH_PRECISION
-            fweights[weightsPosition] = ((packet[shift] << 8) | packet[shift + 1]) / 100.0;
-          #else
-            weights[weightsPosition] = (packet[shift] << 8) | packet[shift + 1];
-          #endif
+          weights[weightsPosition] = (packet[shift] << 8) | packet[shift + 1];
           weightsPosition++;
         } else{
           timeStamps[timeStampsPosition] = (packet[shift] << 8) | packet[shift + 1];
@@ -75,33 +69,17 @@ void Scale::request_event(uint8_t devId){
       Serial.println("Device not found...");
   }
 
-  #ifdef HIGH_PRECISION
-    Serial.println("=== High Precision ===");
-    Scale::extract_parameters(fweights, devId);
-    Memory::write_data_precise(timeStamps, fweights, floatParameters, devId);
-  #else
-    Serial.println("=== Low Precision ===");
-    Scale::extract_parameters(weights, devId);
-    Memory::write_data(timeStamps, weights, parameters, devId);
-  #endif
-
-   Lora::request_send(byteParameters);
+  Scale::extract_parameters(weights, devId);
+  Memory::write_data(timeStamps, weights, parameters, devId);
+  Lora::request_send(byteParameters);
 
   #if DEBUG == 1
     for(int i = 0; i < (RESPONSE_SIZE / 2); i++){
       Serial.print(timeStamps[i]);
-      Serial.print(": \t");
-      #ifdef HIGH_PRECISION
-        Serial.println((float)((fweights[i]) / 100.0));
-        if(fweights[i] == 0 && i > 5){
-          break;
-        }
-      #else 
-        Serial.println(weights[i]);
-        if(fweights[i] == 0 && i > 5){
-          break;
-        }
-      #endif
+      Serial.println(weights[i]);
+      if(weights[i] == 0 && i > 5){
+        break;
+      }
     }
   #endif
   interrupts();
@@ -109,8 +87,6 @@ void Scale::request_event(uint8_t devId){
 
 
 void Scale::extract_parameters(uint16_t* weights, uint8_t devId){
-  // Low precision
-  
   /* Put array in context (i.e. search for datapoints that are non-zero) 
    * Need to do this to calc start and finishing weight
    * Small buffer added at start to ignore 0's
@@ -126,7 +102,7 @@ void Scale::extract_parameters(uint16_t* weights, uint8_t devId){
   uint16_t oneQuarter = weights[uint16_t((float)reading * 0.25)];
   uint16_t halve = weights[uint16_t((float)reading * 0.50)];
   uint16_t threeQuarters = weights[uint16_t((float)reading * 0.75)];
-
+  
   parameters[0] = oneQuarter;
   byteParameters[0] = oneQuarter >> 8;
   byteParameters[1] = oneQuarter;
@@ -151,47 +127,4 @@ void Scale::extract_parameters(uint16_t* weights, uint8_t devId){
   byteParameters[6] = average >> 8;
   byteParameters[7] = average;
   byteParameters[8] = (uint8_t)devId;
-}
-
-
-void Scale::extract_parameters(float* fweights, uint8_t devId){
-  // High precision
-
-  
-  unsigned int reading = 0;
-  while((int)fweights[reading] != 0 || reading <= 5){
-    reading++;
-    if(reading == (RESPONSE_SIZE / 2)){
-      break;
-    }
-  }
-  
-  uint16_t oneQuarter = fweights[uint16_t((float)reading * 0.25)];
-  uint16_t halve = fweights[uint16_t((float)reading * 0.50)];
-  uint16_t threeQuarters = fweights[uint16_t((float)reading * 0.75)];
-
-  floatParameters[0] = oneQuarter / 100.0;
-  byteParameters[0] = oneQuarter >> 8;
-  byteParameters[1] = oneQuarter;
-
-  floatParameters[1] = halve / 100.0;
-  byteParameters[2] = halve >> 8;
-  byteParameters[3] = halve;
-
-  floatParameters[2] = threeQuarters / 100.0; 
-  byteParameters[4] = threeQuarters >> 8;
-  byteParameters[5] = threeQuarters;
-
-  unsigned long sum = 0;
-  for(uint16_t i = 0; i < (RESPONSE_SIZE / 2); i++){
-    sum += weights[i];
-  }
-
-  uint16_t average = (sum / (((float)reading * 0.75 - (float)reading * 0.25)));
-  
-  floatParameters[3] = average / 100.0;
-  floatParameters[4] = (float)devId;
-  byteParameters[6] = average >> 8;
-  byteParameters[7] = average;
-  byteParameters[8] = devId;
 }
