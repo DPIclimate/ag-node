@@ -11,7 +11,7 @@
 
 
 class Scale {
-  inline static int16_t CALIBRATION_FACTOR = 420; // Default: -1760
+  inline static int16_t CALIBRATION_FACTOR = -1760; // Default: -1760
 	inline static unsigned int DOUT = 2; // SDA
 	inline static unsigned int CLK = 3; // SCL
 

@@ -5,7 +5,7 @@
 /* DEVICE_ID specific to each ATmega328 (and therefore weighscale)
  */
 #ifndef DEVICE_ID
-#define DEVICE_ID 2
+#define DEVICE_ID 3
 #endif
 
 
