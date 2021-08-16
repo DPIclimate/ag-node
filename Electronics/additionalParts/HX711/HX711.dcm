@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP HX711
+D 24-Bit Analog-to-Digital Converter (ADC) for Weigh Scale
+K
+F https://cdn.sparkfun.com/datasheets/Sensors/ForceFlex/hx711_english.pdf
+$ENDCMP
+#
+#End Doc Library
