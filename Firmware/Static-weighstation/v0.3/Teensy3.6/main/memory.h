@@ -14,8 +14,8 @@ class Memory {
   
 public:
   static void init();
-  static void write_data(uint16_t* timeStamps, uint16_t* weights, uint16_t* parameters, uint8_t devId);
-  static void write_data_precise(uint16_t* timeStamps, uint16_t* weights, float* parameters, uint8_t devId);
+  static void write_data(int16_t* timeStamps, int16_t* weights, int16_t* parameters, int8_t devId);
+  static void write_data_precise(int16_t* timeStamps, int16_t* weights, float* parameters, int8_t devId);
   static void read_data(const char* fileName);
 };
 

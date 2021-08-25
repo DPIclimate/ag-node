@@ -35,7 +35,7 @@ const lmic_pinmap lmic_pins = {
 };
 
 
-void lorawan_send(osjob_t* j, uint8_t* payload){
+void lorawan_send(osjob_t* j, int8_t* payload){
     Lora::set_state(false);
     // Check if there is not a current TX/RX job running
     if (LMIC.opmode & OP_TXRXPEND) {
@@ -56,7 +56,7 @@ void lorawan_send(osjob_t* j, uint8_t* payload){
         Serial.println(payload[8]);
       #endif
       
-      LMIC_setTxData2(1, payload, 9, 0); // Send payload
+      LMIC_setTxData2(1, (uint8_t*)payload, 9, 0); // Send payload
     }
 }
 
@@ -196,7 +196,7 @@ void Lora::init(){
   // See: https://www.thethingsnetwork.org/docs/lorawan/adaptive-data-rate.html 
   LMIC_setAdrMode(0);
 
-  uint8_t val[9] = {1, 1, 1, 1, 1, 1, 1, 1};
+  int8_t val[9] = {1, 1, 1, 1, 1, 1, 1, 1};
   Lora::request_send(val);
   Serial.println("Finished Sending JOB");
 }
@@ -212,6 +212,6 @@ void Lora::set_state(bool s){
 }
 
 
-void Lora::request_send(uint8_t* payload){
+void Lora::request_send(int8_t* payload){
   lorawan_send(&sendjob, payload);
 }

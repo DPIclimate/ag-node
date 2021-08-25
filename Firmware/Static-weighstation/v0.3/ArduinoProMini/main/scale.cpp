@@ -55,9 +55,9 @@ void Scale::scan(){
     // Get a few values to check if there is a change in slope
     for(uint16_t i = 0; i <= X_RESOLUTION; i++){
       #ifdef HIGH_PRECISION
-        Scale::weights[i] = (uint16_t)((uint16_t)read_weight(SCALE_AVERAGES) * 100); // Change with desired averages
+        Scale::weights[i] = (int16_t)(read_weight(SCALE_AVERAGES) * 100); // Change with desired averages
       #else
-        Scale::weights[i] = (uint16_t)read_weight(SCALE_AVERAGES); // Change with desired averages
+        Scale::weights[i] = (int16_t)read_weight(SCALE_AVERAGES); // Change with desired averages
       #endif
       Scale::timeStamps[i] = millis() - startTime;
 
@@ -92,9 +92,9 @@ void Scale::capture(){
     // Animal is still on the scale, keep reading
     else{
       #ifdef HIGH_PRECISION
-        Scale::weights[i] = (uint16_t)((uint16_t)read_weight(SCALE_AVERAGES) * 100); // Change with desired averages
+        Scale::weights[i] = (int16_t)(read_weight(SCALE_AVERAGES) * 100); // Change with desired averages
       #else
-        Scale::weights[i] = (uint16_t)read_weight(SCALE_AVERAGES); // Change with desired averages
+        Scale::weights[i] = (int16_t)read_weight(SCALE_AVERAGES); // Change with desired averages
       #endif
       Scale::timeStamps[i] = millis() - startTime;
       #if DEBUG == 1

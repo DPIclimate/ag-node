@@ -20,7 +20,7 @@ void Memory::init(){
 }
 
 
-void Memory::write_data(uint16_t* timeStamps, uint16_t* weights, uint16_t* parameters, uint8_t devId){
+void Memory::write_data(int16_t* timeStamps, int16_t* weights, int16_t* parameters, int8_t devId){
   root = SD.open(FILENAME, FILE_WRITE);
   if(root){
     // Concatenate a single line string of data
@@ -47,7 +47,7 @@ void Memory::write_data(uint16_t* timeStamps, uint16_t* weights, uint16_t* param
 }
 
 
-void Memory::write_data_precise(uint16_t* timeStamps, uint16_t* weights, float* parameters, uint8_t devId){
+void Memory::write_data_precise(int16_t* timeStamps, int16_t* weights, float* parameters, int8_t devId){
   root = SD.open(FILENAME, FILE_WRITE);
   if(root){
     // Concatenate a single line string of data

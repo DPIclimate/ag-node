@@ -19,7 +19,7 @@ class Lora {
 public:
 
   static void init();
-  static void request_send(uint8_t* payload);
+  static void request_send(int8_t* payload);
   static bool check_state();
   static void set_state(bool s);
 };

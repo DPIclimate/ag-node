@@ -1,9 +1,9 @@
 #include "scale.h"
 
-static uint16_t weights[(RESPONSE_SIZE / 2)];
-static uint16_t timeStamps[(RESPONSE_SIZE / 2)];
-static uint16_t parameters[5]; // Stores parameters as uint16_t
-static uint8_t byteParameters[9]; // Stores parameters as uint8_t for LoRaWAN
+static int16_t weights[(RESPONSE_SIZE / 2)];
+static int16_t timeStamps[(RESPONSE_SIZE / 2)];
+static int16_t parameters[5]; // Stores parameters as uint16_t
+static int8_t byteParameters[9]; // Stores parameters as uint8_t for LoRaWAN
 
 
 void Scale::init(){
@@ -15,7 +15,7 @@ void Scale::one(){
   #if DEBUG == 1
     Serial.println("Device one requests I2C transmission...");
   #endif
-  request_event(1);
+  request_event((uint8_t)1);
 }
 
 
@@ -23,7 +23,7 @@ void Scale::two(){
   #if DEBUG == 1
     Serial.println("Device two requests I2C transmission...");
   #endif
-  request_event(20);
+  request_event((uint8_t)20);
 }
 
 
@@ -31,7 +31,7 @@ void Scale::three(){
   #if DEBUG == 1
     Serial.println("Device three requests I2C transmission...");
   #endif
-  request_event(30);
+  request_event((uint8_t)30);
 }
 
 
@@ -71,7 +71,11 @@ void Scale::request_event(uint8_t devId){
 
   Scale::extract_parameters(weights, devId);
   Memory::write_data(timeStamps, weights, parameters, devId);
-//  Lora::request_send(byteParameters);
+  Lora::request_send(byteParameters);
+
+  while(!Lora::check_state()){
+    os_runloop_once();
+  }
 
   #if DEBUG == 1
     for(int i = 0; i < (RESPONSE_SIZE / 2); i++){
@@ -87,7 +91,7 @@ void Scale::request_event(uint8_t devId){
 }
 
 
-void Scale::extract_parameters(uint16_t* weights, uint8_t devId){
+void Scale::extract_parameters(int16_t* weights, int8_t devId){
   /* Put array in context (i.e. search for datapoints that are non-zero) 
    * Need to do this to calc start and finishing weight
    * Small buffer added at start to ignore 0's
@@ -100,9 +104,9 @@ void Scale::extract_parameters(uint16_t* weights, uint8_t devId){
     }
   }
   
-  uint16_t oneQuarter = weights[uint16_t((float)reading * 0.25)];
-  uint16_t halve = weights[uint16_t((float)reading * 0.50)];
-  uint16_t threeQuarters = weights[uint16_t((float)reading * 0.75)];
+  int16_t oneQuarter = weights[uint16_t(reading * 0.25)];
+  int16_t halve = weights[int16_t(reading * 0.50)];
+  int16_t threeQuarters = weights[uint16_t(reading * 0.75)];
   
   parameters[0] = oneQuarter;
   byteParameters[0] = oneQuarter >> 8;
@@ -117,15 +121,15 @@ void Scale::extract_parameters(uint16_t* weights, uint8_t devId){
   byteParameters[5] = threeQuarters;
 
   unsigned long sum = 0;
-  for(uint16_t i = (int)((float)reading * 0.25); i < (int)((float)reading * 0.75); i++){
+  for(uint16_t i = (int16_t)((float)reading * 0.25); i < (int16_t)((float)reading * 0.75); i++){
     sum += weights[i];
   }
 
   uint16_t average = (sum / (((float)reading * 0.75 - (float)reading * 0.25)));
 
   parameters[3] = average;
-  parameters[4] = (uint16_t)devId;
+  parameters[4] = (int16_t)devId;
   byteParameters[6] = average >> 8;
   byteParameters[7] = average;
-  byteParameters[8] = (uint8_t)devId;
+  byteParameters[8] = (int8_t)devId;
 }
