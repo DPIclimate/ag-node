@@ -3,8 +3,7 @@
 
 
 /* DEBUG mode
- * 0 = off
- * 1 = on (verbose)
+ *  Comment out if not needed
  */
 #ifndef DEBUG
 #define DEBUG
@@ -50,8 +49,12 @@ const u1_t PROGMEM APPKEY[16] = { 0x57, 0x3D, 0x7E, 0xF9, 0x42, 0x02, 0x92, 0x5C
 
 /* SD-card filename must have a .txt file extension
  */
-#ifndef FILENAME
-#define FILENAME "test.txt"
+#ifndef RAW_DATA_FILENAME
+#define RAW_DATA_FILENAME "raw.txt"
+#endif
+
+#ifndef PARAMETERS_FILENAME
+#define PARAMETERS_FILENAME "para.txt"
 #endif
 
 

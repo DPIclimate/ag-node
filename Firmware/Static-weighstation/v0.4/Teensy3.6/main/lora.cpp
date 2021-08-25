@@ -35,28 +35,14 @@ const lmic_pinmap lmic_pins = {
 };
 
 
-void lorawan_send(osjob_t* j, uint8_t* payload){
+void lorawan_send(osjob_t* j, int8_t* payload){
     Lora::set_state(false);
     // Check if there is not a current TX/RX job running
     if (LMIC.opmode & OP_TXRXPEND) {
       Serial.println(F("OP_TXRXPEND, not sending"));
     }
-    else {
-      #ifdef DEBUG
-        Serial.println("=== Payload to send ===");
-        Serial.print("Start_weight: ");
-        Serial.println((payload[0] << 8) | payload[1]);
-        Serial.print("Middle_weight: ");
-        Serial.println((payload[2] << 8) | payload[3]);
-        Serial.print("End_weight: ");
-        Serial.println((payload[4] << 8) | payload[5]);
-        Serial.print("Average: ");
-        Serial.println((payload[6] << 8) | payload[7]);
-        Serial.print("Device ID: ");
-        Serial.println(payload[8]);
-      #endif
-      
-      LMIC_setTxData2(1, payload, 9, 0); // Send payload
+    else {      
+      LMIC_setTxData2(1, (uint8_t*)payload, sizeof(payload)-1, 0); // Send payload
     }
 }
 
@@ -196,8 +182,8 @@ void Lora::init(){
   // See: https://www.thethingsnetwork.org/docs/lorawan/adaptive-data-rate.html 
   LMIC_setAdrMode(0);
 
-  uint8_t val[9] = {1, 1, 1, 1, 1, 1, 1, 1};
-  Lora::request_send(val);
+//  uint8_t val[] = {1, 1, 1, 1, 1, 1, 1, 1};
+//  Lora::request_send(val);
   Serial.println("Finished Sending JOB");
 }
 
@@ -212,6 +198,6 @@ void Lora::set_state(bool s){
 }
 
 
-void Lora::request_send(uint8_t* payload){
+void Lora::request_send(int8_t* payload){
   lorawan_send(&sendjob, payload);
 }

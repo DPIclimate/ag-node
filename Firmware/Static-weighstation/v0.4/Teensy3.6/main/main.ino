@@ -1,7 +1,7 @@
 
 // User
 //#include "lora.h"
-#include "scale.h"
+#include "sensors.h"
 #include "memory.h"
 
 // External
@@ -16,6 +16,11 @@ WeighStation weighStation;
 
 void setup(){
   Serial.begin(57600);
+  
+  #ifdef DEBUG
+    while(!Serial);
+  #endif
+  
   pinMode(13, OUTPUT);
   
 //  Lora::init();

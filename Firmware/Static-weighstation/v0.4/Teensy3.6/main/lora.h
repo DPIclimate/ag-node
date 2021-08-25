@@ -15,11 +15,14 @@
 static osjob_t sendjob; 
 
 class Lora {
+  
+  // Holds packets until ready to send 
+  static const uint8_t packets[19][50];
 
 public:
 
   static void init();
-  static void request_send(uint8_t* payload);
+  static void request_send(int8_t* payload);
   static bool check_state();
   static void set_state(bool s);
 };

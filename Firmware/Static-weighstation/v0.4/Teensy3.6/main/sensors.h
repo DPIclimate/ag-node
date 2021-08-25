@@ -1,13 +1,33 @@
-#ifndef SCALE
-#define SCALE
+#ifndef SENSORS
+#define SENSORS
 
 #include <HX711.h>
+#include <DS1307RTC.h>
+#include <TimeLib.h>
 #include "Arduino.h"
+
 #include "config.h"
 #include "memory.h"
 #include "lora.h"
 
+struct parameters_t{
+  uint32_t unixTime;
+  uint8_t scaleId;
+  int16_t startWeight;
+  int16_t middleWeight;
+  int16_t endWeight;
+  int16_t avWeight;
+  int16_t deltaWeight;
+  int16_t timeOnScale;
+}; 
 
+class Sensors {
+  static const uint8_t payloadSize = 17; // Bytes
+
+  public:
+    static int8_t payload[payloadSize]; 
+    static void construct_payload(uint8_t scaleID);
+};
 
 class WeighStation {
 
@@ -34,23 +54,18 @@ class WeighStation {
   // Minimum weight threshold
   const int minWeight = 10; // kg
 
+  // Stop reading weight threshold
+  const int stopWeight = 2; // kg
+
   // Timer for calculating time on scale
   unsigned long timer;
 
+  public: 
   // Arrays for holding weights and corresponding time
   static const uint16_t maxArrSize = 2000;
-  // Scale One
-  int scaleOneWeights[maxArrSize];
-  long scaleOneTimes[maxArrSize];
-  // Scale Two
-  int scaleTwoWeights[maxArrSize];
-  long scaleTwoTimes[maxArrSize];
-  // Scale Three
-  int scaleThreeWeights[maxArrSize];
-  long scaleThreeTimes[maxArrSize];
+  static int16_t weights[nScales][maxArrSize];
+  static int16_t timeStamps[nScales][maxArrSize];
   
-  
-  public: 
   // Setup weighscales and zero their offsets (tare)
   void init();
 
@@ -59,6 +74,13 @@ class WeighStation {
   
   // Scan each of the scales and capture any animal weights
   void scan();
+};
+
+
+class RealTimeClock{
+  public:
+    void init();
+    void set_time();
 };
 
 
