@@ -1,8 +1,15 @@
 #ifndef CONFIG
 #define CONFIG
 
+/*  Number of bytes to send over LoRaWAN
+ *  Needs to match the total size of parameters_t in sensors.h
+ */
+#ifndef PAYLOAD_SIZE
+#define PAYLOAD_SIZE 17
+#endif
 
-/* DEBUG mode
+
+/*  DEBUG mode
  *  Comment out if not needed
  */
 #ifndef DEBUG

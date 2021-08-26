@@ -25,12 +25,12 @@ void ISquaredC::respond(){
   for(uint16_t i = shift; i < (packetSize / 2) ; i++){
     shift = i + i;
     if(weightsPosition < (RESPONSE_SIZE / 2)){
-      uint16_t weight = Scale::weights[weightsPosition];
+      int16_t weight = Scale::weights[weightsPosition];
       packet[shift] = weight >> 8;
       packet[shift+1] = weight;
       weightsPosition++;
     } else{
-      uint16_t timeStamp = Scale::timeStamps[timeStampsPosition];
+      int16_t timeStamp = Scale::timeStamps[timeStampsPosition];
       packet[shift] = timeStamp >> 8;
       packet[shift+1] = timeStamp;
       timeStampsPosition++;

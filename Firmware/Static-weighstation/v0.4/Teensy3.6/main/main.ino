@@ -1,16 +1,16 @@
 
 // User
-//#include "lora.h"
+#include "lora.h"
 #include "sensors.h"
 #include "memory.h"
 
-// External
-#include <Snooze.h>
-
-#ifndef DEBUG
-  SnoozeDigital digital;
-  SnoozeBlock config(digital);
-#endif
+//// External
+//#include <Snooze.h>
+//
+//#ifndef DEBUG
+//  SnoozeDigital digital;
+//  SnoozeBlock config(digital);
+//#endif
 
 WeighStation weighStation;
 
@@ -23,10 +23,10 @@ void setup(){
   
   pinMode(13, OUTPUT);
   
-//  Lora::init();
-//  while(!Lora::check_state()){
-//    os_runloop_once();
-//  }
+  Lora::init();
+  while(!Lora::check_state()){
+    os_runloop_once();
+  }
   
   weighStation.init();
   Memory::init();

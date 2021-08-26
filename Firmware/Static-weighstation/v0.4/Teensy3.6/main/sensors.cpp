@@ -33,7 +33,6 @@ void WeighStation::calibrate(HX711 scale){
 void WeighStation::scan(){
   uint16_t onePos = 0, twoPos = 0, threePos = 0; // Position in capture array
   bool oneActive = false, twoActive = false, threeActive = false;
-  uint32_t 
   for(uint8_t i = 0; i < nScales; i++){
     float weight = scales[i].get_units(SCALE_AVERAGES);
     // Check if animal is on scale

@@ -34,8 +34,8 @@ class Scale {
 public: 
   inline static int16_t timer; // Timer for timeStamps
   inline static const unsigned int WEIGHT_ARRAY_SIZE = 200; // Sufficently sized array?
-  inline static uint16_t weights[WEIGHT_ARRAY_SIZE]; // Array containing weight profile
-  inline static uint16_t timeStamps[WEIGHT_ARRAY_SIZE]; // Timestamps for weight profile
+  inline static int16_t weights[WEIGHT_ARRAY_SIZE]; // Array containing weight profile
+  inline static int16_t timeStamps[WEIGHT_ARRAY_SIZE]; // Timestamps for weight profile
   
   static void init();
   static float read_weight(byte times = 1);

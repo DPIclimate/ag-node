@@ -22,11 +22,12 @@ struct parameters_t{
 }; 
 
 class Sensors {
-  static const uint8_t payloadSize = 17; // Bytes
 
   public:
-    static int8_t payload[payloadSize]; 
+    static int8_t payload[PAYLOAD_SIZE];
+    
     static void construct_payload(uint8_t scaleID);
+    
 };
 
 class WeighStation {
@@ -74,13 +75,17 @@ class WeighStation {
   
   // Scan each of the scales and capture any animal weights
   void scan();
+  
 };
 
 
 class RealTimeClock{
+  
   public:
+  
     void init();
     void set_time();
+    
 };
 
 
