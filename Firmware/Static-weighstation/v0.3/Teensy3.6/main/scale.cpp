@@ -12,7 +12,7 @@ void Scale::init(){
 
 
 void Scale::one(){
-  #if DEBUG == 1
+  #ifdef DEBUG
     Serial.println("Device one requests I2C transmission...");
   #endif
   request_event((uint8_t)1);
@@ -20,7 +20,7 @@ void Scale::one(){
 
 
 void Scale::two(){
-  #if DEBUG == 1
+  #ifdef DEBUG
     Serial.println("Device two requests I2C transmission...");
   #endif
   request_event((uint8_t)20);
@@ -28,7 +28,7 @@ void Scale::two(){
 
 
 void Scale::three(){
-  #if DEBUG == 1
+  #ifdef DEBUG
     Serial.println("Device three requests I2C transmission...");
   #endif
   request_event((uint8_t)30);
@@ -71,13 +71,16 @@ void Scale::request_event(uint8_t devId){
 
   Scale::extract_parameters(weights, devId);
   Memory::write_data(timeStamps, weights, parameters, devId);
-  Lora::request_send(byteParameters);
 
-  while(!Lora::check_state()){
-    os_runloop_once();
-  }
+  
+  #ifdef ENABLE_LORAWAN
+    Lora::request_send(byteParameters);
+    while(!Lora::check_state()){
+      os_runloop_once();
+    }
+  #endif
 
-  #if DEBUG == 1
+  #ifdef DEBUG
     for(int i = 0; i < (RESPONSE_SIZE / 2); i++){
       Serial.print(timeStamps[i]);
       Serial.print("\t");

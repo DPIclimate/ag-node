@@ -42,7 +42,7 @@ void lorawan_send(osjob_t* j, int8_t* payload){
       Serial.println(F("OP_TXRXPEND, not sending"));
     }
     else {
-      #if DEBUG == 1
+      #ifdef DEBUG
         Serial.println("=== Payload to send ===");
         Serial.print("Start_weight: ");
         Serial.println((payload[0] << 8) | payload[1]);

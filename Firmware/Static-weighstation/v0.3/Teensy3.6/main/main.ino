@@ -1,13 +1,15 @@
 
 // User
-#include "lora.h"
+#ifdef ENABLE_LORAWAN
+  #include "lora.h"
+#endif
 #include "scale.h"
 #include "memory.h"
 
 // External
 #include <Snooze.h>
 
-#if DEBUG == 0
+#ifndef DEBUG
   SnoozeDigital digital;
   SnoozeBlock config(digital);
 #endif
@@ -15,16 +17,18 @@
 void setup(){
   Serial.begin(57600);
   pinMode(13, OUTPUT);
-  
-  Lora::init();
-  while(!Lora::check_state()){
-    os_runloop_once();
-  }
+
+  #ifdef ENABLE_LORAWAN
+    Lora::init();
+    while(!Lora::check_state()){
+      os_runloop_once();
+    }
+  #endif
   
   Scale::init();
   Memory::init();
 
-  #if DEBUG == 1
+  #ifdef DEBUG
     pinMode(WEIGH_SCALE_1, INPUT_PULLDOWN);
     pinMode(WEIGH_SCALE_2, INPUT_PULLDOWN);
     pinMode(WEIGH_SCALE_3, INPUT_PULLDOWN);
@@ -40,7 +44,7 @@ void setup(){
 
 
 void loop(){
-  #if DEBUG == 0
+  #ifndef DEBUG
     int who = Snooze.deepSleep(config);
     switch(who) {
       case WEIGH_SCALE_1:
@@ -54,5 +58,8 @@ void loop(){
         break;
     }
   #endif
+
+
+  
   delay(100);
 }

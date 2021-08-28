@@ -7,8 +7,16 @@
  * 1 = on (verbose)
  */
 #ifndef DEBUG
-#define DEBUG 0
+#define DEBUG
 #endif
+
+
+/* LoRaWAN Mode
+ * Comment out if not in use
+ */
+//#ifndef ENABLE_LORAWAN
+//#define ENABLE_LORAWAN
+//#endif
 
 
 // Interrupts 

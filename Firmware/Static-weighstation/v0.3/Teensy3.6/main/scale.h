@@ -5,7 +5,9 @@
 #include "Arduino.h"
 #include "config.h"
 #include "memory.h"
-#include "lora.h"
+#ifdef ENABLE_LORAWAN
+  #include "lora.h"
+#endif
 
 
 class Scale {
