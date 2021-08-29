@@ -3,19 +3,24 @@
 #ifdef ENABLE_LORAWAN
   #include "lora.h"
 #endif
-#include "scale.h"
+#include "sensors.h"
 #include "memory.h"
 
-// External
-#include <Snooze.h>
-
+// Enables sleep (interfers with serial coms)
 #ifndef DEBUG
+  #include <Snooze.h>
   SnoozeDigital digital;
   SnoozeBlock config(digital);
 #endif
 
 void setup(){
   Serial.begin(57600);
+  while(!Serial);
+
+  RealTimeClock::init();
+  RealTimeClock::set_time();
+
+  
   pinMode(13, OUTPUT);
 
   #ifdef ENABLE_LORAWAN
@@ -25,16 +30,16 @@ void setup(){
     }
   #endif
   
-  Scale::init();
+  WeighStation::init();
   Memory::init();
 
   #ifdef DEBUG
     pinMode(WEIGH_SCALE_1, INPUT_PULLDOWN);
     pinMode(WEIGH_SCALE_2, INPUT_PULLDOWN);
     pinMode(WEIGH_SCALE_3, INPUT_PULLDOWN);
-    attachInterrupt(WEIGH_SCALE_1, Scale::one, RISING);
-    attachInterrupt(WEIGH_SCALE_2, Scale::two, RISING);
-    attachInterrupt(WEIGH_SCALE_3, Scale::three, RISING);
+    attachInterrupt(WEIGH_SCALE_1, WeighStation::scale_one, RISING);
+    attachInterrupt(WEIGH_SCALE_2, WeighStation::scale_two, RISING);
+    attachInterrupt(WEIGH_SCALE_3, WeighStation::scale_three, RISING);
   #else
     digital.pinMode(WEIGH_SCALE_1, INPUT_PULLDOWN, RISING);
     digital.pinMode(WEIGH_SCALE_2, INPUT_PULLDOWN, RISING);
@@ -48,18 +53,15 @@ void loop(){
     int who = Snooze.deepSleep(config);
     switch(who) {
       case WEIGH_SCALE_1:
-        Scale::one();
+        WeighStation::scale_one();
         break;
       case WEIGH_SCALE_2:
-        Scale::two();
+        WeighStation::scale_two();
         break;
       case WEIGH_SCALE_3:
-        Scale::three();
+        WeighStation::scale_three();
         break;
     }
   #endif
-
-
-  
   delay(100);
 }
