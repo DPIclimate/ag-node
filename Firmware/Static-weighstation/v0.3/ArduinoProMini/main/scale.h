@@ -29,7 +29,9 @@ class Scale {
 
   inline static const unsigned int X_RESOLUTION = 4; // Number of readings between slope calculations
 
-  inline static const unsigned int SCALE_AVERAGES = 1; // Number of readings to create an average 
+  inline static const unsigned int SCALE_AVERAGES = 2; // Number of readings to create an average 
+
+  inline static const uint8_t TRIGGER_WEIGHT = 10; // Kg
 
 public: 
   inline static int16_t timer; // Timer for timeStamps
@@ -40,7 +42,6 @@ public:
   static void init();
   static float read_weight(byte times = 1);
   static void scan();
-  static void calibrate();
   static float calculate_slope(float x1, float x2, float y1, float y2);
   static void capture();
 };

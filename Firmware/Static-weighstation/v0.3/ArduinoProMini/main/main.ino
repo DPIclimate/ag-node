@@ -14,5 +14,5 @@ void setup(){
 void loop(){
   Scale::scan();
   ISquaredC::request_transmission();
-  delay(3000);
+  delay(200);
 }

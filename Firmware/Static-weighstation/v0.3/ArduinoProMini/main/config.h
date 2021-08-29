@@ -5,7 +5,7 @@
 /* DEVICE_ID specific to each ATmega328 (and therefore weighscale)
  */
 #ifndef DEVICE_ID
-#define DEVICE_ID 30
+#define DEVICE_ID 1
 #endif
 
 
@@ -22,7 +22,7 @@
  * 1 = on
  */
 #ifndef DEBUG
-#define DEBUG 1
+#define DEBUG
 #endif 
 
 

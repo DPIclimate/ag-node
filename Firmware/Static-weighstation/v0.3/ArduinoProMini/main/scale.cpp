@@ -19,7 +19,7 @@ HX711 hx711;
 void Scale::init(){
   // Initalise and zero scale
   hx711.begin(DOUT, CLK);
-  #if DEBUG == 1
+  #ifdef DEBUG
     if (hx711.is_ready()){
       Serial.println("Scale found and initalised");
     } else {
@@ -32,45 +32,32 @@ void Scale::init(){
 }
 
 
-void Scale::calibrate(){
-  // Reset scale to zero (preventing drifting)
-  if(read_weight(SCALE_AVERAGES) > ZERO_THRESHOLD || read_weight(SCALE_AVERAGES) < -ZERO_THRESHOLD){
-    hx711.tare(); // Reset to zero
-  }
-}
-
-
 void Scale::scan(){
   // Scan weights to detect when an animal steps on the scale
   // Reset arrays to zeros
   memset(Scale::weights, 0, sizeof(Scale::weights));
   memset(Scale::timeStamps, 0, sizeof(Scale::timeStamps));
-  
-  Scale::calibrate(); // TODO: need to ensure this isn't interfering (its meant to prevent drifting)
 
-  // Wait until slope is positive, indicating animal in on scale
-  while(calculate_slope(Scale::weights[0], Scale::weights[X_RESOLUTION], Scale::timeStamps[0], Scale::timeStamps[X_RESOLUTION]) < POS_ANGLE){
+  hx711.tare();
+
+  // Read weights until animal is detected
+  float weight = 0.0f;
+  uint8_t resetWeight = 0; // Trigger tare
+  while(read_weight(SCALE_AVERAGES) < TRIGGER_WEIGHT){
+    weight = read_weight(SCALE_AVERAGES);
+    #ifdef DEBUG
+      Serial.print("Weight: ");
+      Serial.println(weight);
+    #endif
     Scale::timer = millis(); // Reset timer to zero
     int16_t startTime = Scale::timer;
-    // Get a few values to check if there is a change in slope
-    for(uint16_t i = 0; i <= X_RESOLUTION; i++){
-      #ifdef HIGH_PRECISION
-        Scale::weights[i] = (int16_t)(read_weight(SCALE_AVERAGES) * 100); // Change with desired averages
-      #else
-        Scale::weights[i] = (int16_t)read_weight(SCALE_AVERAGES); // Change with desired averages
+    if(resetWeight == 100){
+      #ifdef DEBUG
+        Serial.println("Tare!");
       #endif
-      Scale::timeStamps[i] = millis() - startTime;
-
-      #if DEBUG == 1
-        Serial.print(Scale::timeStamps[i]);
-        Serial.print("\t");
-        #ifdef HIGH_PRECISION
-          Serial.println((float)Scale::weights[i] / 100.0);
-        #else
-          Serial.println(Scale::weights[i]);
-        #endif
-      #endif
-    }
+      hx711.tare();
+      resetWeight = 0;
+    } resetWeight++;
   }
   capture(); // Animal is on scale begin capture
 }
@@ -80,33 +67,29 @@ void Scale::capture(){
   // Capture the animals weight and corresponding timestamps
   digitalWrite(13, HIGH);
   int16_t startTime = Scale::timer; // Capture start time
-  #if DEBUG == 1
+  #ifdef DEBUG
     Serial.println("==== Capture ====");
   #endif
-  for(unsigned int i = X_RESOLUTION; i < WEIGHT_ARRAY_SIZE; i++){
+  int8_t offWeights = 0; // Keep track of time off scale
+  for(unsigned int i = 0; i < WEIGHT_ARRAY_SIZE; i++){
     // Check if animal has stepped off the scale
-    if(calculate_slope(Scale::weights[i - X_RESOLUTION], Scale::weights[i - 1], Scale::timeStamps[i - X_RESOLUTION], Scale::timeStamps[i - 1]) < NEG_ANGLE
-    && i >= 20){
-      break;
-    }
+    float weight = read_weight(SCALE_AVERAGES);
+    #ifdef DEBUG
+      Serial.print("Weight: ");
+      Serial.println(weight);
+    #endif
+
+    // Animal is off scale, take a few more readings just to be sure
+    if(weight < TRIGGER_WEIGHT) offWeights++;
+    else offWeights = 0;
+
+    // Animal is definitely off scale, stop reading
+    if(offWeights >= 10) break;
+
     // Animal is still on the scale, keep reading
     else{
-      #ifdef HIGH_PRECISION
-        Scale::weights[i] = (int16_t)(read_weight(SCALE_AVERAGES) * 100); // Change with desired averages
-      #else
-        Scale::weights[i] = (int16_t)read_weight(SCALE_AVERAGES); // Change with desired averages
-      #endif
+      Scale::weights[i] = weight * 100.0;
       Scale::timeStamps[i] = millis() - startTime;
-      #if DEBUG == 1
-        Serial.print(Scale::timeStamps[i]);
-        Serial.print("\t");
-        #ifdef HIGH_PRECISION
-          Serial.println((float)Scale::weights[i] / 100.0);
-        #else
-          Serial.println(Scale::weights[i]);
-        #endif
-      #endif
-      delay(100);
     }
   }
   digitalWrite(13, LOW);
