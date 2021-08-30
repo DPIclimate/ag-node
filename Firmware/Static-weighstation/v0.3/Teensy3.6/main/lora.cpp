@@ -43,20 +43,9 @@ void lorawan_send(osjob_t* j, int8_t* payload){
     }
     else {
       #ifdef DEBUG
-        Serial.println("=== Payload to send ===");
-        Serial.print("Start_weight: ");
-        Serial.println((payload[0] << 8) | payload[1]);
-        Serial.print("Middle_weight: ");
-        Serial.println((payload[2] << 8) | payload[3]);
-        Serial.print("End_weight: ");
-        Serial.println((payload[4] << 8) | payload[5]);
-        Serial.print("Average: ");
-        Serial.println((payload[6] << 8) | payload[7]);
-        Serial.print("Device ID: ");
-        Serial.println(payload[8]);
+        Serial.println("Sending Payload");
       #endif
-      
-      LMIC_setTxData2(1, (uint8_t*)payload, 9, 0); // Send payload
+      LMIC_setTxData2(1, (uint8_t*)payload, sizeof(payload) - 1, 0); // Send payload
     }
 }
 
@@ -136,9 +125,7 @@ void onEvent (ev_t ev) {
             }
             Serial.println();
             // Transmission was competed successfully 
-            // TODO: This is proberbly blocking if the gateway cannot be reached
             Lora::set_state(true);
-            
             break;
         case EV_LOST_TSYNC:
             Serial.println(F("EV_LOST_TSYNC"));

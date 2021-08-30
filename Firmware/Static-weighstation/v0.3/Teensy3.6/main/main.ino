@@ -1,12 +1,12 @@
 
-// User
+// Local imports
 #ifdef ENABLE_LORAWAN
   #include "lora.h"
 #endif
 #include "sensors.h"
 #include "memory.h"
 
-// Enables sleep (interfers with serial coms)
+// Enables sleep (disables serial communications)
 #ifndef DEBUG
   #include <Snooze.h>
   SnoozeDigital digital;
@@ -15,12 +15,13 @@
 
 void setup(){
   Serial.begin(57600);
-  while(!Serial);
+  #ifdef DEBUG
+    while(!Serial);
+  #endif
 
   RealTimeClock::init();
   RealTimeClock::set_time();
 
-  
   pinMode(13, OUTPUT);
 
   #ifdef ENABLE_LORAWAN

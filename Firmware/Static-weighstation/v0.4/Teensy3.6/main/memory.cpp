@@ -20,7 +20,7 @@ void Memory::init(){
 }
 
 
-void Memory::write_data(int16_t* timeStamps, int16_t* weights, int8_t* payload, struct parameters_t &parameters){
+void Memory::write_data(int16_t* weights, int16_t* timeStamps, int8_t* payload, struct parameters_t &parameters){
   root = SD.open(RAW_DATA_FILENAME, FILE_WRITE);
   Serial.println(parameters.scaleId);
   if(root){

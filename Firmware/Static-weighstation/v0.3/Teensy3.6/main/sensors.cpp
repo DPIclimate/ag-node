@@ -28,7 +28,7 @@ void WeighStation::scale_two(){
   #ifdef DEBUG
     Serial.println("Device two requests I2C transmission...");
   #endif
-  request_weights((uint8_t)20);
+  request_weights((uint8_t)2);
 }
 
 
@@ -36,7 +36,7 @@ void WeighStation::scale_three(){
   #ifdef DEBUG
     Serial.println("Device three requests I2C transmission...");
   #endif
-  request_weights((uint8_t)30);
+  request_weights((uint8_t)3);
 }
 
 
@@ -74,14 +74,16 @@ void WeighStation::request_weights(uint8_t scaleID){
     } else {
       Serial.println("Device not found...");
   }
-  
+
+  // Construct payload for LoRaWAN and SD-Card
   Sensors::construct_payload(scaleID);
-  
-//  WeighStation::extract_parameters(weights, devId);
-//  Memory::write_data(timeStamps, weights, parameters, devId);
+
+  // Save to SD-Card
+  Memory::write_data(WeighStation::weights, WeighStation::timeStamps, Sensors::payload, parameters);
   
   #ifdef ENABLE_LORAWAN
-    Lora::request_send(byteParameters);
+    // Send payload over LoRaWAN and wait until its sent
+    Lora::request_send(Sensors::payload);
     while(!Lora::check_state()){
       os_runloop_once();
     }
@@ -98,6 +100,8 @@ void WeighStation::request_weights(uint8_t scaleID){
     }
   #endif
 
+  // Reset arrays with zeros
+  memset(Sensors::payload, 0, sizeof(Sensors::payload));
   memset(WeighStation::weights, 0, sizeof(WeighStation::weights));
   memset(WeighStation::timeStamps, 0, sizeof(WeighStation::timeStamps));
   interrupts();
@@ -120,7 +124,7 @@ void Sensors::construct_payload(uint8_t scaleID){
   
   // === Get weights from within array (drop zeros to improve averaging accuracy) ===
   uint16_t pos = 0; // Location within weight array
-  while((WeighStation::weights[pos] != 0 || pos <= 5) && pos <= (RESPONSE_SIZE / 2)){
+  while((WeighStation::weights[pos] != 0 || pos <= 10) && pos <= (RESPONSE_SIZE / 2)){
     pos++;
   }
 
@@ -190,10 +194,27 @@ void Sensors::construct_payload(uint8_t scaleID){
   payload[15] = parameters.timeOnScale;
   payload[16] = parameters.timeOnScale >> 8;
 
+  // === Weight StDev ===
+  int16_t stdevSum = 0;
+  for(uint16_t i = uint16_t(pos * 0.25); i < uint16_t(pos*0.75); i++){
+    stdevSum += pow((WeighStation::weights[i] - parameters.avWeight), 2);
+  }
+  parameters.stdevWeight = sqrt(stdevSum/pos);
+  #ifdef DEBUG
+    Serial.print("StDev Weight:\t");
+    Serial.print(parameters.stdevWeight / 100.0f);
+    Serial.println(" kg");
+  #endif
+  payload[17] = parameters.stdevWeight;
+  payload[18] = parameters.stdevWeight >> 8;
+
   #ifdef DEBUG
     Serial.print("Payload:\t");
     for(uint8_t i = 0; i < sizeof(payload); i++){
       if (i != 0) Serial.print("-");
+      payload[i] &= 0xff;
+      if (payload[i] < 16)
+          Serial.print('0');
       Serial.print(payload[i], HEX);
     } Serial.println("");
   #endif

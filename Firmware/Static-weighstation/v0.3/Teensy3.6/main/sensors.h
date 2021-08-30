@@ -22,6 +22,7 @@ struct parameters_t{
   int16_t middleWeight;
   int16_t endWeight;
   int16_t avWeight;
+  int16_t stdevWeight;
   int16_t deltaWeight;
   int16_t timeOnScale;
 }; 
