@@ -21,17 +21,24 @@
 /* DEBUG mode
  * Comment out if not needed
  */
-#ifndef DEBUG
-#define DEBUG
-#endif
+//#ifndef DEBUG
+//#define DEBUG
+//#endif
+
+/* LOW_POWER mode
+ * Comment out if not needed
+ */
+//#ifndef LOW_POWER
+//#define LOW_POWER
+//#endif
 
 
 /* LoRaWAN Mode
  * Comment out if not in use
  */
-//#ifndef ENABLE_LORAWAN
-//#define ENABLE_LORAWAN
-//#endif
+#ifndef ENABLE_LORAWAN
+#define ENABLE_LORAWAN
+#endif
 
 
 // Interrupt pins 
@@ -48,10 +55,10 @@
 const u1_t PROGMEM APPEUI[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 };
 
 // Device unique identifier (Format = LSB)
-const u1_t PROGMEM DEVEUI[8] = { 0x14, 0x4A, 0x04, 0xD0, 0x7E, 0xD5, 0xB3, 0x70 };
+const u1_t PROGMEM DEVEUI[8] = { 0x33, 0x4C, 0x04, 0xD0, 0x7E, 0xD5, 0xB3, 0x70 };
 
 // APP-KEY (Sensitive - Remove if going public) (Format = MSB)
-const u1_t PROGMEM APPKEY[16] = { 0xA0, 0x7E, 0x7E, 0x49, 0x33, 0x1D, 0xCE, 0xAA, 0xA3, 0x39, 0xC7, 0x75, 0x29, 0x9C, 0x4C, 0x68 };
+const u1_t PROGMEM APPKEY[16] = { 0x3D, 0x76, 0x3A, 0xA7, 0x08, 0x63, 0x36, 0xB5, 0xF7, 0x70, 0xD6, 0x64, 0xE6, 0xF6, 0xDC, 0x6D };
 
 
 /* SD-card filename, must have a .txt file extension

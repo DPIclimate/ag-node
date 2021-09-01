@@ -42,6 +42,10 @@ void WeighStation::scale_three(){
 
 
 void WeighStation::request_weights(uint8_t scaleID){
+//  // Reset arrays with zeros
+//  memset(Sensors::payload, 0, sizeof(Sensors::payload));
+//  memset(WeighStation::weights, 0, sizeof(WeighStation::weights));
+//  memset(WeighStation::timeStamps, 0, sizeof(WeighStation::timeStamps));
   noInterrupts();
   Serial.println("==== Response ====");
   const uint8_t PACKET_SIZE = 20;
@@ -99,17 +103,12 @@ void WeighStation::request_weights(uint8_t scaleID){
       }
     }
   #endif
-
-  // Reset arrays with zeros
-  memset(Sensors::payload, 0, sizeof(Sensors::payload));
-  memset(WeighStation::weights, 0, sizeof(WeighStation::weights));
-  memset(WeighStation::timeStamps, 0, sizeof(WeighStation::timeStamps));
   interrupts();
 }
 
 
 void Sensors::construct_payload(uint8_t scaleID){
-  memset(Sensors::payload, 0, sizeof(Sensors::payload)); // Clear payload
+//  memset(Sensors::payload, 0, sizeof(Sensors::payload)); // Clear payload
   
   // === Get current time as a UNIX epoch format ===
   parameters.unixTime = now();

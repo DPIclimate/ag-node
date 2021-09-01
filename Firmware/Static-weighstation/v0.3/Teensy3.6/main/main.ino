@@ -7,7 +7,7 @@
 #include "memory.h"
 
 // Enables sleep (disables serial communications)
-#ifndef DEBUG
+#if !defined(DEBUG) && defined(LOW_POWER)
   #include <Snooze.h>
   SnoozeDigital digital;
   SnoozeBlock config(digital);
@@ -34,23 +34,23 @@ void setup(){
   WeighStation::init();
   Memory::init();
 
-  #ifdef DEBUG
+  #if !defined(DEBUG) && defined(LOW_POWER)
+    digital.pinMode(WEIGH_SCALE_1, INPUT_PULLDOWN, RISING);
+    digital.pinMode(WEIGH_SCALE_2, INPUT_PULLDOWN, RISING);
+    digital.pinMode(WEIGH_SCALE_3, INPUT_PULLDOWN, RISING);
+  #else
     pinMode(WEIGH_SCALE_1, INPUT_PULLDOWN);
     pinMode(WEIGH_SCALE_2, INPUT_PULLDOWN);
     pinMode(WEIGH_SCALE_3, INPUT_PULLDOWN);
     attachInterrupt(WEIGH_SCALE_1, WeighStation::scale_one, RISING);
     attachInterrupt(WEIGH_SCALE_2, WeighStation::scale_two, RISING);
     attachInterrupt(WEIGH_SCALE_3, WeighStation::scale_three, RISING);
-  #else
-    digital.pinMode(WEIGH_SCALE_1, INPUT_PULLDOWN, RISING);
-    digital.pinMode(WEIGH_SCALE_2, INPUT_PULLDOWN, RISING);
-    digital.pinMode(WEIGH_SCALE_3, INPUT_PULLDOWN, RISING);
   #endif
 }
 
 
 void loop(){
-  #ifndef DEBUG
+  #if !defined(DEBUG) && defined(LOW_POWER)
     int who = Snooze.deepSleep(config);
     switch(who) {
       case WEIGH_SCALE_1:

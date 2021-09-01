@@ -57,7 +57,7 @@ class WeighStation {
 
 
 class RealTimeClock{
-  uint32_t unixTime = 1630237934; // Current UNIX time
+  static const uint32_t unixTime = 1630466457; // Current UNIX time
   
   public:
   // Initalise RTC

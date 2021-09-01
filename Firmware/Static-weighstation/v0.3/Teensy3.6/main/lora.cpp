@@ -45,7 +45,7 @@ void lorawan_send(osjob_t* j, int8_t* payload){
       #ifdef DEBUG
         Serial.println("Sending Payload");
       #endif
-      LMIC_setTxData2(1, (uint8_t*)payload, sizeof(payload) - 1, 0); // Send payload
+      LMIC_setTxData2(1, (uint8_t*)Sensors::payload, sizeof(Sensors::payload), 0); // Send payload
     }
 }
 

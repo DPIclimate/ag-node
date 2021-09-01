@@ -10,6 +10,7 @@
 #include <hal/hal.h>
 #include <SPI.h>
 #include "config.h"
+#include "sensors.h"
 
 // payload for things network
 static osjob_t sendjob; 
