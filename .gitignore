@@ -1,6 +1,9 @@
 # Folders
 # Electronics/additionalParts
 
+# Temp
+*.html
+
 # User Specified 
 *.DS_Store
 *.swp
