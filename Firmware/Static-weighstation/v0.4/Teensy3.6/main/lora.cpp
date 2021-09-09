@@ -26,7 +26,7 @@ void Lora::init(){
   // US ONLY, with TTN, it saves join time if we start on subband 1 (channels 8-15). This will
   // get overridden after the join by parameters from the network. If working with other
   // networks or in other regions, this will need to be changed.
-  LMIC_selectSubBand(1);
+//  LMIC_selectSubBand(1);
   // Disable data rate adaptation
   // This mode optimises data rates for transmission 
   // See: https://www.thethingsnetwork.org/docs/lorawan/adaptive-data-rate.html 

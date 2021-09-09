@@ -1,14 +1,6 @@
 #ifndef CONFIG
 #define CONFIG
 
-/*  Number of bytes to send over LoRaWAN
- *  Needs to match the total size of parameters_t in sensors.h
- */
-#ifndef PAYLOAD_SIZE
-#define PAYLOAD_SIZE 17
-#endif
-
-
 /*  DEBUG mode
  *  Comment out if not needed
  */
@@ -17,26 +9,27 @@
 #endif
 
 
-// Interrupts 
-#define WEIGH_SCALE_1 21
-#define WEIGH_SCALE_2 20
-#define WEIGH_SCALE_3 17
-
-
-/* HIGH_PRECISION uses floats rather than ints for weights. 
- * If no scale is connected or values are greater than 655.36 kg this will overflow.
- * Needs to be defined on both the ATMega328 and the Teensy
+/* LOW_POWER mode
+ * Comment out if not needed
  */
-#ifndef HIGH_PRECISION
-#define HIGH_PRECISION
-#endif
+//#ifndef LOW_POWER
+//#define LOW_POWER
+//#endif
 
 
-/* RESPONSE_SIZE is the expected array size from the weigh scale
- * RESPONSE_SIZE = size of weights + size of timestamps
+///* LoRaWAN Mode
+// * Comment out if not in use
+// */
+//#ifndef ENABLE_LORAWAN
+//#define ENABLE_LORAWAN
+//#endif
+
+
+/*  Number of bytes to send over LoRaWAN
+ *  Needs to match the total size of parameters_t in sensors.h
  */
-#ifndef RESPONSE_SIZE
-#define RESPONSE_SIZE 400
+#ifndef PAYLOAD_SIZE
+#define PAYLOAD_SIZE 19
 #endif
 
 
@@ -48,10 +41,10 @@
 const u1_t PROGMEM APPEUI[8] = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
 // Device unique identifier (Format = LSB)
-const u1_t PROGMEM DEVEUI[8] = { 0x25, 0x3C, 0x04, 0xD0, 0x7E, 0xD5, 0xB3, 0x70 };
+const u1_t PROGMEM DEVEUI[8] = { 0x96, 0x51, 0x04, 0xD0, 0x7E, 0xD5, 0xB3, 0x70 };
 
 // APP-KEY (Sensitive - Remove if going public) (Format = MSB)
-const u1_t PROGMEM APPKEY[16] = { 0x57, 0x3D, 0x7E, 0xF9, 0x42, 0x02, 0x92, 0x5C, 0xC2, 0x0D, 0xE2, 0xB0, 0x4E, 0x9B, 0xB6, 0xF7 };
+const u1_t PROGMEM APPKEY[16] = { 0x66, 0x6E, 0x40, 0x03, 0x05, 0x8E, 0x52, 0xE2, 0xA1, 0x03, 0xD2, 0x16, 0xFE, 0xD0, 0x59, 0x89 };
 
 
 /* SD-card filename must have a .txt file extension

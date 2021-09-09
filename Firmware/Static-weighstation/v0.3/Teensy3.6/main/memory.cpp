@@ -9,13 +9,19 @@ File root;
 
 
 void Memory::init(){
-  Serial.println("[MEMORY]: Intialising Memory Card...");
+  #ifdef DEBUG
+    Serial.println("[MEMORY]: Intialising Memory Card...");
+  #endif
   if(!SD.begin(chipSelect)){
-    Serial.println("[MEMORY]: Intialisation failed.");
+    #ifdef DEBUG
+      Serial.println("[MEMORY]: Intialisation failed.");
+    #endif
     return;
   }
   else{
-    Serial.println("[MEMORY]: Card Intialised");
+    #ifdef DEBUG
+      Serial.println("[MEMORY]: Card Intialised");
+    #endif
   }
 }
 
