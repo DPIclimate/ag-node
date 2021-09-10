@@ -17,7 +17,7 @@ static osjob_t sendjob;
 class Lora {
   
   // Holds packets until ready to send 
-  static int8_t payloads[50][PAYLOAD_SIZE];
+  static int8_t payloads[50][WEIGH_PAYLOAD_SIZE];
 
 public:
 

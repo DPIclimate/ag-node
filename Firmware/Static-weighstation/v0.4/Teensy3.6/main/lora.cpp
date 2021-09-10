@@ -41,7 +41,7 @@ void Lora::init(){
 
 
 void Lora::append_payload(int8_t* payload){
-  for(uint8_t i = 0; i < PAYLOAD_SIZE; i++){
+  for(uint8_t i = 0; i < WEIGH_PAYLOAD_SIZE; i++){
     payloads[payloadPos][i] = payload[i];
   }
   payloadPos++;

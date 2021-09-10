@@ -54,7 +54,7 @@ void Memory::write_data(int16_t* weights, int16_t* timeStamps, int8_t* payload, 
     concatData += ",";
 
     // Append raw payload
-    for(uint8_t i = 0; i < PAYLOAD_SIZE; i++){
+    for(uint8_t i = 0; i < WEIGH_PAYLOAD_SIZE; i++){
       if (i != 0) {
         concatData += '-';
       }

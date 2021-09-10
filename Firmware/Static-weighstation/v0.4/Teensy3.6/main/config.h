@@ -28,8 +28,8 @@
 /*  Number of bytes to send over LoRaWAN
  *  Needs to match the total size of parameters_t in sensors.h
  */
-#ifndef PAYLOAD_SIZE
-#define PAYLOAD_SIZE 19
+#ifndef WEIGH_PAYLOAD_SIZE
+#define WEIGH_PAYLOAD_SIZE 19
 #endif
 
 

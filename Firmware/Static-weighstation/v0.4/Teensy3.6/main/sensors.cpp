@@ -14,10 +14,15 @@ static constexpr uint8_t scaleClock[WeighStation::nScales] = {3, 20, 29};
 // Set calibration factor for scale (see calibration script)
 static constexpr int16_t calibrationFactors[WeighStation::nScales] = {-1870, -1840, -1800};
 
+// Initalise HX711 library
 static const HX711 scaleOne;
 static const HX711 scaleTwo;
 static const HX711 scaleThree;
 static HX711 scales[WeighStation::nScales] = {scaleOne, scaleTwo, scaleThree};
+
+// Initialse INA219 library
+Adafruit_INA219 battery(Monitoring::batteryAddr);
+Adafruit_INA219 solar(Monitoring::solarAddr);
 
 void WeighStation::init(){
   for(uint8_t i = 0; i < nScales; i++){
@@ -28,7 +33,6 @@ void WeighStation::init(){
   #ifdef DEBUG
     Serial.println("Scales ready...");
   #endif
-  timer = millis(); // Start timer
 }
 
 
@@ -41,41 +45,49 @@ void WeighStation::calibrate(HX711 scale){
 
 void WeighStation::scan(){
   for(uint8_t i = 0; i < nScales; i++){
-    uint32_t timeStamp = millis() - timer;
     float weight = scales[i].get_units(SCALE_AVERAGES);
     // Check if animal is on scale
     if(weight >= triggerWeight){
       // Identify which scale is active and append weight (with timestamp)
       if(i == 0){
+        if(!oneActive){
+          oneStartTime = millis();
+        }
         oneActive = true;
         weights[i][onePos] = weight * 100.0; // Convert float to int with decimal places (i.e. *100)
-        timeStamps[i][onePos++] = timeStamp;
+        timeStamps[i][onePos++] = millis() - oneStartTime;
         #ifdef DEBUG
-          Serial.print("Scale one active: ");
-          Serial.print(timeStamp);
+          Serial.print("Scale [0]: ");
+          Serial.print(timeStamps[i][onePos - 1] / 1000.0);
           Serial.print("\t");
           Serial.println(weight);
         #endif
       }
       else if(i == 1){
+        if(!twoActive){
+          twoStartTime = millis();
+        }
         twoActive = true;
         weights[i][twoPos] = weight * 100.0;
-        timeStamps[i][twoPos++] = timeStamp;
+        timeStamps[i][twoPos++] = millis() - twoStartTime;
         #ifdef DEBUG
-          Serial.print("Scale two active: ");
-          Serial.print(timeStamp);
+          Serial.print("Scale [1]: ");
+          Serial.print(timeStamps[i][twoPos - 1] / 1000.0);
           Serial.print("\t");
           Serial.println(weight);
         #endif
 
       }
       else if(i == 2){
+        if(!threeActive){
+          threeStartTime = millis();
+        }
         threeActive = true;
         weights[i][threePos] = weight * 100.0;
-        timeStamps[i][threePos++] = timeStamp;
+        timeStamps[i][threePos++] = millis() - threeStartTime;
         #ifdef DEBUG
-          Serial.print("Scale three active: ");
-          Serial.print(timeStamp);
+          Serial.print("Scale [2]: ");
+          Serial.print(timeStamps[i][threePos - 1] / 1000.0);
           Serial.print("\t");
           Serial.println(weight);
         #endif
@@ -83,40 +95,43 @@ void WeighStation::scan(){
       
     }
     else if(oneActive && i == 0 && weight <= stopWeight){
-      int8_t* payload = Sensors::construct_payload(i);
+      int8_t* payload = construct_payload(i);
 //      Memory::write_data(weights[i], timeStamps[i], payload, parameters);
       #ifdef DEBUG
         Serial.println("Scale one finished.");
       #endif
       oneActive = false;
       onePos = 0;
+      oneStartTime = 0;
     }
     else if(twoActive && i == 1 && weight <= stopWeight){
-      int8_t* payload = Sensors::construct_payload(i);
+      int8_t* payload = construct_payload(i);
 //      Memory::write_data(weights[i], timeStamps[i], payload, parameters);
       #ifdef DEBUG
         Serial.println("Scale two finished.");
       #endif
       twoActive = false;
       twoPos = 0;
+      twoStartTime = 0;
     }
     else if(threeActive && i == 2 && weight <= stopWeight){
-      int8_t* payload = Sensors::construct_payload(i);
+      int8_t* payload = construct_payload(i);
 //      Memory::write_data(weights[i], timeStamps[i], payload, parameters);
       #ifdef DEBUG
         Serial.println("Scale three finished.");
       #endif
       threeActive = false;
       threePos = 0;
+      threeStartTime = 0;
     }
   }
 }
 
 
-int8_t* Sensors::construct_payload(uint8_t scaleID){
-  static int8_t payload[PAYLOAD_SIZE];
+int8_t* WeighStation::construct_payload(uint8_t scaleID){
+  static int8_t payload[WEIGH_PAYLOAD_SIZE];
 
-  for(int i=0; i < WeighStation::maxArrSize; i++){
+  for(int i=0; i < maxArrSize; i++){
     Serial.println(weights[scaleID][i]);
     if(weights[scaleID][i] == 0) break;
   }
@@ -134,7 +149,7 @@ int8_t* Sensors::construct_payload(uint8_t scaleID){
   
   // === Get weights from within array (drop zeros to improve averaging accuracy) ===
   uint16_t pos = 0; // Location within weight array
-  while((weights[scaleID][pos] != 0 || pos <= 10) && pos <= WeighStation::maxArrSize){
+  while((weights[scaleID][pos] != 0 || pos <= 10) && pos <= maxArrSize){
     pos++;
   }
 
@@ -233,11 +248,55 @@ int8_t* Sensors::construct_payload(uint8_t scaleID){
 }
 
 
+void Monitoring::init(){
+  #ifdef DEBUG
+    if(battery.begin()){
+      Serial.println("Battery monitoring initalisaed");
+    } else Serial.println("Battery monitoring error");
+    if(solar.begin()){
+      Serial.println("Solar monitoring initalised");
+    } else Serial.println("Solar monitoring error");
+  #endif
+}
+
+
+int16_t Monitoring::voltage(Adafruit_INA219 ina219){
+  float volts = ina219.getBusVoltage_V() + (ina219.getShuntVoltage_mV() / 1000);
+  return (int16_t)volts * 100;
+}
+
+
+int16_t Monitoring::current(Adafruit_INA219 ina219){
+  float curr = ina219.getCurrent_mA();
+  return (int16_t)curr * 100;
+}
+
+
+int16_t Monitoring::power(Adafruit_INA219 ina219){
+  float watts = ina219.getPower_mW();
+  return (int16_t)watts * 100;
+}
+
+
+void Temperature::init(OneWire* oneWire){
+  sensor(oneWire);
+  sensor.begin();
+  sensor.setResolution(TEMPERATURE_RESOLUTION);
+}
+
+
+int16_t Temperature::measure(DallasTemperature sensor){
+  sensor.requestTemperatures();
+  float tempC = sensor.getTempCByIndex(0);
+  return (int16_t)tempC * 100;
+}
+
+
 void RealTimeClock::init(){
-  setSyncProvider(RTC.get); // Get time from RTC
   #ifdef DEBUG
     if(timeStatus() != timeSet){
-      Serial.println("Unable to sync with RTC");
+      Serial.print("Unable to sync with RTC...");
+      set_time();
     } else {
       Serial.println("RTC has set the system time");
     }
@@ -247,6 +306,7 @@ void RealTimeClock::init(){
 
 void RealTimeClock::set_time(){
   bool configuredTime = false;
+  Serial.println("Set unix time (format = T1631254602):");
   while(!configuredTime){
     if(Serial.available()){
       String command = Serial.readStringUntil('\n');
@@ -254,9 +314,45 @@ void RealTimeClock::set_time(){
         uint32_t userTime = command.substring(1, command.length()).toInt();
         RTC.set(userTime);
         setTime(userTime);
+        Serial.print("Time set to: ");
+        Serial.println(now());
         configuredTime = true;
       }
     }
     delay(100);
   }
+}
+
+int8_t* Sensors::construct_payload(){
+  static int8_t payload[14];
+
+  // === Power monitoring ===
+  // Battery
+  int16_t batteryV = Monitoring::voltage(battery);
+  payload[0] = batteryV;
+  payload[1] = batteryV >> 8;
+  int16_t batteryA = Monitoring::current(battery);
+  payload[2] = batteryA;
+  payload[3] = batteryA >> 8;
+  int16_t batteryW = Monitoring::power(battery);
+  payload[4] = batteryW;
+  payload[5] = batteryW >> 8;
+
+  // Solar
+  int16_t solarV = Monitoring::voltage(solar);
+  payload[6] = solarV;
+  payload[7] = solarV >> 8;
+  int16_t solarA = Monitoring::current(solar);
+  payload[8] = solarA;
+  payload[9] = solarA >> 8;
+  int16_t solarW = Monitoring::power(solar);
+  payload[10] = solarW;
+  payload[11] = solarW >> 8;
+
+  // === Temperature monitoring ===
+  int16_t tempC = Temperature::measure(Temperature::sensor);
+  payload[12] = tempC;
+  payload[13] = tempC >> 8;
+
+  return payload;
 }

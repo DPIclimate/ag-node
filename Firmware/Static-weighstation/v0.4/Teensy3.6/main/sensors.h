@@ -3,10 +3,16 @@
 
 // External libraries
 #include <Wire.h>
+// Weigh scales
 #include <HX711.h>
+// Time keeping
 #include <DS1307RTC.h>
 #include <TimeLib.h>
+// Power monitoring
+#include <Adafruit_INA219.h>
 #include "Arduino.h"
+// Temperature
+#include <DallasTemperature.h>
 
 // Internal libraries
 #include "config.h"
@@ -28,18 +34,19 @@ struct parameters_t{
   int16_t timeOnScale;
 }; 
 
+#define ONE_WIRE_BUS 38
+#define TEMPERATURE_RESOLUTION 12
+
 class Sensors {
   public:
-  // Payload to be sent over LoRaWAN
-  static int8_t payload[PAYLOAD_SIZE];
-  
-  // Construct payload to send over LoRaWAN
-  static int8_t* construct_payload(uint8_t scaleID);
+  static int8_t* construct_payload();
+
 };
 
 class WeighStation {
   // Scale states
   bool oneActive = false, twoActive = false, threeActive = false;
+  uint32_t oneStartTime = 0, twoStartTime = 0, threeStartTime = 0;
   uint16_t onePos = 0, twoPos = 0, threePos = 0; // Position in capture array
 
   // Number of readings to average (more is slower)
@@ -54,11 +61,7 @@ class WeighStation {
   // Stop reading weight threshold
   const float stopWeight = 2; // kg
 
-  // Timer for calculating time on scale
-  unsigned long timer;
-
   public: 
-
   // Create scale objects
   static const uint8_t nScales = 3;
 
@@ -73,12 +76,40 @@ class WeighStation {
   
   // Scan each of the scales and capture any animal weights
   void scan();
-  
+
+  // Construct payload to send over LoRaWAN
+  static int8_t* construct_payload(uint8_t scaleID);
+
+};
+
+class Monitoring {
+  public:
+    // Power monitoring addresses
+    static const uint8_t batteryAddr = 0x40;
+    static const uint8_t solarAddr = 0x44;
+    
+    static void init();
+    
+    // Get voltage
+    static int16_t voltage(Adafruit_INA219 ina219); 
+    
+    // Get current
+    static int16_t current(Adafruit_INA219 ina219);
+    
+    // Get power
+    static int16_t power(Adafruit_INA219 ina219);
+};
+
+class Temperature : public DallasTemperature{
+  public:
+    static DallasTemperature sensor;
+    static void init(OneWire* oneWire);
+    static int16_t measure(DallasTemperature sensor);
 };
 
 
 class RealTimeClock{
-  static const uint32_t unixTime = 1630466457; // Current UNIX time
+  static const uint32_t unixTime = 1631253902; // Current UNIX time
   
   public:
   // Initalise RTC

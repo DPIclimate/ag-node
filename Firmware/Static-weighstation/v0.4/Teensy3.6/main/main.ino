@@ -15,6 +15,10 @@
 
 WeighStation weighStation;
 
+// Temperature 
+OneWire oneWire(ONE_WIRE_BUS);
+//Temperature temperature(&oneWire);
+
 void setup(){
   Serial.begin(57600);
   
@@ -22,8 +26,7 @@ void setup(){
     while(!Serial);
   #endif
 
-//  RealTimeClock::init();
-//  RealTimeClock::set_time();
+  RealTimeClock::init();
   
   pinMode(13, OUTPUT);
   
@@ -33,7 +36,9 @@ void setup(){
       os_runloop_once();
     }
   #endif
-  
+
+  Temperature::init(&oneWire);
+  Monitoring::init();
   weighStation.init();
 //  Memory::init();
 }
