@@ -1,3 +1,8 @@
+/* 
+ * All sensor related functions, including:
+ * Weighstation data, temperature monitoring, power monitoring and payload handling
+ */
+
 #include "sensors.h"
 
 // Struct of parameters to store on SD card and send over LoRaWAN 
@@ -5,7 +10,7 @@ static parameters_t parameters;
 
 // Weights and timeStamps
 static int16_t weights[WeighStation::nScales][WeighStation::maxArrSize];
-static int16_t timeStamps[WeighStation::nScales][WeighStation::maxArrSize];
+static int32_t timeStamps[WeighStation::nScales][WeighStation::maxArrSize];
 
 // Setup pin mapping for data and clock lines
 static constexpr uint8_t scaleData[WeighStation::nScales] = {4, 21, 30};
@@ -18,32 +23,56 @@ static constexpr int16_t calibrationFactors[WeighStation::nScales] = {-1870, -18
 static const HX711 scaleOne;
 static const HX711 scaleTwo;
 static const HX711 scaleThree;
+// Store HX711 objects in array for easy indexing
 static HX711 scales[WeighStation::nScales] = {scaleOne, scaleTwo, scaleThree};
 
-// Initialse INA219 library
-Adafruit_INA219 battery(Monitoring::batteryAddr);
-Adafruit_INA219 solar(Monitoring::solarAddr);
+// Initialse INA219 (power monitoring) library 
+static Adafruit_INA219 battery(Monitoring::batteryAddr);
+static Adafruit_INA219 solar(Monitoring::solarAddr);
+
+// DallasTemperature (oneWire)
+DallasTemperature sensor;
+
 
 void WeighStation::init(){
+  /*
+   * Initialise the weighstation. 
+   * Set their calibration factors.
+   * Zero them (tare).
+   */
   for(uint8_t i = 0; i < nScales; i++){
     scales[i].begin(scaleData[i], scaleClock[i]);
     scales[i].set_scale(calibrationFactors[i]);
     scales[i].tare();
   }
   #ifdef DEBUG
-    Serial.println("Scales ready...");
+    Serial.println("Weighstation initialised");
   #endif
 }
 
 
-void WeighStation::calibrate(HX711 scale){
-  if(scale.get_units(SCALE_AVERAGES) > ZERO_THRESHOLD || scale.get_units(SCALE_AVERAGES) < -ZERO_THRESHOLD){
-    scale.tare(); // Reset to zero
+void WeighStation::tare_scales(){
+  /*
+   * Reset all scales to zero (tare).
+   * Call often as scales drift over time.
+   */
+  #ifdef DEBUG
+    Serial.println("Tare scales.");
+  #endif
+  for(uint8_t i = 0; i < nScales; i++){
+    scales[i].tare(); // Reset to zero
   }
 }
 
 
 void WeighStation::scan(){
+  /*
+   * Main weighstation function. Loops through HX711 objects and checks if they exceed a trigger weight,
+   * signifying an animal is on the scale. If this is true the device will record the weight into two 2D
+   * arrays (holding the scale id and weights / timestamps).
+   * Once the animal has stepped of the particular scale (below trigger weight) some functions are called 
+   * to calculate parameters, append packets to a LoRaWAN stack (to send in the future) and append to a SD-card.
+   */
   for(uint8_t i = 0; i < nScales; i++){
     float weight = scales[i].get_units(SCALE_AVERAGES);
     // Check if animal is on scale
@@ -54,7 +83,7 @@ void WeighStation::scan(){
           oneStartTime = millis();
         }
         oneActive = true;
-        weights[i][onePos] = weight * 100.0; // Convert float to int with decimal places (i.e. *100)
+        weights[i][onePos] = weight * 100.0; // Convert float to int with decimal places
         timeStamps[i][onePos++] = millis() - oneStartTime;
         #ifdef DEBUG
           Serial.print("Scale [0]: ");
@@ -94,58 +123,80 @@ void WeighStation::scan(){
       }
       
     }
-    else if(oneActive && i == 0 && weight <= stopWeight){
+    else if(oneActive && i == 0){
       int8_t* payload = construct_payload(i);
-//      Memory::write_data(weights[i], timeStamps[i], payload, parameters);
+      append_payload(payload); // Append payload to stack (to send over LoRaWAN)
+      Memory::write_weigh_data(weights[i], timeStamps[i], payload, parameters);
       #ifdef DEBUG
         Serial.println("Scale one finished.");
       #endif
+      // Reset varaibles and arrays to initial values
       oneActive = false;
       onePos = 0;
       oneStartTime = 0;
+      memset(weights[i], 0, sizeof(weights[i]));
+      memset(timeStamps[i], 0, sizeof(timeStamps[i]));
     }
-    else if(twoActive && i == 1 && weight <= stopWeight){
+    else if(twoActive && i == 1){
       int8_t* payload = construct_payload(i);
-//      Memory::write_data(weights[i], timeStamps[i], payload, parameters);
+      append_payload(payload);
+      Memory::write_weigh_data(weights[i], timeStamps[i], payload, parameters);
       #ifdef DEBUG
         Serial.println("Scale two finished.");
       #endif
       twoActive = false;
       twoPos = 0;
       twoStartTime = 0;
+      memset(weights[i], 0, sizeof(weights[i]));
+      memset(timeStamps[i], 0, sizeof(timeStamps[i]));
     }
-    else if(threeActive && i == 2 && weight <= stopWeight){
+    else if(threeActive && i == 2){
       int8_t* payload = construct_payload(i);
-//      Memory::write_data(weights[i], timeStamps[i], payload, parameters);
+      append_payload(payload);
+      Memory::write_weigh_data(weights[i], timeStamps[i], payload, parameters);
       #ifdef DEBUG
         Serial.println("Scale three finished.");
       #endif
       threeActive = false;
       threePos = 0;
       threeStartTime = 0;
+      memset(weights[i], 0, sizeof(weights[i]));
+      memset(timeStamps[i], 0, sizeof(timeStamps[i]));
     }
   }
 }
 
 
 int8_t* WeighStation::construct_payload(uint8_t scaleID){
+  /*
+   * Construct payload to send over LoRaWAN and calculate weighscale reading parameters.
+   * @param scaleID ID of scale which these reading correspond to.
+   * @return payload A payload to send over LoRaWAN.
+   */
   static int8_t payload[WEIGH_PAYLOAD_SIZE];
 
+  /*
+   * Loop through array to find first zero value. 
+   * This puts the array in context by ignoring all following zeros and focusing on actual values.
+   */
   for(int i=0; i < maxArrSize; i++){
-    Serial.println(weights[scaleID][i]);
     if(weights[scaleID][i] == 0) break;
   }
+
+  // === Payload identifier ===
+  int8_t payloadType = 0;
+  payload[0] = payloadType;
   
-    // === Get current time as a UNIX epoch format ===
+  // === Get current time as a UNIX epoch format ===
   parameters.unixTime = now();
   #ifdef DEBUG
     Serial.print("UNIX Time:\t");
     Serial.println(parameters.unixTime);
   #endif
-  payload[0] = parameters.unixTime;
-  payload[1] = parameters.unixTime >> 8;
-  payload[2] = parameters.unixTime >> 16;
-  payload[3] = parameters.unixTime >> 24;
+  payload[1] = parameters.unixTime;
+  payload[2] = parameters.unixTime >> 8;
+  payload[3] = parameters.unixTime >> 16;
+  payload[4] = parameters.unixTime >> 24;
   
   // === Get weights from within array (drop zeros to improve averaging accuracy) ===
   uint16_t pos = 0; // Location within weight array
@@ -175,15 +226,15 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID){
     Serial.print("Scale ID:\t");
     Serial.println(parameters.scaleID);
   #endif
-  payload[4] = parameters.scaleID;
-  payload[5] = parameters.startWeight;
-  payload[6] = parameters.startWeight >> 8;
+  payload[5] = parameters.scaleID;
+  payload[6] = parameters.startWeight;
+  payload[7] = parameters.startWeight >> 8;
   
-  payload[7] = parameters.middleWeight;
-  payload[8] = parameters.middleWeight >> 8;
+  payload[8] = parameters.middleWeight;
+  payload[9] = parameters.middleWeight >> 8;
   
-  payload[9] = parameters.endWeight;
-  payload[10] = parameters.endWeight >> 8;
+  payload[10] = parameters.endWeight;
+  payload[11] = parameters.endWeight >> 8;
 
   // === Sum weights and calculate average ===
   uint32_t sumWeights = 0;
@@ -196,8 +247,8 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID){
     Serial.print(parameters.avWeight / 100.0f);
     Serial.println(" kg");
   #endif
-  payload[11] = parameters.avWeight;
-  payload[12] = parameters.avWeight >> 8;
+  payload[12] = parameters.avWeight;
+  payload[13] = parameters.avWeight >> 8;
 
   // === Change in weight ===
   parameters.deltaWeight = parameters.endWeight - parameters.startWeight;
@@ -206,8 +257,8 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID){
     Serial.print(parameters.deltaWeight / 100.0f);
     Serial.println(" kg");
   #endif
-  payload[13] = parameters.deltaWeight;
-  payload[14] = parameters.deltaWeight >> 8;
+  payload[14] = parameters.deltaWeight;
+  payload[15] = parameters.deltaWeight >> 8;
 
   // === Time on scale ===
   parameters.timeOnScale = timeStamps[scaleID][pos-1]; // Gets the time at the last weight
@@ -216,8 +267,10 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID){
     Serial.print(parameters.timeOnScale / 1000.0f);
     Serial.println(" s");
   #endif
-  payload[15] = parameters.timeOnScale;
-  payload[16] = parameters.timeOnScale >> 8;
+  payload[16] = parameters.timeOnScale;
+  payload[17] = parameters.timeOnScale >> 8;
+  payload[18] = parameters.timeOnScale >> 16;
+  payload[19] = parameters.timeOnScale >> 24;
 
   // === Weight StDev ===
   int16_t stdevSum = 0;
@@ -230,8 +283,8 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID){
     Serial.print(parameters.stdevWeight / 100.0f);
     Serial.println(" kg");
   #endif
-  payload[17] = parameters.stdevWeight;
-  payload[18] = parameters.stdevWeight >> 8;
+  payload[20] = parameters.stdevWeight;
+  payload[21] = parameters.stdevWeight >> 8;
 
   #ifdef DEBUG
     Serial.print("Payload:\t");
@@ -248,51 +301,177 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID){
 }
 
 
+void WeighStation::append_payload(int8_t* payload){
+  /*
+   * Add payload to the stack to be sent over LoRaWAN when the next window opens.
+   * @param payload An array consiting of a payload to send.
+   */
+  #ifdef DEBUG
+    Serial.println("Appending payload to LoRa stack");
+  #endif
+  for(uint8_t i = 0; i < WEIGH_PAYLOAD_SIZE; i++){
+    payloads[payloadPos][i] = payload[i];
+  }
+  payloadPos++;
+}
+
+
+void WeighStation::forward_payload(){
+  /*
+   * Pop a payload off the pending stack and send it over LoRaWAN.
+   * Decrement the payload position to lower down the stack.
+   */
+  #ifdef DEBUG
+    Serial.print("Forwarding payload (pos):\t");
+    Serial.println(payloadPos - 1);
+  #endif
+  Lora::request_send(payloads[payloadPos - 1], 1);
+  while(!Lora::check_state()){
+    os_runloop_once();
+  }
+  // Decrement payload pos to next payload
+  if(payloadPos != 0) payloadPos--;
+}
+
+
+bool WeighStation::check_state(){
+  /*
+   * Check if there is an animal on any one of the scales.
+   * @return A bool indicating if this is true (there is an animal) or false (there isn't)
+   */
+  if(!oneActive && !twoActive && !threeActive){
+    return false;
+  } else {
+    return true;
+  }
+}
+
+
 void Monitoring::init(){
+  /*
+   * Initialise power monitoring for battery and solar power.
+   */
   #ifdef DEBUG
     if(battery.begin()){
-      Serial.println("Battery monitoring initalisaed");
+      battery.setCalibration_32V_1A();
+      Serial.println("Battery monitoring initialised");
     } else Serial.println("Battery monitoring error");
     if(solar.begin()){
-      Serial.println("Solar monitoring initalised");
+      solar.setCalibration_32V_1A();
+      Serial.println("Solar monitoring initialised");
     } else Serial.println("Solar monitoring error");
   #endif
 }
 
 
-int16_t Monitoring::voltage(Adafruit_INA219 ina219){
-  float volts = ina219.getBusVoltage_V() + (ina219.getShuntVoltage_mV() / 1000);
-  return (int16_t)volts * 100;
+int16_t Monitoring::voltage(char type){
+  /*
+   * Get the voltage of either the battery or solar panel.
+   * @param type Is the device type ('b' = battery, 's' = solar).
+   * @return volts Voltage of device x100 for float conversion.
+   */
+  float volts = 0;
+  if(type == 'b'){
+    volts = battery.getBusVoltage_V() + (battery.getShuntVoltage_mV() / 1000.0f);
+  } 
+  else if(type == 's') {
+    volts = solar.getBusVoltage_V() + (solar.getShuntVoltage_mV() / 1000.0f);
+  } else{
+    #ifdef DEBUG
+      Serial.println("Unknown monitoring type");
+    #endif
+    return (int16_t)volts;
+  }
+  #ifdef DEBUG
+    Serial.print("Volts:\t");
+    Serial.println(volts);
+  #endif
+  return (int16_t)(volts * 100.0f);
 }
 
 
-int16_t Monitoring::current(Adafruit_INA219 ina219){
-  float curr = ina219.getCurrent_mA();
-  return (int16_t)curr * 100;
+int16_t Monitoring::current(char type){
+  /*
+   * Get the current of either the battery or solar panel.
+   * @param type Is the device type ('b' = battery, 's' = solar).
+   * @return curr Current of device x100 for float conversion.
+   */
+  float curr = 0;
+  if(type == 'b'){
+    curr = battery.getCurrent_mA();
+  } 
+  else if(type == 's'){
+    curr = solar.getCurrent_mA();
+  } else {
+    #ifdef DEBUG
+      Serial.println("Unknown monitoring type");
+    #endif
+    return (int16_t)curr;
+  }
+  #ifdef DEBUG
+    Serial.print("Amps:\t");
+    Serial.println(curr);
+  #endif
+  return (int16_t)(curr * 100.0f);
 }
 
 
-int16_t Monitoring::power(Adafruit_INA219 ina219){
-  float watts = ina219.getPower_mW();
-  return (int16_t)watts * 100;
+int16_t Monitoring::power(char type){
+  /*
+   * Get the power of either the battery or solar panel.
+   * @param type Is the device type ('b' = battery, 's' = solar).
+   * @return watts Power of device x100 for float conversion.
+   */
+  float watts = 0;
+  if(type == 'b'){
+    watts = battery.getPower_mW();
+  }
+  else if(type == 's'){
+    watts = solar.getPower_mW();
+  } else{
+    #ifdef DEBUG
+      Serial.println("Unknown monitoring type");
+    #endif
+    return (int16_t)watts;
+  }
+  #ifdef DEBUG
+    Serial.print("Watts:\t");
+    Serial.println(watts);
+  #endif
+  return (int16_t)(watts * 100.0f);
 }
 
 
-void Temperature::init(OneWire* oneWire){
-  sensor(oneWire);
+void Temperature::init(DallasTemperature sensors){
+  /*
+   * Initialise temperatrue sensors - OneWire interface.
+   */
+  sensor = sensors;
   sensor.begin();
   sensor.setResolution(TEMPERATURE_RESOLUTION);
 }
 
 
-int16_t Temperature::measure(DallasTemperature sensor){
+int16_t Temperature::measure(){
+  /*
+   * Measure the current temperature.
+   * @return tempC The current temperature using x100 float conversion.
+   */
   sensor.requestTemperatures();
   float tempC = sensor.getTempCByIndex(0);
-  return (int16_t)tempC * 100;
+  #ifdef DEBUG 
+    Serial.print("Temperature:\t");
+    Serial.print(tempC);
+    Serial.println("\u02DAC");
+  #endif
+  return (int16_t)(tempC * 100.0f);
 }
 
 
 void RealTimeClock::init(){
+  /*
+   * Initialise real time clock (RTC).
+   */
   #ifdef DEBUG
     if(timeStatus() != timeSet){
       Serial.print("Unable to sync with RTC...");
@@ -305,6 +484,9 @@ void RealTimeClock::init(){
 
 
 void RealTimeClock::set_time(){
+  /*
+   * Set the time of the RTC in UNIX epoch time.
+   */
   bool configuredTime = false;
   Serial.println("Set unix time (format = T1631254602):");
   while(!configuredTime){
@@ -323,36 +505,56 @@ void RealTimeClock::set_time(){
   }
 }
 
+
 int8_t* Sensors::construct_payload(){
-  static int8_t payload[14];
+  /*
+   * Construct the sensor payload - sensors, monitoring, temperature and RTC.
+   * @return payload A payload containing sensor information.
+   */
+  static int8_t payload[SENSORS_PAYLOAD_SIZE];
+
+  // === Payload identifier ===
+  int8_t payloadType = 1;
+  payload[0] = payloadType;
+
+  // === Current time ===
+  uint32_t unixTime = now();
+  payload[1] = unixTime;
+  payload[2] = unixTime >> 8;
+  payload[3] = unixTime >> 16;
+  payload[4] = unixTime >> 24;
+  #ifdef DEBUG
+    Serial.print("UNIX Time:\t");
+    Serial.println(unixTime);
+  #endif
 
   // === Power monitoring ===
   // Battery
-  int16_t batteryV = Monitoring::voltage(battery);
-  payload[0] = batteryV;
-  payload[1] = batteryV >> 8;
-  int16_t batteryA = Monitoring::current(battery);
-  payload[2] = batteryA;
-  payload[3] = batteryA >> 8;
-  int16_t batteryW = Monitoring::power(battery);
-  payload[4] = batteryW;
-  payload[5] = batteryW >> 8;
+  int16_t batteryV = Monitoring::voltage('b');
+  payload[5] = batteryV;
+  payload[6] = batteryV >> 8;
+  int16_t batteryA = Monitoring::current('b');
+  payload[7] = batteryA;
+  payload[8] = batteryA >> 8;
+  int16_t batteryW = Monitoring::power('b');
+  payload[9] = batteryW;
+  payload[10] = batteryW >> 8;
 
   // Solar
-  int16_t solarV = Monitoring::voltage(solar);
-  payload[6] = solarV;
-  payload[7] = solarV >> 8;
-  int16_t solarA = Monitoring::current(solar);
-  payload[8] = solarA;
-  payload[9] = solarA >> 8;
-  int16_t solarW = Monitoring::power(solar);
-  payload[10] = solarW;
-  payload[11] = solarW >> 8;
+  int16_t solarV = Monitoring::voltage('s');
+  payload[11] = solarV;
+  payload[12] = solarV >> 8;
+  int16_t solarA = Monitoring::current('s');
+  payload[13] = solarA;
+  payload[14] = solarA >> 8;
+  int16_t solarW = Monitoring::power('s');
+  payload[15] = solarW;
+  payload[16] = solarW >> 8;
 
   // === Temperature monitoring ===
-  int16_t tempC = Temperature::measure(Temperature::sensor);
-  payload[12] = tempC;
-  payload[13] = tempC >> 8;
+  int16_t tempC = Temperature::measure();
+  payload[17] = tempC;
+  payload[18] = tempC >> 8;
 
   return payload;
 }

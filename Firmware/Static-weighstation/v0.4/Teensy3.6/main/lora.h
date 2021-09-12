@@ -11,19 +11,14 @@
 #include <SPI.h>
 #include "config.h"
 
-// payload for things network
-static osjob_t sendjob; 
 
 class Lora {
-  
-  // Holds packets until ready to send 
-  static int8_t payloads[50][WEIGH_PAYLOAD_SIZE];
+  static const int8_t IRQ = 0;
 
 public:
-
   static void init();
-  static void append_payload(int8_t* payload);
-  static void request_send(int8_t* payload);
+  static void test_connection();
+  static void request_send(int8_t* payload, uint8_t port);
   static bool check_state();
   static void set_state(bool s);
 };

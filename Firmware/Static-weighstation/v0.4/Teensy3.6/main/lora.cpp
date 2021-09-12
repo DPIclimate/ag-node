@@ -1,15 +1,21 @@
 /*
- * Static functions for communications between Feather M0 and node. 
+ * Functions for communications between node and TTN.
  */
 
 #include "lora.h"
 
 static bool state = false;
-static uint8_t payloadPos = 0;
+
+// LMIC job
+static osjob_t sendjob; 
 
 void Lora::init(){
+  /* 
+   *  Initialise LoRaWAN communications with appropiate settings.
+   *  Create interrupt for testing LoRaWAN.
+   */
   #ifdef DEBUG
-    Serial.println("Initialising LoRaWAN communications...");
+    Serial.println("Initialising LoRaWAN communications");
   #endif
   
   // LoRaMAC-in-C (LMIC) init
@@ -32,39 +38,80 @@ void Lora::init(){
   // See: https://www.thethingsnetwork.org/docs/lorawan/adaptive-data-rate.html 
   LMIC_setAdrMode(0);
 
-//  uint8_t val[] = {1, 1, 1, 1, 1, 1, 1, 1};
-//  Lora::request_send(val);
+  // Send connection message to start comms with TTN
+  int8_t connect[4] = {1, 2, 3, 4};
+  Lora::request_send(connect, 3);
+  
+  // Setup interrupt button
+  pinMode(IRQ, INPUT_PULLDOWN);
+  attachInterrupt(IRQ, Lora::test_connection, RISING);
+  
   #ifdef DEBUG
-    Serial.println("LoRaWAN commuications has been configured.");
+    Serial.println("LoRaWAN commuications initialised");
   #endif
 }
 
-
-void Lora::append_payload(int8_t* payload){
-  for(uint8_t i = 0; i < WEIGH_PAYLOAD_SIZE; i++){
-    payloads[payloadPos][i] = payload[i];
+void Lora::test_connection(){
+  /*
+   * Send a test packet to TTN 
+   * @return Connection status on TTN (should be "success")
+   */
+  #ifdef DEBUG
+    Serial.println("Sending LoRaWAN test message");
+  #endif
+  
+  int8_t connect[4] = {1, 2, 3, 4};
+  Lora::request_send(connect, 3);
+  
+  while(!Lora::check_state()){
+    os_runloop_once();
   }
-  payloadPos++;
 }
 
 
-void lorawan_send(osjob_t* j, int8_t* payload){
+void lorawan_send(osjob_t* j, int8_t* payload, uint8_t port){
+  /*
+   * Send payload (packet) over LoRaWAN.
+   * @param j The LMIC job (sendjob).
+   * @param payload The payload to send.
+   * @param port The fPort (TTN) to use - used to differentiate payloads.
+   */
   Lora::set_state(false);
   // Check if there is not a current TX/RX job running
   if (LMIC.opmode & OP_TXRXPEND) {
     Serial.println(F("OP_TXRXPEND, not sending"));
   } else {
-    LMIC_setTxData2(1, (uint8_t*)payload, sizeof(payload)-1, 0); // Send payload
+    if(port == 1){
+      // Send weighstation data over LoRaWAN port 0
+      LMIC_setTxData2(port, (uint8_t*)payload, WEIGH_PAYLOAD_SIZE, 0);
+    }
+    else if(port == 2){
+      // Send sensor data over LoRaWAN port 1
+      // sizeof(payload) doesn't work here as its a pointer to an array
+      LMIC_setTxData2(port, (uint8_t*)payload, SENSORS_PAYLOAD_SIZE, 0);
+    } 
+    else{
+      LMIC_setTxData2(port, (uint8_t*)payload, sizeof(payload), 0);
+    }
   }
 }
 
 
-void Lora::request_send(int8_t* payload){
-  lorawan_send(&sendjob, payload);
+void Lora::request_send(int8_t* payload, uint8_t port){
+  /*
+   * Interface between LMIC functions and Lora class.
+   * Used so the LMIC sendjob varaible doesn't have to be passed around.
+   * @param payload Payload to send.
+   * @param port The fPort (TTN) to use - used to differentiate payloads.
+   */
+  lorawan_send(&sendjob, payload, port);
 }
 
 
 void printHex2(unsigned v) {
+  /*
+   * LMIC function to convert key to HEX
+   */
   v &= 0xff;
   if (v < 16)
       Serial.print('0');
@@ -73,6 +120,9 @@ void printHex2(unsigned v) {
 
 
 void onEvent (ev_t ev) {
+  /*
+   * LMIC function to identify LoRaWAN state.
+   */
   switch(ev) {
     case EV_SCAN_TIMEOUT:
         Serial.println(F("EV_SCAN_TIMEOUT"));
@@ -158,11 +208,19 @@ void onEvent (ev_t ev) {
 
 
 bool Lora::check_state(){
+  /*
+   * Check the state of a message which has been qued to send over LoRaWAN.
+   * @return state True if sent - false if pending.
+   */
   return state;
 }
 
 
 void Lora::set_state(bool s){
+  /*
+   * Set the state of a pending message over LoRaWAN.
+   * @param s State of message transmission.
+   */
   state = s;
 }
 
@@ -186,6 +244,13 @@ void os_getDevKey (u1_t* buf) {
 
 
 const lmic_pinmap lmic_pins = {
+  /*
+   * Pins used for SPI interface with LoRaWAN radio.
+   * RST = Reset pin - 9
+   * NSS = Chip select - 10
+   * DIO = Radio pins - G0 - 2, G1 - 5, G2 - 6
+   * Not shown* = MOSI - 11, MISO - 12, SCK - 13
+   */
   .nss = 10,
   .rxtx = LMIC_UNUSED_PIN,
   .rst = 9,

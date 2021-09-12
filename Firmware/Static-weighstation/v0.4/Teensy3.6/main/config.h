@@ -17,19 +17,27 @@
 //#endif
 
 
-///* LoRaWAN Mode
-// * Comment out if not in use
-// */
-//#ifndef ENABLE_LORAWAN
-//#define ENABLE_LORAWAN
-//#endif
+/* LoRaWAN Mode
+ * Comment out if not in use
+ */
+#ifndef ENABLE_LORAWAN
+#define ENABLE_LORAWAN
+#endif
 
 
 /*  Number of bytes to send over LoRaWAN
  *  Needs to match the total size of parameters_t in sensors.h
  */
 #ifndef WEIGH_PAYLOAD_SIZE
-#define WEIGH_PAYLOAD_SIZE 19
+#define WEIGH_PAYLOAD_SIZE 22
+#endif
+
+
+/*  Number of bytes to send over LoRaWAN
+ *  Needs to match the total size of parameters_t in sensors.h
+ */
+#ifndef SENSORS_PAYLOAD_SIZE
+#define SENSORS_PAYLOAD_SIZE 19
 #endif
 
 
@@ -57,5 +65,14 @@ const u1_t PROGMEM APPKEY[16] = { 0x66, 0x6E, 0x40, 0x03, 0x05, 0x8E, 0x52, 0xE2
 #define PARAMETERS_FILENAME "para.txt"
 #endif
 
+
+/*
+ * OneWire interface (temperature probe)
+ * Theres two one wire intefaces on pin 38 (J7) and 37 (J6)
+ * Need to implement the dev on pin 37
+ */
+#ifndef ONE_WIRE_BUS
+#define ONE_WIRE_BUS 38
+#endif
 
 #endif

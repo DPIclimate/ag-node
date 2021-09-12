@@ -15,7 +15,7 @@ class Memory {
   
 public:
   static void init();
-  static void write_data(int16_t* weights, int16_t* timeStamps, int8_t* payload, struct parameters_t &parameters);
+  static void write_weigh_data(int16_t* weights, int32_t* timeStamps, int8_t* payload, struct parameters_t &parameters);
   static void read_data(const char* fileName);
 };
 

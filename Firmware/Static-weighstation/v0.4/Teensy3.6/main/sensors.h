@@ -31,14 +31,12 @@ struct parameters_t{
   int16_t avWeight;
   int16_t stdevWeight;
   int16_t deltaWeight;
-  int16_t timeOnScale;
+  int32_t timeOnScale;
 }; 
-
-#define ONE_WIRE_BUS 38
-#define TEMPERATURE_RESOLUTION 12
 
 class Sensors {
   public:
+//  static int8_t payload[SENSORS_PAYLOAD_SIZE];
   static int8_t* construct_payload();
 
 };
@@ -56,29 +54,42 @@ class WeighStation {
   const float ZERO_THRESHOLD = 0.5;
 
   // Minimum weight threshold
-  const float triggerWeight = 10; // kg
+  const float triggerWeight = 5; // kg
 
-  // Stop reading weight threshold
-  const float stopWeight = 2; // kg
+  // Holds packets until ready to send 
+  int8_t payloads[50][WEIGH_PAYLOAD_SIZE];
 
-  public: 
+  public:
+  
   // Create scale objects
   static const uint8_t nScales = 3;
 
   // Arrays for holding weights and corresponding time
   static const int16_t maxArrSize = 2000;
+
+  // Current position in payloads array
+  uint8_t payloadPos = 0; 
   
   // Setup weighscales and zero their offsets (tare)
   void init();
 
   // Zero weighscales when over a certain threshold (ZERO_THRESHOLD)
-  void calibrate(HX711 scale);
+  static void tare_scales();
   
   // Scan each of the scales and capture any animal weights
   void scan();
 
   // Construct payload to send over LoRaWAN
   static int8_t* construct_payload(uint8_t scaleID);
+
+  // Place payload in storage to send over LoRa
+  void append_payload(int8_t* payload);
+
+  // Send waiting payloads over LoRaWAN
+  void forward_payload();
+
+  // Check if scale is currently reading
+  bool check_state();
 
 };
 
@@ -91,20 +102,20 @@ class Monitoring {
     static void init();
     
     // Get voltage
-    static int16_t voltage(Adafruit_INA219 ina219); 
+    static int16_t voltage(char type); 
     
     // Get current
-    static int16_t current(Adafruit_INA219 ina219);
+    static int16_t current(char type);
     
     // Get power
-    static int16_t power(Adafruit_INA219 ina219);
+    static int16_t power(char type);
 };
 
-class Temperature : public DallasTemperature{
+class Temperature{
+  static int8_t const TEMPERATURE_RESOLUTION = 9; // bits
   public:
-    static DallasTemperature sensor;
-    static void init(OneWire* oneWire);
-    static int16_t measure(DallasTemperature sensor);
+    static void init(DallasTemperature sensor);
+    static int16_t measure();
 };
 
 
