@@ -1,4 +1,4 @@
-# AgU-Node
+# ag-node
 
 <img src="Imgs/IMG_0173.GIF" style="display: flex; align-items: center; justify-content: space-around;"/>
 
