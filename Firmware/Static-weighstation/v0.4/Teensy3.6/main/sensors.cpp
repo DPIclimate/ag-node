@@ -17,7 +17,7 @@ static constexpr uint8_t scaleData[WeighStation::nScales] = {4, 21, 30};
 static constexpr uint8_t scaleClock[WeighStation::nScales] = {3, 20, 29};
 
 // Set calibration factor for scale (see calibration script)
-static constexpr int16_t calibrationFactors[WeighStation::nScales] = {-1870, -1840, -1800};
+static constexpr int16_t calibrationFactors[WeighStation::nScales] = {-1770, -1760, -1770};
 
 // Initalise HX711 library
 static const HX711 scaleOne;
@@ -32,6 +32,8 @@ static Adafruit_INA219 solar(Monitoring::solarAddr);
 
 // DallasTemperature (oneWire)
 DallasTemperature sensor;
+
+uint32_t unixTime = 1631681105; // Current UNIX time
 
 
 void WeighStation::init(){
@@ -472,14 +474,12 @@ void RealTimeClock::init(){
   /*
    * Initialise real time clock (RTC).
    */
-  #ifdef DEBUG
-    if(timeStatus() != timeSet){
-      Serial.print("Unable to sync with RTC...");
-      set_time();
-    } else {
-      Serial.println("RTC has set the system time");
-    }
-  #endif
+  if(timeStatus() != timeSet){
+    Serial.print("Unable to sync with RTC...");
+    set_time();
+  } else {
+    Serial.println("RTC has set the system time");
+  }
 }
 
 
@@ -487,6 +487,8 @@ void RealTimeClock::set_time(){
   /*
    * Set the time of the RTC in UNIX epoch time.
    */
+  
+  #ifdef DEBUG
   bool configuredTime = false;
   Serial.println("Set unix time (format = T1631254602):");
   while(!configuredTime){
@@ -503,6 +505,12 @@ void RealTimeClock::set_time(){
     }
     delay(100);
   }
+  #else
+    RTC.set(unixTime);
+    setTime(unixTime);
+    Serial.print("Set time: ");
+    Serial.println(now());
+   #endif
 }
 
 

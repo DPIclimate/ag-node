@@ -1,16 +1,16 @@
-// To be compiled on ATmega328 wiht connected HX711 load cell amplifier
+// To be compiled for Teensy with connected HX711 load cell amplifier
 
 #include "HX711.h"
 
-#define DOUT  2 // SDA
-#define CLK  3 // SCL
+#define DOUT  30 // SDA
+#define CLK  29 // SCL
 
 HX711 scale;
 
-int CALIBRATION_FACTOR = -1760;
+int CALIBRATION_FACTOR = -1770;
 
 void setup() {
-  Serial.begin(57600);
+  Serial.begin(9600);
 
   // Scale setup
   scale.begin(DOUT, CLK);

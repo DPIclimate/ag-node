@@ -4,9 +4,9 @@
 /*  DEBUG mode
  *  Comment out if not needed
  */
-#ifndef DEBUG
-#define DEBUG
-#endif
+//#ifndef DEBUG
+//#define DEBUG
+//#endif
 
 
 /* LOW_POWER mode

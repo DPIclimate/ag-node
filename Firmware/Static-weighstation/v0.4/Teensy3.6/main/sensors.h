@@ -120,7 +120,7 @@ class Temperature{
 
 
 class RealTimeClock{
-  static const uint32_t unixTime = 1631253902; // Current UNIX time
+
   
   public:
   // Initalise RTC
