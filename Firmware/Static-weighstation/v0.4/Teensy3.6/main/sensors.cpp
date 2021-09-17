@@ -33,7 +33,10 @@ static Adafruit_INA219 solar(Monitoring::solarAddr);
 // DallasTemperature (oneWire)
 DallasTemperature sensor;
 
-uint32_t unixTime = 1631681105; // Current UNIX time
+uint32_t unixTime = 1631852595; // Current UNIX time
+
+// Current position in payloads array
+uint8_t WeighStation::payloadPos = 0; 
 
 
 void WeighStation::init(){
@@ -353,16 +356,15 @@ void Monitoring::init(){
   /*
    * Initialise power monitoring for battery and solar power.
    */
-  #ifdef DEBUG
-    if(battery.begin()){
-      battery.setCalibration_32V_1A();
-      Serial.println("Battery monitoring initialised");
-    } else Serial.println("Battery monitoring error");
-    if(solar.begin()){
-      solar.setCalibration_32V_1A();
-      Serial.println("Solar monitoring initialised");
-    } else Serial.println("Solar monitoring error");
-  #endif
+  if(battery.begin()){
+    battery.setCalibration_16V_400mA();
+    Serial.println("Battery monitoring initialised");
+  } else Serial.println("Battery monitoring error");
+  
+  if(solar.begin()){
+    solar.setCalibration_32V_1A();
+    Serial.println("Solar monitoring initialised");
+  } else Serial.println("Solar monitoring error");
 }
 
 

@@ -59,7 +59,7 @@ void loop(){
   } else tareScales++;
 
   // Send stored weigh payloads over LoRa
-  if((!weighStation.check_state() && weighStation.payloadPos != 0) && timer >= messageSpacing){
+  if(!weighStation.check_state() && weighStation.payloadPos != 0 && timer >= messageSpacing){
     weighStation.forward_payload();
     // Reset timer - prevents slow LoRa transimission
     lastMessage = millis();
@@ -84,4 +84,8 @@ void loop(){
     tareScales = 0; 
   }
 
+  if(!weighStation.check_state()){
+    delay(200);
+  }
+  
 }

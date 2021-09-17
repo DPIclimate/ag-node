@@ -68,7 +68,7 @@ class WeighStation {
   static const int16_t maxArrSize = 2000;
 
   // Current position in payloads array
-  uint8_t payloadPos = 0; 
+  static uint8_t payloadPos;
   
   // Setup weighscales and zero their offsets (tare)
   void init();
