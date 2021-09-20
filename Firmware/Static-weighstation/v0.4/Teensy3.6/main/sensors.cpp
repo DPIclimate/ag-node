@@ -33,7 +33,7 @@ static Adafruit_INA219 solar(Monitoring::solarAddr);
 // DallasTemperature (oneWire)
 DallasTemperature sensor;
 
-uint32_t unixTime = 1631852595; // Current UNIX time
+uint32_t unixTime = 1632160905; // Current UNIX time
 
 // Current position in payloads array
 uint8_t WeighStation::payloadPos = 0; 
@@ -45,14 +45,14 @@ void WeighStation::init(){
    * Set their calibration factors.
    * Zero them (tare).
    */
+  Serial.print("[WEIGH STATION]: Initialising");
   for(uint8_t i = 0; i < nScales; i++){
     scales[i].begin(scaleData[i], scaleClock[i]);
     scales[i].set_scale(calibrationFactors[i]);
     scales[i].tare();
+    Serial.print(".");
   }
-  #ifdef DEBUG
-    Serial.println("Weighstation initialised");
-  #endif
+  Serial.println(" success");
 }
 
 
@@ -62,10 +62,24 @@ void WeighStation::tare_scales(){
    * Call often as scales drift over time.
    */
   #ifdef DEBUG
-    Serial.println("Tare scales.");
+    Serial.println("[WEIGH STATION]: Tare scales.");
   #endif
   for(uint8_t i = 0; i < nScales; i++){
     scales[i].tare(); // Reset to zero
+  }
+}
+
+
+void WeighStation::sleep(){
+  for(uint8_t i = 0; i < nScales; i++){
+    scales[i].power_down();
+  }
+}
+
+
+void WeighStation::wakeup(){
+  for(uint8_t i = 0; i < nScales; i++){
+    scales[i].power_up();
   }
 }
 
@@ -133,7 +147,7 @@ void WeighStation::scan(){
       append_payload(payload); // Append payload to stack (to send over LoRaWAN)
       Memory::write_weigh_data(weights[i], timeStamps[i], payload, parameters);
       #ifdef DEBUG
-        Serial.println("Scale one finished.");
+        Serial.println("[WEIGH STATION]: Scale one finished.");
       #endif
       // Reset varaibles and arrays to initial values
       oneActive = false;
@@ -147,7 +161,7 @@ void WeighStation::scan(){
       append_payload(payload);
       Memory::write_weigh_data(weights[i], timeStamps[i], payload, parameters);
       #ifdef DEBUG
-        Serial.println("Scale two finished.");
+        Serial.println("[WEIGH STATION]: Scale two finished.");
       #endif
       twoActive = false;
       twoPos = 0;
@@ -160,7 +174,7 @@ void WeighStation::scan(){
       append_payload(payload);
       Memory::write_weigh_data(weights[i], timeStamps[i], payload, parameters);
       #ifdef DEBUG
-        Serial.println("Scale three finished.");
+        Serial.println("[WEIGH STATION]: Scale three finished.");
       #endif
       threeActive = false;
       threePos = 0;
@@ -184,6 +198,9 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID){
    * Loop through array to find first zero value. 
    * This puts the array in context by ignoring all following zeros and focusing on actual values.
    */
+
+  Serial.println("[WEIGH STATION]: Creating payload...");
+  
   for(int i=0; i < maxArrSize; i++){
     if(weights[scaleID][i] == 0) break;
   }
@@ -312,7 +329,7 @@ void WeighStation::append_payload(int8_t* payload){
    * @param payload An array consiting of a payload to send.
    */
   #ifdef DEBUG
-    Serial.println("Appending payload to LoRa stack");
+    Serial.println("[WEIGH STATION]: Appending payload to LoRaWAN stack...");
   #endif
   for(uint8_t i = 0; i < WEIGH_PAYLOAD_SIZE; i++){
     payloads[payloadPos][i] = payload[i];
@@ -327,13 +344,15 @@ void WeighStation::forward_payload(){
    * Decrement the payload position to lower down the stack.
    */
   #ifdef DEBUG
-    Serial.print("Forwarding payload (pos):\t");
+    Serial.print("[WEIGH STATION]: Forwarding payload at position:\t");
     Serial.println(payloadPos - 1);
   #endif
-  Lora::request_send(payloads[payloadPos - 1], 1);
-  while(!Lora::check_state()){
-    os_runloop_once();
-  }
+  #ifdef ENABLE_LORAWAN
+    Lora::request_send(payloads[payloadPos - 1], 1);
+    while(!Lora::check_state()){
+      os_runloop_once();
+    }
+  #endif
   // Decrement payload pos to next payload
   if(payloadPos != 0) payloadPos--;
 }
@@ -356,15 +375,17 @@ void Monitoring::init(){
   /*
    * Initialise power monitoring for battery and solar power.
    */
+  Serial.print("[MONITORING]: initialising battery... ");
   if(battery.begin()){
     battery.setCalibration_16V_400mA();
-    Serial.println("Battery monitoring initialised");
-  } else Serial.println("Battery monitoring error");
-  
+    Serial.println("success");
+  } else Serial.println("failed");
+
+  Serial.print("[MONITORING]: initialising solar... ");
   if(solar.begin()){
     solar.setCalibration_32V_1A();
-    Serial.println("Solar monitoring initialised");
-  } else Serial.println("Solar monitoring error");
+    Serial.println("success");
+  } else Serial.println("failed");
 }
 
 
@@ -382,12 +403,12 @@ int16_t Monitoring::voltage(char type){
     volts = solar.getBusVoltage_V() + (solar.getShuntVoltage_mV() / 1000.0f);
   } else{
     #ifdef DEBUG
-      Serial.println("Unknown monitoring type");
+      Serial.println("[MONITORING]: Unknown device type.");
     #endif
     return (int16_t)volts;
   }
   #ifdef DEBUG
-    Serial.print("Volts:\t");
+    Serial.print("[MONITORING]: Millivolts:\t");
     Serial.println(volts);
   #endif
   return (int16_t)(volts * 100.0f);
@@ -408,12 +429,12 @@ int16_t Monitoring::current(char type){
     curr = solar.getCurrent_mA();
   } else {
     #ifdef DEBUG
-      Serial.println("Unknown monitoring type");
+      Serial.println("[MONITORING]: Unknown device type.");
     #endif
     return (int16_t)curr;
   }
   #ifdef DEBUG
-    Serial.print("Amps:\t");
+    Serial.print("[MONITORING]: Milliamps:\t");
     Serial.println(curr);
   #endif
   return (int16_t)(curr * 100.0f);
@@ -434,12 +455,12 @@ int16_t Monitoring::power(char type){
     watts = solar.getPower_mW();
   } else{
     #ifdef DEBUG
-      Serial.println("Unknown monitoring type");
+      Serial.println("[MONITORING]: Unknown device type.");
     #endif
     return (int16_t)watts;
   }
   #ifdef DEBUG
-    Serial.print("Watts:\t");
+    Serial.print("[MONITORING]: Milliwatts:\t");
     Serial.println(watts);
   #endif
   return (int16_t)(watts * 100.0f);
@@ -464,7 +485,7 @@ int16_t Temperature::measure(){
   sensor.requestTemperatures();
   float tempC = sensor.getTempCByIndex(0);
   #ifdef DEBUG 
-    Serial.print("Temperature:\t");
+    Serial.print("[TEMPERATURE]: Temperature:\t");
     Serial.print(tempC);
     Serial.println("\u02DAC");
   #endif
@@ -477,10 +498,10 @@ void RealTimeClock::init(){
    * Initialise real time clock (RTC).
    */
   if(timeStatus() != timeSet){
-    Serial.print("Unable to sync with RTC...");
+    Serial.println("[RTC]: Unable to sync.");
     set_time();
   } else {
-    Serial.println("RTC has set the system time");
+    Serial.println("[RTC]: RTC has set the system time.");
   }
 }
 
@@ -492,7 +513,7 @@ void RealTimeClock::set_time(){
   
   #ifdef DEBUG
   bool configuredTime = false;
-  Serial.println("Set unix time (format = T1631254602):");
+  Serial.println("[RTC]: User must set unix time (format = T1631254602):");
   while(!configuredTime){
     if(Serial.available()){
       String command = Serial.readStringUntil('\n');
@@ -500,7 +521,7 @@ void RealTimeClock::set_time(){
         uint32_t userTime = command.substring(1, command.length()).toInt();
         RTC.set(userTime);
         setTime(userTime);
-        Serial.print("Time set to: ");
+        Serial.print("[RTC]: Time set to: ");
         Serial.println(now());
         configuredTime = true;
       }
@@ -510,7 +531,7 @@ void RealTimeClock::set_time(){
   #else
     RTC.set(unixTime);
     setTime(unixTime);
-    Serial.print("Set time: ");
+    Serial.print("[RTC]: Set time: ");
     Serial.println(now());
    #endif
 }
@@ -521,6 +542,8 @@ int8_t* Sensors::construct_payload(){
    * Construct the sensor payload - sensors, monitoring, temperature and RTC.
    * @return payload A payload containing sensor information.
    */
+  Serial.println("[SENSORS]: Creating payload...");
+  
   static int8_t payload[SENSORS_PAYLOAD_SIZE];
 
   // === Payload identifier ===

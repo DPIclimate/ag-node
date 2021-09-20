@@ -12,13 +12,13 @@ void Memory::init(){
   /*
    * Initialise memory card to see if it is plugged in and available.
    */
-  Serial.println("[MEMORY]: Intialising Memory Card...");
+  Serial.print("[MEMORY]: Intialising memory card... ");
   if(!SD.begin(chipSelect)){
-    Serial.println("[MEMORY]: Intialisation failed.");
+    Serial.println("failed");
     return;
   }
   else{
-    Serial.println("[MEMORY]: Card Intialised");
+    Serial.println("success");
   }
 }
 

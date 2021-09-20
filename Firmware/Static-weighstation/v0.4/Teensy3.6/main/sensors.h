@@ -32,13 +32,12 @@ struct parameters_t{
   int16_t stdevWeight;
   int16_t deltaWeight;
   int32_t timeOnScale;
-}; 
+};
 
 class Sensors {
   public:
-//  static int8_t payload[SENSORS_PAYLOAD_SIZE];
+  // Sensors payload (Temperature, monitoring and additional sensors...)
   static int8_t* construct_payload();
-
 };
 
 class WeighStation {
@@ -75,6 +74,12 @@ class WeighStation {
 
   // Zero weighscales when over a certain threshold (ZERO_THRESHOLD)
   static void tare_scales();
+
+  // Put the scales in low-power mode
+  void sleep();
+
+  // Wake up the scales from low-power mode
+  void wakeup();
   
   // Scan each of the scales and capture any animal weights
   void scan();

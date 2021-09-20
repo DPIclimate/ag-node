@@ -15,7 +15,7 @@ void Lora::init(){
    *  Create interrupt for testing LoRaWAN.
    */
   #ifdef DEBUG
-    Serial.println("Initialising LoRaWAN communications");
+    Serial.print("[LORAWAN]: Initialising... ");
   #endif
   
   // LoRaMAC-in-C (LMIC) init
@@ -47,7 +47,7 @@ void Lora::init(){
   attachInterrupt(IRQ, Lora::test_connection, RISING);
   
   #ifdef DEBUG
-    Serial.println("LoRaWAN commuications initialised");
+    Serial.println("success");
   #endif
 }
 
@@ -57,7 +57,7 @@ void Lora::test_connection(){
    * @return Connection status on TTN (should be "success")
    */
   #ifdef DEBUG
-    Serial.println("Sending LoRaWAN test message");
+    Serial.println("[LORAWAN]: Sending test message");
   #endif
   
   int8_t connect[4] = {1, 2, 3, 4};
