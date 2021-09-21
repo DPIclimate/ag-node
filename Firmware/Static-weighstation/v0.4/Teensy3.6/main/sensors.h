@@ -22,7 +22,7 @@
 #endif
 
 // Struct that holds all desired variables
-struct parameters_t{
+struct parameters_t {
   uint32_t unixTime;
   uint8_t scaleID;
   int16_t startWeight;
@@ -116,7 +116,7 @@ class Monitoring {
     static int16_t power(char type);
 };
 
-class Temperature{
+class Temperature {
   static int8_t const TEMPERATURE_RESOLUTION = 9; // bits
   public:
     static void init(DallasTemperature sensor);
@@ -124,8 +124,7 @@ class Temperature{
 };
 
 
-class RealTimeClock{
-
+class RealTimeClock {
   
   public:
   // Initalise RTC
@@ -135,6 +134,5 @@ class RealTimeClock{
   static void set_time();
     
 };
-
 
 #endif

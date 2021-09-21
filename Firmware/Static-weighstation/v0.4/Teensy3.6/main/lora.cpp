@@ -9,7 +9,7 @@ static bool state = false;
 // LMIC job
 static osjob_t sendjob; 
 
-void Lora::init(){
+void Lora::init() {
   /* 
    *  Initialise LoRaWAN communications with appropiate settings.
    *  Create interrupt for testing LoRaWAN.
@@ -51,7 +51,7 @@ void Lora::init(){
   #endif
 }
 
-void Lora::test_connection(){
+void Lora::test_connection() {
   /*
    * Send a test packet to TTN 
    * @return Connection status on TTN (should be "success")
@@ -63,13 +63,13 @@ void Lora::test_connection(){
   int8_t connect[4] = {1, 2, 3, 4};
   Lora::request_send(connect, 3);
   
-  while(!Lora::check_state()){
+  while(!Lora::check_state()) {
     os_runloop_once();
   }
 }
 
 
-void lorawan_send(osjob_t* j, int8_t* payload, uint8_t port){
+void lorawan_send(osjob_t* j, int8_t* payload, uint8_t port) {
   /*
    * Send payload (packet) over LoRaWAN.
    * @param j The LMIC job (sendjob).
@@ -81,11 +81,11 @@ void lorawan_send(osjob_t* j, int8_t* payload, uint8_t port){
   if (LMIC.opmode & OP_TXRXPEND) {
     Serial.println(F("OP_TXRXPEND, not sending"));
   } else {
-    if(port == 1){
+    if(port == 1) {
       // Send weighstation data over LoRaWAN port 0
       LMIC_setTxData2(port, (uint8_t*)payload, WEIGH_PAYLOAD_SIZE, 0);
     }
-    else if(port == 2){
+    else if(port == 2) {
       // Send sensor data over LoRaWAN port 1
       // sizeof(payload) doesn't work here as its a pointer to an array
       LMIC_setTxData2(port, (uint8_t*)payload, SENSORS_PAYLOAD_SIZE, 0);
@@ -97,7 +97,7 @@ void lorawan_send(osjob_t* j, int8_t* payload, uint8_t port){
 }
 
 
-void Lora::request_send(int8_t* payload, uint8_t port){
+void Lora::request_send(int8_t* payload, uint8_t port) {
   /*
    * Interface between LMIC functions and Lora class.
    * Used so the LMIC sendjob varaible doesn't have to be passed around.
@@ -179,7 +179,7 @@ void onEvent (ev_t ev) {
         }
         Serial.println();
         // Transmission was competed successfully 
-        // TODO: This is proberbly blocking if the gateway cannot be reached
+        // TODO: This is probably blocking if the gateway cannot be reached
         Lora::set_state(true);
         
         break;
@@ -207,7 +207,7 @@ void onEvent (ev_t ev) {
 }
 
 
-bool Lora::check_state(){
+bool Lora::check_state() {
   /*
    * Check the state of a message which has been qued to send over LoRaWAN.
    * @return state True if sent - false if pending.
@@ -216,7 +216,7 @@ bool Lora::check_state(){
 }
 
 
-void Lora::set_state(bool s){
+void Lora::set_state(bool s) {
   /*
    * Set the state of a pending message over LoRaWAN.
    * @param s State of message transmission.

@@ -23,6 +23,4 @@ public:
   static void set_state(bool s);
 };
 
-
-
 #endif
