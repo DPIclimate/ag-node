@@ -23,6 +23,8 @@ void Lora::init() {
   // Reset the MAC state. Session and pending data transfers will be discarded.
   LMIC_reset();
   // Compensates for inaccurate clock
+//z You might need to define LMIC_ENABLE_arbitrary_clock_error.
+//z See https://www.thethingsnetwork.org/forum/t/using-lmic-setclockerror-on-mcci-lmic-howto/39776  
   LMIC_setClockError(MAX_CLOCK_ERROR * 1 / 100);
   // Disable link-check mode and ADR, because ADR tends to complicate testing.
   LMIC_setLinkCheckMode(0);
@@ -206,7 +208,10 @@ void onEvent (ev_t ev) {
   }
 }
 
-
+//z I used this to check the state of the LoRa stack:
+//z return LMIC.opmode & (OP_JOINING | OP_TXRXPEND | OP_SHUTDOWN) ? false : true;
+//z That might not be great because I would see occasional huge delays in sending
+//z messages, but it might be worth looking at that variable.
 bool Lora::check_state() {
   /*
    * Check the state of a message which has been qued to send over LoRaWAN.

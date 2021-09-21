@@ -63,6 +63,8 @@ void setup() {
 void loop() {
   
   // Keep track of when the last message was sent
+//z Is something weird going to happen when millis() wraps? Google says there is away
+//z to handle that but I couldn't understand it.
   timer = millis() - lastMessage;
 
   // ======== Weight Payload ========
@@ -71,6 +73,8 @@ void loop() {
   weighStation.scan();
 
   // Reset scale to zero (every 255 readings) - providing there isn't an animal on scale
+//z tareScales is incremented in either case so drop the else and just do the increment
+//z outside the if block.
   if(tareScales == 255 && !weighStation.check_state()) {
     WeighStation::tare_scales();
     tareScales++;
@@ -93,10 +97,15 @@ void loop() {
   // ======== Sensor Payload ========
 
   // Reset sensor payload send state - prevents multiple packets
+//z It's really dangerous having if/while etc without braces, even for one-liners.
+//z Aside from the obvious future bug of adding another line you just get used to
+//z seeing the structure of code and things like this look weird.
   if(timer >= messageSpacing && sensorPayload) sensorPayload = false;
 
   // Every 15 min send sensor payload (monitoring and temperature)
   if(minute() % 15 == 0 && !sensorPayload) {
+//z You're sending bytes so I think uint8_t* would be a better semantic fit. Also have to change the method signature.
+//z Also below in the wakup code.
     int8_t* sensorsPayload = Sensors::construct_payload();
     #ifdef ENABLE_LORAWAN
       Lora::request_send(sensorsPayload, 2);

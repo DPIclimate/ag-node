@@ -42,6 +42,9 @@ class Sensors {
 
 class WeighStation {
   // Scale states
+//z If you make these into arrays it might allow the code that loops through the hx711s
+//z to be different - it must already have the appropriate array index for accessing
+//z weights and timestamps arrays.
   bool oneActive = false, twoActive = false, threeActive = false;
   uint32_t oneStartTime = 0, twoStartTime = 0, threeStartTime = 0;
   uint16_t onePos = 0, twoPos = 0, threePos = 0; // Position in capture array
@@ -84,6 +87,7 @@ class WeighStation {
   // Scan each of the scales and capture any animal weights
   void scan();
 
+//z Maybe uint8_t* here & below.
   // Construct payload to send over LoRaWAN
   static int8_t* construct_payload(uint8_t scaleID);
 
@@ -98,6 +102,7 @@ class WeighStation {
 
 };
 
+//z LOL, static all the things.
 class Monitoring {
   public:
     // Power monitoring addresses

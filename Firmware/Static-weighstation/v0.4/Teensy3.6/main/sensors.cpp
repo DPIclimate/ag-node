@@ -10,6 +10,7 @@ static parameters_t parameters;
 
 // Weights and timeStamps
 static int16_t weights[WeighStation::nScales][WeighStation::maxArrSize];
+//z uint32_t for timestamps?
 static int32_t timeStamps[WeighStation::nScales][WeighStation::maxArrSize];
 
 // Setup pin mapping for data and clock lines
@@ -24,6 +25,8 @@ static const HX711 scaleOne;
 static const HX711 scaleTwo;
 static const HX711 scaleThree;
 // Store HX711 objects in array for easy indexing
+//z I'm wondering if this array makes copies of scaleOne, scaleTwo, scaleThree rather than holding the expected
+//z references or pointers to.
 static HX711 scales[WeighStation::nScales] = {scaleOne, scaleTwo, scaleThree};
 
 // Initialse INA219 (power monitoring) library 
@@ -98,11 +101,28 @@ void WeighStation::scan() {
     if(weight >= triggerWeight) {
       // Identify which scale is active and append weight (with timestamp)
       if(i == 0) {
+//z This is where I was thinking making active, startTime, and pos into arrays might reduce the
+//z code size because there would be no need for the if(i == n), but then the weights and timestamps
+//z lines would look like weights[i][pos[i]] :(
+//z
+//z But it could be rewritten to look like
+//z
+//z j = pos[i];
+//z weights[i][j] = ...
+//z timeStamps[i][j] = ...
+//z #ifdef DEBUG
+//z ... no need to -1 the index in here
+//z #endif
+//z pos[i] = pos[i] + 1;
+//z
         if(!oneActive) {
           oneStartTime = millis();
         }
         oneActive = true;
         weights[i][onePos] = weight * 100.0; // Convert float to int with decimal places
+//z Even if you don't like the idea of making pos etc arrays, I wouldn't do the increment here.
+//z If you added a new array you'd need to remember to remove the increment, plus you have to do
+//z the -1 adjustment below. Just increment xPos below the #endif.
         timeStamps[i][onePos++] = millis() - oneStartTime;
         #ifdef DEBUG
           Serial.print("Scale [0]: ");
@@ -192,6 +212,10 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
    * @param scaleID ID of scale which these reading correspond to.
    * @return payload A payload to send over LoRaWAN.
    */
+//z I would get the caller to pass in a pointer to a buffer of size WEIGH_PAYLOAD_SIZE.
+//z Having this method return a pointer is ambiguous - did it allocate memory and the caller
+//z is meant to free it?
+//z main.ino can have a single buffer declared outside any function or method and pass that in.
   static int8_t payload[WEIGH_PAYLOAD_SIZE];
 
   /*
@@ -322,7 +346,8 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
   return payload;
 }
 
-
+//z To make a FIFO queue I guess you need both read and write indexes and handle wrapping of both.
+//z Too difficult!
 void WeighStation::append_payload(int8_t* payload) {
   /*
    * Add payload to the stack to be sent over LoRaWAN when the next window opens.
@@ -339,6 +364,8 @@ void WeighStation::append_payload(int8_t* payload) {
 
 
 void WeighStation::forward_payload() {
+//z Should probably add a check to return immediately if payloadPos < 1.
+
   /*
    * Pop a payload off the pending stack and send it over LoRaWAN.
    * Decrement the payload position to lower down the stack.
@@ -518,6 +545,7 @@ void RealTimeClock::set_time() {
     if(Serial.available()) {
       String command = Serial.readStringUntil('\n');
       if(command.startsWith("T")) {
+//z What type does toInt return? You'll probably not learn by looking at the Arduino 'documentation' :(
         uint32_t userTime = command.substring(1, command.length()).toInt();
         RTC.set(userTime);
         setTime(userTime);
@@ -552,6 +580,7 @@ int8_t* Sensors::construct_payload() {
 
   // === Current time ===
   uint32_t unixTime = now();
+//z I'd put "& 0xFF" after each of these to be sure.
   payload[1] = unixTime;
   payload[2] = unixTime >> 8;
   payload[3] = unixTime >> 16;
