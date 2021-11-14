@@ -33,10 +33,10 @@ static Adafruit_INA219 solar(Monitoring::solarAddr);
 // DallasTemperature (oneWire)
 DallasTemperature sensor;
 
-uint32_t unixTime = 1632160905; // Current UNIX time
+uint32_t unixTime = 1635036471; // Current UNIX time
 
 // Current position in payloads array
-uint8_t WeighStation::payloadPos = 0; 
+uint8_t WeighStation::payloadPos = 0;
 
 
 void WeighStation::init(){
@@ -513,7 +513,7 @@ void RealTimeClock::set_time(){
   
   #ifdef DEBUG
   bool configuredTime = false;
-  Serial.println("[RTC]: User must set unix time (format = T1631254602):");
+  Serial.println("[RTC]: User must set unix time (format = T1632191801):");
   while(!configuredTime){
     if(Serial.available()){
       String command = Serial.readStringUntil('\n');

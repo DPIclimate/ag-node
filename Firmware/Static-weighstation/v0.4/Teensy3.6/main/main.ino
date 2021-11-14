@@ -47,7 +47,7 @@ void setup(){
   #endif
 
   #ifdef LOW_POWER
-    // Send a sensor payload every night at 15 minute intervals
+    // Send a sensor payload every night at 30 minute intervals
     alarm.setRtcTimer(0, 30, 0);
   #endif
 
@@ -119,17 +119,17 @@ void loop(){
     while(hour() >= 18 || hour() < 6) {
       weighStation.sleep();
       int who;
-      who = Snooze.sleep(sleepConfig); 
-      if(who == 35){ // Alarm wake up
-        // Send a payload
-        int8_t* sensorsPayload = Sensors::construct_payload();
-        #ifdef ENABLE_LORAWAN
-          Lora::request_send(sensorsPayload, 2); 
-          while(!Lora::check_state()){
-            os_runloop_once();
-          }
-        #endif
-      }
+      who = Snooze.sleep(sleepConfig);
+      
+      // Send a payload
+      int8_t* sensorsPayload = Sensors::construct_payload();
+      #ifdef ENABLE_LORAWAN
+        Lora::request_send(sensorsPayload, 2); 
+        while(!Lora::check_state()){
+          os_runloop_once();
+        }
+      #endif
+      
       weighStation.wakeup();
     }
   #endif
