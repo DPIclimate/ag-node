@@ -1,5 +1,5 @@
 /*
- * To be ran at 24 MHz
+ * To be run at 24 MHz
  */
 
 // Local imports
@@ -30,7 +30,7 @@ uint32_t messageSpacing = 1000 * 60; // ms
 
 WeighStation weighStation; // Create weighstation object
 
-void setup(){
+void setup() {
   Serial.begin(57600);
   
   #ifdef DEBUG
@@ -41,7 +41,7 @@ void setup(){
   
   #ifdef ENABLE_LORAWAN
     Lora::init();
-    while(!Lora::check_state()){
+    while(!Lora::check_state()) {
       os_runloop_once();
     }
   #endif
@@ -60,7 +60,7 @@ void setup(){
 }
 
 
-void loop(){
+void loop() {
   
   // Keep track of when the last message was sent
   timer = millis() - lastMessage;
@@ -71,13 +71,13 @@ void loop(){
   weighStation.scan();
 
   // Reset scale to zero (every 255 readings) - providing there isn't an animal on scale
-  if(tareScales == 255 && !weighStation.check_state()){
+  if(tareScales == 255 && !weighStation.check_state()) {
     WeighStation::tare_scales();
     tareScales++;
   } else tareScales++;
 
   // Send stored weigh payloads over LoRa
-  if(!weighStation.check_state() && weighStation.payloadPos != 0 && timer >= messageSpacing){
+  if(!weighStation.check_state() && weighStation.payloadPos != 0 && timer >= messageSpacing) {
     weighStation.forward_payload();
     // Reset timer - prevents slow LoRa transimission
     lastMessage = millis();
@@ -86,7 +86,7 @@ void loop(){
   }
 
   // Small delay to prevent high current usage 
-  if(!weighStation.check_state()){
+  if(!weighStation.check_state()) {
     delay(200);
   }
 
@@ -95,13 +95,13 @@ void loop(){
   // Reset sensor payload send state - prevents multiple packets
   if(timer >= messageSpacing && sensorPayload) sensorPayload = false;
 
-  // Every 15 min send sensor payload (moitoring and temperature)
-  if(minute() % 15 == 0 && !sensorPayload){
+  // Every 15 min send sensor payload (monitoring and temperature)
+  if(minute() % 15 == 0 && !sensorPayload) {
     int8_t* sensorsPayload = Sensors::construct_payload();
     #ifdef ENABLE_LORAWAN
       Lora::request_send(sensorsPayload, 2);
 
-      while(!Lora::check_state()){
+      while(!Lora::check_state()) {
         os_runloop_once();
       }
     #endif
@@ -120,7 +120,6 @@ void loop(){
       weighStation.sleep();
       int who;
       who = Snooze.sleep(sleepConfig);
-      
       // Send a payload
       int8_t* sensorsPayload = Sensors::construct_payload();
       #ifdef ENABLE_LORAWAN
@@ -129,9 +128,7 @@ void loop(){
           os_runloop_once();
         }
       #endif
-      
       weighStation.wakeup();
     }
   #endif
-  
 }

@@ -8,12 +8,12 @@
 static const int chipSelect = BUILTIN_SDCARD;
 File root;
 
-void Memory::init(){
+void Memory::init() {
   /*
    * Initialise memory card to see if it is plugged in and available.
    */
   Serial.print("[MEMORY]: Intialising memory card... ");
-  if(!SD.begin(chipSelect)){
+  if(!SD.begin(chipSelect)) {
     Serial.println("failed");
     return;
   }
@@ -23,7 +23,7 @@ void Memory::init(){
 }
 
 
-void Memory::write_weigh_data(int16_t* weights, int32_t* timeStamps, int8_t* payload, struct parameters_t &parameters){
+void Memory::write_weigh_data(int16_t* weights, int32_t* timeStamps, int8_t* payload, struct parameters_t &parameters) {
   /*
    * Write weights and timestamps to build in SD-card. Also appends caluclated parameters.
    * @param weights Weights array from scale.
@@ -33,19 +33,20 @@ void Memory::write_weigh_data(int16_t* weights, int32_t* timeStamps, int8_t* pay
    */
   // Open SD card file
   root = SD.open(RAW_DATA_FILENAME, FILE_WRITE);
-  if(root){
+  if(root) {
     // Concatenate a single line string of data
     String concatData;
     root.println((String)parameters.unixTime);
     // Loop over arrays and append to file
-    for(uint16_t i = 0; i < sizeof(timeStamps) / sizeof(timeStamps[0]); i++){
-      if(timeStamps[i] == 0) break;
+    for(uint16_t i = 0; i < WeighStation::maxArrSize; i++) {
+      Serial.println(weights[i]);
       String row;
       row += (String)(timeStamps[i] / 1000.0f); 
       row += ",";
       row += (String)(weights[i] / 100.0f);
       row += ";";
       root.println(row);
+      if(weights[i] == 0) break;
     }
     root.close();
     #ifdef DEBUG
@@ -60,26 +61,26 @@ void Memory::write_weigh_data(int16_t* weights, int32_t* timeStamps, int8_t* pay
 
   // Do the same as above to all parameters (in a seperate file) 
   root = SD.open(PARAMETERS_FILENAME, FILE_WRITE);
-  if(root){
+  if(root) {
     // Concatenate a single line string of data
     String concatData;
     concatData += (String)parameters.unixTime;
     concatData += ",";
 
     // Append raw payload
-    for(uint8_t i = 0; i < WEIGH_PAYLOAD_SIZE; i++){
-      if (i != 0) {
-        concatData += '-';
-      }
-      payload[i] &= 0xff;
-      if (payload[i] < 16){
-        concatData += '0';
-      }
-      concatData += String(payload[i], HEX);
-    }
+//    for(uint8_t i = 0; i < WEIGH_PAYLOAD_SIZE; i++) {
+//      if (i != 0) {
+//        concatData += '-';
+//      }
+//      payload[i] &= 0xff;
+//      if (payload[i] < 16) {
+//        concatData += '0';
+//      }
+//      concatData += String(payload[i], HEX);
+//    }
+//    concatData += ",";
 
     // Add parameters to concatenated string 
-    concatData += ",";
     concatData += String(parameters.scaleID);
     concatData += ",";
     concatData += String((float)(parameters.startWeight / 100.0)); // convert to kg
@@ -112,15 +113,15 @@ void Memory::write_weigh_data(int16_t* weights, int32_t* timeStamps, int8_t* pay
 
 
 
-void Memory::read_data(const char* fileName){
+void Memory::read_data(const char* fileName) {
   /*
    * Prints out contents of file to serial monitor.
    * @param fileName Name of .txt file.
    */
   root = SD.open(fileName, FILE_READ);
-  if(root){
+  if(root) {
     Serial.println("[MEMORY]: Output from SD card below.");
-    while(root.available()){
+    while(root.available()) {
       Serial.write(root.read());
     }
     root.close();
