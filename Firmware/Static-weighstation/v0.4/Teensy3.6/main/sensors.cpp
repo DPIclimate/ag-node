@@ -264,6 +264,7 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
     sumWeights += weights[scaleID][i];
   }
   parameters.avWeight = sumWeights / ((pos * 0.75) - (pos * 0.25));
+  
   #ifdef DEBUG
     Serial.print("AV Weight:\t");
     Serial.print(parameters.avWeight / 100.0f);
@@ -295,11 +296,15 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
   payload[19] = parameters.timeOnScale >> 24;
 
   // === Weight StDev ===
-  int16_t stdevSum = 0;
+  uint32_t stdevSum = 0;
+  int16_t lenSum = 0;
   for(uint16_t i = uint16_t(pos * 0.25); i < uint16_t(pos*0.75); i++) {
     stdevSum += pow((weights[scaleID][i] - parameters.avWeight), 2);
+    lenSum++;
   }
-  parameters.stdevWeight = sqrt(stdevSum/pos);
+
+  parameters.stdevWeight = sqrt((1.0f/lenSum) * stdevSum);
+  
   #ifdef DEBUG
     Serial.print("StDev Weight:\t");
     Serial.print(parameters.stdevWeight / 100.0f);

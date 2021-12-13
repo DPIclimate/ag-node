@@ -39,7 +39,6 @@ void Memory::write_weigh_data(int16_t* weights, int32_t* timeStamps, int8_t* pay
     root.println((String)parameters.unixTime);
     // Loop over arrays and append to file
     for(uint16_t i = 0; i < WeighStation::maxArrSize; i++) {
-      Serial.println(weights[i]);
       String row;
       row += (String)(timeStamps[i] / 1000.0f); 
       row += ",";
@@ -109,8 +108,6 @@ void Memory::write_weigh_data(int16_t* weights, int32_t* timeStamps, int8_t* pay
     #endif
   }
 }
-
-
 
 
 void Memory::read_data(const char* fileName) {

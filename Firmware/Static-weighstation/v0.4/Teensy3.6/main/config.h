@@ -12,9 +12,9 @@
 /* LOW_POWER mode
  * Comment out if not needed
  */
-//#ifndef LOW_POWER
-//#define LOW_POWER
-//#endif
+#ifndef LOW_POWER
+#define LOW_POWER
+#endif
 
 
 /* LoRaWAN Mode
