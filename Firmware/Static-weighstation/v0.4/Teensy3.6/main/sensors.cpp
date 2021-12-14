@@ -33,10 +33,14 @@ static Adafruit_INA219 solar(Monitoring::solarAddr);
 // DallasTemperature (oneWire)
 DallasTemperature sensor;
 
-uint32_t unixTime = 1635036471; // Current UNIX time
+uint32_t unixTime = 1639347340; // Current UNIX time
 
 // Current position in payloads array
 uint8_t WeighStation::payloadPos = 0;
+
+// Solar and battery monitoring
+bool Monitoring::batteryConnected = false;
+bool Monitoring::solarConnected = false;
 
 
 void WeighStation::init() {
@@ -194,13 +198,12 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
    */
   static int8_t payload[WEIGH_PAYLOAD_SIZE];
 
+  Serial.println("[WEIGH STATION]: Creating payload...");
+
   /*
    * Loop through array to find first zero value. 
    * This puts the array in context by ignoring all following zeros and focusing on actual values.
    */
-
-  Serial.println("[WEIGH STATION]: Creating payload...");
-  
   for(int i=0; i < maxArrSize; i++) {
     if(weights[scaleID][i] == 0) break;
   }
@@ -382,12 +385,14 @@ void Monitoring::init() {
    */
   Serial.print("[MONITORING]: initialising battery... ");
   if(battery.begin()) {
+    Monitoring::batteryConnected = true;
     battery.setCalibration_16V_400mA();
     Serial.println("success");
   } else Serial.println("failed");
 
   Serial.print("[MONITORING]: initialising solar... ");
   if(solar.begin()) {
+    Monitoring::solarConnected = true;
     solar.setCalibration_32V_1A();
     Serial.println("success");
   } else Serial.println("failed");
@@ -568,24 +573,36 @@ int8_t* Sensors::construct_payload() {
 
   // === Power monitoring ===
   // Battery
-  int16_t batteryV = Monitoring::voltage('b');
+  int16_t batteryV = 0;
+  int16_t batteryA = 0;
+  int16_t batteryW = 0;
+  if(Monitoring::batteryConnected){
+    batteryV = Monitoring::voltage('b');
+    batteryA = Monitoring::current('b');
+    batteryW = Monitoring::power('b');
+  }
+  
   payload[5] = batteryV;
   payload[6] = batteryV >> 8;
-  int16_t batteryA = Monitoring::current('b');
   payload[7] = batteryA;
   payload[8] = batteryA >> 8;
-  int16_t batteryW = Monitoring::power('b');
   payload[9] = batteryW;
   payload[10] = batteryW >> 8;
 
   // Solar
-  int16_t solarV = Monitoring::voltage('s');
+  int16_t solarV = 0;
+  int16_t solarA = 0;
+  int16_t solarW = 0;
+  if(Monitoring::solarConnected){
+    solarV = Monitoring::voltage('s');
+    solarA = Monitoring::current('s');
+    solarW = Monitoring::power('s');
+  }
+
   payload[11] = solarV;
   payload[12] = solarV >> 8;
-  int16_t solarA = Monitoring::current('s');
   payload[13] = solarA;
   payload[14] = solarA >> 8;
-  int16_t solarW = Monitoring::power('s');
   payload[15] = solarW;
   payload[16] = solarW >> 8;
 

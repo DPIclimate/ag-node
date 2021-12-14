@@ -103,6 +103,9 @@ class Monitoring {
     // Power monitoring addresses
     static const uint8_t batteryAddr = 0x40;
     static const uint8_t solarAddr = 0x44;
+
+    static bool batteryConnected;
+    static bool solarConnected;
     
     static void init();
     

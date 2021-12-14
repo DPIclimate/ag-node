@@ -4,17 +4,17 @@
 /*  DEBUG mode
  *  Comment out if not needed
  */
-#ifndef DEBUG
-#define DEBUG
-#endif
+//#ifndef DEBUG
+//#define DEBUG
+//#endif
 
 
 /* LOW_POWER mode
  * Comment out if not needed
  */
-#ifndef LOW_POWER
-#define LOW_POWER
-#endif
+//#ifndef LOW_POWER
+//#define LOW_POWER
+//#endif
 
 
 /* LoRaWAN Mode
