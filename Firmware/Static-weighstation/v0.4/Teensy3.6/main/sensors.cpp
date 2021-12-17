@@ -33,7 +33,7 @@ static Adafruit_INA219 solar(Monitoring::solarAddr);
 // DallasTemperature (oneWire)
 DallasTemperature sensor;
 
-uint32_t unixTime = 1639347340; // Current UNIX time
+uint32_t unixTime = 1639607562; // Current UNIX time
 
 // Current position in payloads array
 uint8_t WeighStation::payloadPos = 0;

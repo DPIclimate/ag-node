@@ -67,17 +67,17 @@ void Memory::write_weigh_data(int16_t* weights, int32_t* timeStamps, int8_t* pay
     concatData += ",";
 
     // Append raw payload
-//    for(uint8_t i = 0; i < WEIGH_PAYLOAD_SIZE; i++) {
-//      if (i != 0) {
-//        concatData += '-';
-//      }
-//      payload[i] &= 0xff;
-//      if (payload[i] < 16) {
-//        concatData += '0';
-//      }
-//      concatData += String(payload[i], HEX);
-//    }
-//    concatData += ",";
+    for(uint8_t i = 0; i < WEIGH_PAYLOAD_SIZE; i++) {
+      if (i != 0) {
+        concatData += '-';
+      }
+      payload[i] &= 0xff;
+      if (payload[i] < 16) {
+        concatData += '0';
+      }
+      concatData += String(payload[i], HEX);
+    }
+    concatData += ",";
 
     // Add parameters to concatenated string 
     concatData += String(parameters.scaleID);
