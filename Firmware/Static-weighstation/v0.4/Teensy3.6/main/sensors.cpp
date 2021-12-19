@@ -16,6 +16,9 @@ static int32_t timeStamps[WeighStation::nScales][WeighStation::maxArrSize];
 static constexpr uint8_t scaleData[WeighStation::nScales] = {4, 21, 30};
 static constexpr uint8_t scaleClock[WeighStation::nScales] = {3, 20, 29};
 
+// Overtime check (animal has spent too long on the scales)
+static bool overtime[WeighStation::nScales] = {false, false, false};
+
 // Set calibration factor for scale (see calibration script)
 static constexpr int16_t calibrationFactors[WeighStation::nScales] = {-1770, -1760, -1770};
 
@@ -33,7 +36,7 @@ static Adafruit_INA219 solar(Monitoring::solarAddr);
 // DallasTemperature (oneWire)
 DallasTemperature sensor;
 
-uint32_t unixTime = 1639607562; // Current UNIX time
+uint32_t unixTime = 1639715442; // Current UNIX time
 
 // Current position in payloads array
 uint8_t WeighStation::payloadPos = 0;
@@ -105,46 +108,60 @@ void WeighStation::scan() {
         if(!oneActive) {
           oneStartTime = millis();
         }
-        oneActive = true;
-        weights[i][onePos] = weight * 100.0; // Convert float to int with decimal places
-        timeStamps[i][onePos++] = millis() - oneStartTime;
-        #ifdef DEBUG
-          Serial.print("Scale [0]: ");
-          Serial.print(timeStamps[i][onePos - 1] / 1000.0);
-          Serial.print("\t");
-          Serial.println(weight);
-        #endif
+        // Checks if animal has been on the scale for too long
+        if(onePos > (WeighStation::maxArrSize - 1)){
+          overtime[i] = true;
+        }
+        else{
+          oneActive = true;
+          weights[i][onePos] = weight * 100.0; // Convert float to int with decimal places
+          timeStamps[i][onePos++] = millis() - oneStartTime;
+          #ifdef DEBUG
+            Serial.print("Scale [0]: ");
+            Serial.print(timeStamps[i][onePos - 1] / 1000.0);
+            Serial.print("\t");
+            Serial.println(weight);
+          #endif
+        }
       }
       else if(i == 1) {
         if(!twoActive) {
           twoStartTime = millis();
         }
-        twoActive = true;
-        weights[i][twoPos] = weight * 100.0;
-        timeStamps[i][twoPos++] = millis() - twoStartTime;
-        #ifdef DEBUG
-          Serial.print("Scale [1]: ");
-          Serial.print(timeStamps[i][twoPos - 1] / 1000.0);
-          Serial.print("\t");
-          Serial.println(weight);
-        #endif
-
+        if(twoPos > (WeighStation::maxArrSize - 1)){
+          overtime[i] = true;
+        }
+        else{
+          twoActive = true;
+          weights[i][twoPos] = weight * 100.0;
+          timeStamps[i][twoPos++] = millis() - twoStartTime;
+          #ifdef DEBUG
+            Serial.print("Scale [1]: ");
+            Serial.print(timeStamps[i][twoPos - 1] / 1000.0);
+            Serial.print("\t");
+            Serial.println(weight);
+          #endif
+        }
       }
       else if(i == 2) {
         if(!threeActive) {
           threeStartTime = millis();
         }
-        threeActive = true;
-        weights[i][threePos] = weight * 100.0;
-        timeStamps[i][threePos++] = millis() - threeStartTime;
-        #ifdef DEBUG
-          Serial.print("Scale [2]: ");
-          Serial.print(timeStamps[i][threePos - 1] / 1000.0);
-          Serial.print("\t");
-          Serial.println(weight);
-        #endif
+        if(threePos > (WeighStation::maxArrSize - 1)){
+          overtime[i] = true;
+        }
+        else{
+          threeActive = true;
+          weights[i][threePos] = weight * 100.0;
+          timeStamps[i][threePos++] = millis() - threeStartTime;
+          #ifdef DEBUG
+            Serial.print("Scale [2]: ");
+            Serial.print(timeStamps[i][threePos - 1] / 1000.0);
+            Serial.print("\t");
+            Serial.println(weight);
+          #endif
+        }
       }
-      
     }
     else if(oneActive && i == 0) {
       int8_t* payload = construct_payload(i);
@@ -155,6 +172,7 @@ void WeighStation::scan() {
       #endif
       // Reset varaibles and arrays to initial values
       oneActive = false;
+      overtime[i] = false;
       onePos = 0;
       oneStartTime = 0;
       memset(weights[i], 0, sizeof(weights[i]));
@@ -168,6 +186,7 @@ void WeighStation::scan() {
         Serial.println("[WEIGH STATION]: Scale two finished.");
       #endif
       twoActive = false;
+      overtime[i] = false;
       twoPos = 0;
       twoStartTime = 0;
       memset(weights[i], 0, sizeof(weights[i]));
@@ -181,6 +200,7 @@ void WeighStation::scan() {
         Serial.println("[WEIGH STATION]: Scale three finished.");
       #endif
       threeActive = false;
+      overtime[i] = false;
       threePos = 0;
       threeStartTime = 0;
       memset(weights[i], 0, sizeof(weights[i]));
