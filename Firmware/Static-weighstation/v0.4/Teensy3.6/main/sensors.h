@@ -64,7 +64,7 @@ class WeighStation {
   static const uint8_t nScales = 3;
 
   // Arrays for holding weights and corresponding time
-  static const int16_t maxArrSize = 2000;
+  static const int16_t maxArrSize = 20;
 
   // Current position in payloads array
   static uint8_t payloadPos;

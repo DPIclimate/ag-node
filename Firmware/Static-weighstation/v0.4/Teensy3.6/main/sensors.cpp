@@ -36,7 +36,7 @@ static Adafruit_INA219 solar(Monitoring::solarAddr);
 // DallasTemperature (oneWire)
 DallasTemperature sensor;
 
-uint32_t unixTime = 1639715442; // Current UNIX time
+uint32_t unixTime = 1639950610; // Current UNIX time
 
 // Current position in payloads array
 uint8_t WeighStation::payloadPos = 0;
@@ -111,6 +111,9 @@ void WeighStation::scan() {
         // Checks if animal has been on the scale for too long
         if(onePos > (WeighStation::maxArrSize - 1)){
           overtime[i] = true;
+          #ifdef DEBUG
+            Serial.println("Overtime");
+          #endif
         }
         else{
           oneActive = true;
@@ -130,6 +133,9 @@ void WeighStation::scan() {
         }
         if(twoPos > (WeighStation::maxArrSize - 1)){
           overtime[i] = true;
+          #ifdef DEBUG
+            Serial.println("Overtime");
+          #endif
         }
         else{
           twoActive = true;
@@ -149,6 +155,9 @@ void WeighStation::scan() {
         }
         if(threePos > (WeighStation::maxArrSize - 1)){
           overtime[i] = true;
+          #ifdef DEBUG
+            Serial.println("Overtime");
+          #endif
         }
         else{
           threeActive = true;
@@ -224,9 +233,6 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
    * Loop through array to find first zero value. 
    * This puts the array in context by ignoring all following zeros and focusing on actual values.
    */
-  for(int i=0; i < maxArrSize; i++) {
-    if(weights[scaleID][i] == 0) break;
-  }
 
   // === Payload identifier ===
   int8_t payloadType = 0;
@@ -245,7 +251,8 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
   
   // === Get weights from within array (drop zeros to improve averaging accuracy) ===
   uint16_t pos = 0; // Location within weight array
-  while((weights[scaleID][pos] != 0 || pos <= 10) && pos <= maxArrSize) {
+  for(int i = 0; i < (WeighStation::maxArrSize - 1); i++){
+    if(weights[scaleID][i] == 0 and i > 10) break;
     pos++;
   }
 
@@ -307,7 +314,7 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
   payload[15] = parameters.deltaWeight >> 8;
 
   // === Time on scale ===
-  parameters.timeOnScale = timeStamps[scaleID][pos-1]; // Gets the time at the last weight
+  parameters.timeOnScale = timeStamps[scaleID][pos]; // Gets the time at the last weight
   #ifdef DEBUG
     Serial.print("Drink time:\t");
     Serial.print(parameters.timeOnScale / 1000.0f);

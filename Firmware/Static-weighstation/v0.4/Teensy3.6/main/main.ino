@@ -1,7 +1,3 @@
-/*
- * To be run at 24 MHz
- */
-
 // Local imports
 #ifdef ENABLE_LORAWAN
   #include "lora.h"
@@ -108,7 +104,7 @@ void loop() {
   if(timer >= messageSpacing && sensorPayload) sensorPayload = false;
 
   // Every 15 min send sensor payload (monitoring and temperature)
-  if(minute() % 15 == 0 && !sensorPayload) {
+  if(minute() % 2 == 0 && !sensorPayload) {
     int8_t* sensorsPayload = Sensors::construct_payload();
     #ifdef ENABLE_LORAWAN
       Lora::request_send(sensorsPayload, 2);
