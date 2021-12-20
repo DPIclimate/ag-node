@@ -104,17 +104,17 @@ void loop() {
   if(timer >= messageSpacing && sensorPayload) sensorPayload = false;
 
   // Every 15 min send sensor payload (monitoring and temperature)
-  if(minute() % 2 == 0 && !sensorPayload) {
-    int8_t* sensorsPayload = Sensors::construct_payload();
+  if(minute() % 15 == 0 && !sensorPayload) {
     #ifdef ENABLE_LORAWAN
+      int8_t* sensorsPayload = Sensors::construct_payload();
       Lora::request_send(sensorsPayload, 2);
 
       while(!Lora::check_state()) {
         os_runloop_once();
       }
+      Serial.println("[SENSORS]: Payload sent.");
+      sensorPayload = true;
     #endif
-    Serial.println("[SENSORS]: Payload sent.");
-    sensorPayload = true;
     // Reset timer - preventing slow LoRa transmission
     lastMessage = millis();
     // Reset scales timer - just incase there is now an animal on scale

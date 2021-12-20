@@ -30,9 +30,9 @@
 /* LoRaWAN Mode
  * Comment out if not in use
  */
-#ifndef ENABLE_LORAWAN
-#define ENABLE_LORAWAN
-#endif
+//#ifndef ENABLE_LORAWAN
+//#define ENABLE_LORAWAN
+//#endif
 
 
 /*  Number of bytes to send over LoRaWAN

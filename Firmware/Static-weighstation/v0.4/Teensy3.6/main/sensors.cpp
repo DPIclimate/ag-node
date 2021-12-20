@@ -23,11 +23,20 @@ static bool overtime[WeighStation::nScales] = {false, false, false};
 static constexpr int16_t calibrationFactors[WeighStation::nScales] = {-1770, -1760, -1770};
 
 // Initalise HX711 library
-static const HX711 scaleOne;
-static const HX711 scaleTwo;
-static const HX711 scaleThree;
+static HX711 scaleOne;
+static HX711 scaleTwo;
+static HX711 scaleThree;
 // Store HX711 objects in array for easy indexing
-static HX711 scales[WeighStation::nScales] = {scaleOne, scaleTwo, scaleThree};
+static constexpr HX711* scales[WeighStation::nScales] = {&scaleOne, &scaleTwo, &scaleThree};
+
+// Check active scale
+static bool scaleActive[WeighStation::nScales] = {false, false, false};
+
+// Note start time (using millis())
+static uint32_t weighStartTime[WeighStation::nScales] = {0, 0, 0};
+
+// Position in weights array
+static uint16_t readingPos[WeighStation::nScales] = {0, 0, 0};
 
 // Initialse INA219 (power monitoring) library 
 static Adafruit_INA219 battery(Monitoring::batteryAddr);
@@ -36,7 +45,7 @@ static Adafruit_INA219 solar(Monitoring::solarAddr);
 // DallasTemperature (oneWire)
 DallasTemperature sensor;
 
-uint32_t unixTime = 1639950610; // Current UNIX time
+uint32_t unixTime = 1640038323; // Current UNIX time
 
 // Current position in payloads array
 uint8_t WeighStation::payloadPos = 0;
@@ -54,9 +63,9 @@ void WeighStation::init() {
    */
   Serial.print("[WEIGH STATION]: Initialising");
   for(uint8_t i = 0; i < nScales; i++) {
-    scales[i].begin(scaleData[i], scaleClock[i]);
-    scales[i].set_scale(calibrationFactors[i]);
-    scales[i].tare();
+    scales[i]->begin(scaleData[i], scaleClock[i]);
+    scales[i]->set_scale(calibrationFactors[i]);
+    scales[i]->tare();
     Serial.print(".");
   }
   Serial.println(" success");
@@ -72,107 +81,54 @@ void WeighStation::tare_scales() {
     Serial.println("[WEIGH STATION]: Tare scales.");
   #endif
   for(uint8_t i = 0; i < nScales; i++) {
-    scales[i].tare(); // Reset to zero
+    scales[i]->tare(); // Reset to zero
   }
 }
 
 
 void WeighStation::sleep() {
   for(uint8_t i = 0; i < nScales; i++) {
-    scales[i].power_down();
+    scales[i]->power_down();
   }
 }
 
 
 void WeighStation::wakeup() {
   for(uint8_t i = 0; i < nScales; i++) {
-    scales[i].power_up();
+    scales[i]->power_up();
   }
 }
 
 
-void WeighStation::scan() {
-  /*
-   * Main weighstation function. Loops through HX711 objects and checks if they exceed a trigger weight,
-   * signifying an animal is on the scale. If this is true the device will record the weight into two 2D
-   * arrays (holding the scale id and weights / timestamps).
-   * Once the animal has stepped of the particular scale (below trigger weight) some functions are called 
-   * to calculate parameters, append packets to a LoRaWAN stack (to send in the future) and append to a SD-card.
-   */
-  for(uint8_t i = 0; i < nScales; i++) {
-    float weight = scales[i].get_units(SCALE_AVERAGES);
-    // Check if animal is on scale
-    if(weight >= triggerWeight) {
-      // Identify which scale is active and append weight (with timestamp)
-      if(i == 0) {
-        if(!oneActive) {
-          oneStartTime = millis();
-        }
-        // Checks if animal has been on the scale for too long
-        if(onePos > (WeighStation::maxArrSize - 1)){
-          overtime[i] = true;
-          #ifdef DEBUG
-            Serial.println("Overtime");
-          #endif
-        }
-        else{
-          oneActive = true;
-          weights[i][onePos] = weight * 100.0; // Convert float to int with decimal places
-          timeStamps[i][onePos++] = millis() - oneStartTime;
-          #ifdef DEBUG
-            Serial.print("Scale [0]: ");
-            Serial.print(timeStamps[i][onePos - 1] / 1000.0);
-            Serial.print("\t");
-            Serial.println(weight);
-          #endif
-        }
+void WeighStation::scan(){
+  for(uint8_t i = 0; i < nScales; i++){
+    float weight = scales[i]->get_units(SCALE_AVERAGES);
+    if(weight >= triggerWeight){
+      if(!scaleActive[i]){
+        weighStartTime[i] = millis();
       }
-      else if(i == 1) {
-        if(!twoActive) {
-          twoStartTime = millis();
-        }
-        if(twoPos > (WeighStation::maxArrSize - 1)){
-          overtime[i] = true;
-          #ifdef DEBUG
-            Serial.println("Overtime");
-          #endif
-        }
-        else{
-          twoActive = true;
-          weights[i][twoPos] = weight * 100.0;
-          timeStamps[i][twoPos++] = millis() - twoStartTime;
-          #ifdef DEBUG
-            Serial.print("Scale [1]: ");
-            Serial.print(timeStamps[i][twoPos - 1] / 1000.0);
-            Serial.print("\t");
-            Serial.println(weight);
-          #endif
-        }
+      if(readingPos[i] > (WeighStation::maxArrSize - 1)){
+        overtime[i] = true;
+        #ifdef DEBUG
+          Serial.println("Overtime");
+        #endif
       }
-      else if(i == 2) {
-        if(!threeActive) {
-          threeStartTime = millis();
-        }
-        if(threePos > (WeighStation::maxArrSize - 1)){
-          overtime[i] = true;
-          #ifdef DEBUG
-            Serial.println("Overtime");
-          #endif
-        }
-        else{
-          threeActive = true;
-          weights[i][threePos] = weight * 100.0;
-          timeStamps[i][threePos++] = millis() - threeStartTime;
-          #ifdef DEBUG
-            Serial.print("Scale [2]: ");
-            Serial.print(timeStamps[i][threePos - 1] / 1000.0);
-            Serial.print("\t");
-            Serial.println(weight);
-          #endif
-        }
+      else {
+        scaleActive[i] = true;
+        weights[i][readingPos[i]] = weight * 100.0; // Convert float to int with decimal places
+        timeStamps[i][readingPos[i]] = millis() - weighStartTime[i];
+        #ifdef DEBUG
+          Serial.print("Scale [");
+          Serial.print(i);
+          Serial.print("]: ");
+          Serial.print(timeStamps[i][readingPos[i]] / 1000.0);
+          Serial.print("\t");
+          Serial.println(weight);
+        #endif
+        readingPos[i]++;
       }
     }
-    else if(oneActive && i == 0) {
+    else if(scaleActive[i]) {
       int8_t* payload = construct_payload(i);
       append_payload(payload); // Append payload to stack (to send over LoRaWAN)
       Memory::write_weigh_data(weights[i], timeStamps[i], payload, parameters);
@@ -180,38 +136,10 @@ void WeighStation::scan() {
         Serial.println("[WEIGH STATION]: Scale one finished.");
       #endif
       // Reset varaibles and arrays to initial values
-      oneActive = false;
+      scaleActive[i] = false;
       overtime[i] = false;
-      onePos = 0;
-      oneStartTime = 0;
-      memset(weights[i], 0, sizeof(weights[i]));
-      memset(timeStamps[i], 0, sizeof(timeStamps[i]));
-    }
-    else if(twoActive && i == 1) {
-      int8_t* payload = construct_payload(i);
-      append_payload(payload);
-      Memory::write_weigh_data(weights[i], timeStamps[i], payload, parameters);
-      #ifdef DEBUG
-        Serial.println("[WEIGH STATION]: Scale two finished.");
-      #endif
-      twoActive = false;
-      overtime[i] = false;
-      twoPos = 0;
-      twoStartTime = 0;
-      memset(weights[i], 0, sizeof(weights[i]));
-      memset(timeStamps[i], 0, sizeof(timeStamps[i]));
-    }
-    else if(threeActive && i == 2) {
-      int8_t* payload = construct_payload(i);
-      append_payload(payload);
-      Memory::write_weigh_data(weights[i], timeStamps[i], payload, parameters);
-      #ifdef DEBUG
-        Serial.println("[WEIGH STATION]: Scale three finished.");
-      #endif
-      threeActive = false;
-      overtime[i] = false;
-      threePos = 0;
-      threeStartTime = 0;
+      readingPos[i] = 0;
+      weighStartTime[i] = 0;
       memset(weights[i], 0, sizeof(weights[i]));
       memset(timeStamps[i], 0, sizeof(timeStamps[i]));
     }
@@ -257,9 +185,12 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
   }
 
   // === Calculate parameters ===
-  parameters.startWeight = weights[scaleID][uint16_t(pos * 0.25)]; // 25 %
-  parameters.middleWeight = weights[scaleID][uint16_t(pos * 0.50)]; // 50 %
-  parameters.endWeight = weights[scaleID][uint16_t(pos * 0.75)]; // 75 %
+  uint16_t p25 = (pos * 0.25); // 25 %
+  uint16_t p50 = (pos * 0.50); // 50 %
+  uint16_t p75 = (pos * 0.75); // 75 %
+  parameters.startWeight = weights[scaleID][p25];
+  parameters.middleWeight = weights[scaleID][p50];
+  parameters.endWeight = weights[scaleID][p75];
 
   #ifdef DEBUG
     Serial.print("Start Weight:\t");
@@ -290,10 +221,10 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
 
   // === Sum weights and calculate average ===
   uint32_t sumWeights = 0;
-  for(uint16_t i = uint16_t(pos * 0.25); i < uint16_t(pos*0.75); i++) {
+  for(uint16_t i = p25; i < p75; i++) {
     sumWeights += weights[scaleID][i];
   }
-  parameters.avWeight = sumWeights / ((pos * 0.75) - (pos * 0.25));
+  parameters.avWeight = sumWeights / (p75 - p25);
   
   #ifdef DEBUG
     Serial.print("AV Weight:\t");
@@ -314,7 +245,7 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
   payload[15] = parameters.deltaWeight >> 8;
 
   // === Time on scale ===
-  parameters.timeOnScale = timeStamps[scaleID][pos]; // Gets the time at the last weight
+  parameters.timeOnScale = timeStamps[scaleID][pos-1]; // Gets the time at the last weight
   #ifdef DEBUG
     Serial.print("Drink time:\t");
     Serial.print(parameters.timeOnScale / 1000.0f);
@@ -328,7 +259,7 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
   // === Weight StDev ===
   uint32_t stdevSum = 0;
   int16_t lenSum = 0;
-  for(uint16_t i = uint16_t(pos * 0.25); i < uint16_t(pos*0.75); i++) {
+  for(uint16_t i = p25; i < p75; i++) {
     stdevSum += pow((weights[scaleID][i] - parameters.avWeight), 2);
     lenSum++;
   }
@@ -398,11 +329,12 @@ bool WeighStation::check_state() {
    * Check if there is an animal on any one of the scales.
    * @return A bool indicating if this is true (there is an animal) or false (there isn't)
    */
-  if(!oneActive && !twoActive && !threeActive) {
-    return false;
-  } else {
-    return true;
-  }
+   for(int i = 0; i < nScales; i++){
+    if(scaleActive[i]){
+      return true;
+    }
+   }
+   return true;
 }
 
 

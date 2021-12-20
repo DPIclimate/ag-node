@@ -41,10 +41,6 @@ class Sensors {
 };
 
 class WeighStation {
-  // Scale states
-  bool oneActive = false, twoActive = false, threeActive = false;
-  uint32_t oneStartTime = 0, twoStartTime = 0, threeStartTime = 0;
-  uint16_t onePos = 0, twoPos = 0, threePos = 0; // Position in capture array
 
   // Number of readings to average (more is slower)
   const unsigned int SCALE_AVERAGES = 1;
@@ -64,7 +60,7 @@ class WeighStation {
   static const uint8_t nScales = 3;
 
   // Arrays for holding weights and corresponding time
-  static const int16_t maxArrSize = 20;
+  static const int16_t maxArrSize = 5000;
 
   // Current position in payloads array
   static uint8_t payloadPos;
