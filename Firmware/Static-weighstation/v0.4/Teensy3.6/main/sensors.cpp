@@ -102,7 +102,7 @@ void WeighStation::wakeup() {
 
 void WeighStation::scan(){
   for(uint8_t i = 0; i < nScales; i++){
-    float weight = scales[i]->get_units(SCALE_AVERAGES);
+    float weight = scales[i]->get_units(SCALE_AVERAGES);  
     if(weight >= triggerWeight){
       if(!scaleActive[i]){
         weighStartTime[i] = millis();
@@ -178,10 +178,9 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
   payload[4] = parameters.unixTime >> 24;
   
   // === Get weights from within array (drop zeros to improve averaging accuracy) ===
-  uint16_t pos = 0; // Location within weight array
-  for(int i = 0; i < (WeighStation::maxArrSize - 1); i++){
-    if(weights[scaleID][i] == 0 and i > 10) break;
-    pos++;
+  uint16_t pos; // Location within weight array
+  for(pos = 0; pos < (WeighStation::maxArrSize - 1); pos++){
+    if(weights[scaleID][pos] == 0 and pos > 10) break;
   }
 
   // === Calculate parameters ===
@@ -294,13 +293,21 @@ void WeighStation::append_payload(int8_t* payload) {
    * Add payload to the stack to be sent over LoRaWAN when the next window opens.
    * @param payload An array consiting of a payload to send.
    */
-  #ifdef DEBUG
-    Serial.println("[WEIGH STATION]: Appending payload to LoRaWAN stack...");
-  #endif
-  for(uint8_t i = 0; i < WEIGH_PAYLOAD_SIZE; i++) {
-    payloads[payloadPos][i] = payload[i];
+
+  if(payloadPos < STORED_PAYLOAD_SIZE){
+    #ifdef DEBUG
+      Serial.println("[WEIGH STATION]: Appending payload to LoRaWAN stack...");
+    #endif
+    for(uint8_t i = 0; i < WEIGH_PAYLOAD_SIZE; i++) {
+      payloads[payloadPos][i] = payload[i];
+    }
+    payloadPos++;
   }
-  payloadPos++;
+  else{
+    #ifdef DEBUG
+      Serial.print("[WEIGH STATION]: Too many payloads in queue.");
+    #endif
+  }
 }
 
 
@@ -334,7 +341,7 @@ bool WeighStation::check_state() {
       return true;
     }
    }
-   return true;
+   return false;
 }
 
 

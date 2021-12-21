@@ -30,21 +30,26 @@
 /* LoRaWAN Mode
  * Comment out if not in use
  */
-//#ifndef ENABLE_LORAWAN
-//#define ENABLE_LORAWAN
-//#endif
+#ifndef ENABLE_LORAWAN
+#define ENABLE_LORAWAN
+#endif
 
 
 /*  Number of bytes to send over LoRaWAN
- *  Needs to match the total size of parameters_t in sensors.h
  */
 #ifndef WEIGH_PAYLOAD_SIZE
 #define WEIGH_PAYLOAD_SIZE 22
 #endif
 
 
+/*  Number of payloads that can be stored for sending over LoRaWAN
+ */
+#ifndef STORED_PAYLOAD_SIZE
+#define STORED_PAYLOAD_SIZE 100
+#endif
+
+
 /*  Number of bytes to send over LoRaWAN
- *  Needs to match the total size of parameters_t in sensors.h
  */
 #ifndef SENSORS_PAYLOAD_SIZE
 #define SENSORS_PAYLOAD_SIZE 19

@@ -52,19 +52,19 @@ class WeighStation {
   const float triggerWeight = 5; // kg
 
   // Holds packets until ready to send 
-  int8_t payloads[50][WEIGH_PAYLOAD_SIZE];
+  int8_t payloads[STORED_PAYLOAD_SIZE][WEIGH_PAYLOAD_SIZE];
 
   public:
   
   // Create scale objects
   static const uint8_t nScales = 3;
 
+  // Current position in payloads array
+  static uint8_t payloadPos;
+
   // Arrays for holding weights and corresponding time
   static const int16_t maxArrSize = 5000;
 
-  // Current position in payloads array
-  static uint8_t payloadPos;
-  
   // Setup weighscales and zero their offsets (tare)
   void init();
 
