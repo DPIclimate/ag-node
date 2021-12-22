@@ -1,5 +1,6 @@
 # Folders
 # Electronics/additionalParts
+main
 
 # Temp
 *.html
@@ -7,6 +8,7 @@
 # User Specified 
 *.DS_Store
 *.swp
+*.*.swp
 *.gbr
 *.drl
 *.gbrjob
