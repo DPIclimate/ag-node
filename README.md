@@ -1,6 +1,6 @@
 # ag-node
 
-<img src="Imgs/IMG_0173.GIF" style="display: flex; align-items: center; justify-content: space-around;"/>
+<img src="imgs/IMG_0249.jpg" style="display: flex; align-items: center; justify-content: space-around;"/>
 
 ## Description
 The Universal Agriculture Node (AgU-Node) is a device aimed at providing a range of environmental and biological telemetry from a single device. It is capable of reading from three weigh stations simultaneously using dedicated low-powered micro-controllers (ATMega328) while maintaining expandability for external sensors such as trough level sensors, weather stations, soil moisture probes etc.
