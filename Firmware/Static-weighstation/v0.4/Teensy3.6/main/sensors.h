@@ -31,6 +31,7 @@ struct parameters_t {
   int16_t avWeight;
   int16_t stdevWeight;
   int16_t deltaWeight;
+  int16_t estimatedWeight;
   int32_t timeOnScale;
 };
 
@@ -63,7 +64,7 @@ class WeighStation {
   static uint8_t payloadPos;
 
   // Arrays for holding weights and corresponding time
-  static const int16_t maxArrSize = 5000;
+  static const int16_t maxArrSize = 6000;
 
   // Setup weighscales and zero their offsets (tare)
   void init();

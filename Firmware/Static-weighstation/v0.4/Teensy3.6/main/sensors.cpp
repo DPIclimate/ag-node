@@ -45,7 +45,7 @@ static Adafruit_INA219 solar(Monitoring::solarAddr);
 // DallasTemperature (oneWire)
 DallasTemperature sensor;
 
-uint32_t unixTime = 1640038323; // Current UNIX time
+uint32_t unixTime = 1640124900; // Current UNIX time
 
 // Current position in payloads array
 uint8_t WeighStation::payloadPos = 0;
@@ -272,6 +272,43 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
   #endif
   payload[20] = parameters.stdevWeight;
   payload[21] = parameters.stdevWeight >> 8;
+
+  // === Estimated Weight ===
+  // Most "accurate" weight reading
+  parameters.estimatedWeight = 0;
+
+  // Use average weight as stdev is low
+  if((parameters.stdevWeight / 100.0f) < 2.0f){
+    parameters.estimatedWeight = parameters.avWeight;
+    #ifdef DEBUG
+      Serial.print("Estimated weight (average weight):\t");
+      Serial.print(parameters.estimatedWeight / 100.0f);
+      Serial.println(" kg");
+    #endif
+  }
+  else {
+    // Use last weight
+    if((parameters.deltaWeight / 100.0f) > 5.0f){
+      parameters.estimatedWeight = weights[scaleID][p75];
+      #ifdef DEBUG
+        Serial.print("Estimated weight (p75 weight):\t");
+        Serial.print(parameters.estimatedWeight / 100.0f);
+        Serial.println(" kg");
+      #endif
+    }
+    // Use first weight
+    else if((parameters.deltaWeight / 100.0f) < 5.0f){
+      parameters.estimatedWeight = weights[scaleID][p25];
+      #ifdef DEBUG
+        Serial.print("Estimated weight (p25 weight):\t");
+        Serial.print(parameters.estimatedWeight / 100.0f);
+        Serial.println(" kg");
+      #endif
+    }
+  }
+
+  payload[22] = parameters.estimatedWeight;
+  payload[23] = parameters.estimatedWeight >> 8;
 
   #ifdef DEBUG
     Serial.print("Payload:\t");
