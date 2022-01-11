@@ -26,4 +26,5 @@
   (lib (name TBP02R2-381-02BE)(type Legacy)(uri ${KIPRJMOD}/../additionalParts/TBP02R2-381-02BE/TBP02R2-381-02BE.lib)(options "")(descr ""))
   (lib (name BH32T-C-G)(type Legacy)(uri ${KIPRJMOD}/../additionalParts/BH32T-C-G/BH32T-C-G.lib)(options "")(descr ""))
   (lib (name TST_1-2450)(type Legacy)(uri ${KIPRJMOD}/../additionalParts/TSR_1-2450/TSR_1-2450.lib)(options "")(descr ""))
+  (lib (name UniversalNode-rescue)(type Legacy)(uri ${KIPRJMOD}/UniversalNode-rescue.lib)(options "")(descr ""))
 )
