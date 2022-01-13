@@ -1,0 +1,32 @@
+\hypertarget{memory_8h_source}{}\doxysection{memory.\+h}
+\label{memory_8h_source}\index{firmware/static-\/weighstation/main/memory.h@{firmware/static-\/weighstation/main/memory.h}}
+\mbox{\hyperlink{memory_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/* }}
+\DoxyCodeLine{2 \textcolor{comment}{ * Memory Card functions for reading and writing data.}}
+\DoxyCodeLine{3 \textcolor{comment}{ */}}
+\DoxyCodeLine{4   }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#ifndef MEMORY\_CARD}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#define MEMORY\_CARD}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}Arduino.h"{}}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <SD.h>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <SPI.h>}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{config_8h}{config.h}}"{}}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{sensors_8h}{sensors.h}}"{}}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{keyword}{class }\mbox{\hyperlink{class_memory}{Memory}} \{}
+\DoxyCodeLine{15   }
+\DoxyCodeLine{16 \textcolor{keyword}{public}:}
+\DoxyCodeLine{17   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_memory_aa9b352ba73f5a07175cfe7cb4383a000}{init}}(); }
+\DoxyCodeLine{18   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_memory_afdff1061b4254a4a9aebb9ef7f322caa}{write\_weigh\_data}}(int16\_t* weights, }
+\DoxyCodeLine{19           int32\_t* timeStamps, }
+\DoxyCodeLine{20           int8\_t* payload, }
+\DoxyCodeLine{21           \textcolor{keyword}{struct} \mbox{\hyperlink{structparameters__t}{parameters\_t}} \&parameters); }
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_memory_a64d2071d661fea452dec337f361fe666}{read\_data}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* fileName); }
+\DoxyCodeLine{24 \};}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

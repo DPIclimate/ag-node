@@ -1,0 +1,102 @@
+\hypertarget{class_lora}{}\doxysection{Lora Class Reference}
+\label{class_lora}\index{Lora@{Lora}}
+
+
+{\ttfamily \#include $<$lora.\+h$>$}
+
+
+
+Collaboration diagram for Lora\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=181pt]{class_lora__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{class_lora_ad6aea7e92b36611ae109038ef09f775f}{init}} ()
+\begin{DoxyCompactList}\small\item\em Initialise \mbox{\hyperlink{class_lora}{Lora}} class. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{class_lora_a1684cebd02af70d9e795c3eb8a088e07}{test\+\_\+connection}} ()
+\begin{DoxyCompactList}\small\item\em Send a test message over Lo\+Ra\+WAN. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{class_lora_ad691dba553e96576ed21ae9bfcce9a9d}{request\+\_\+send}} (int8\+\_\+t $\ast$payload, uint8\+\_\+t port)
+\begin{DoxyCompactList}\small\item\em Request payload be sent over Lo\+Ra\+WAN. \end{DoxyCompactList}\item 
+static bool \mbox{\hyperlink{class_lora_ad648bbf34c8f195ec143979484034940}{check\+\_\+state}} ()
+\begin{DoxyCompactList}\small\item\em Check if payload has been sent. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{class_lora_a033141b20026750cd116aa9fcf15f3e0}{set\+\_\+state}} (bool s)
+\begin{DoxyCompactList}\small\item\em Set the state of transmission. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_lora_ad648bbf34c8f195ec143979484034940}\label{class_lora_ad648bbf34c8f195ec143979484034940}} 
+\index{Lora@{Lora}!check\_state@{check\_state}}
+\index{check\_state@{check\_state}!Lora@{Lora}}
+\doxysubsubsection{\texorpdfstring{check\_state()}{check\_state()}}
+{\footnotesize\ttfamily bool Lora\+::check\+\_\+state (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Check if payload has been sent. 
+
+Check the state of a message which has been qued to send over Lo\+Ra\+WAN. \begin{DoxyReturn}{Returns}
+state True if sent -\/ false if pending. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_lora_ad6aea7e92b36611ae109038ef09f775f}\label{class_lora_ad6aea7e92b36611ae109038ef09f775f}} 
+\index{Lora@{Lora}!init@{init}}
+\index{init@{init}!Lora@{Lora}}
+\doxysubsubsection{\texorpdfstring{init()}{init()}}
+{\footnotesize\ttfamily void Lora\+::init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Initialise \mbox{\hyperlink{class_lora}{Lora}} class. 
+
+Initialise Lo\+Ra\+WAN communications with appropiate settings. Create interrupt for testing Lo\+Ra\+WAN via a button press. \mbox{\Hypertarget{class_lora_ad691dba553e96576ed21ae9bfcce9a9d}\label{class_lora_ad691dba553e96576ed21ae9bfcce9a9d}} 
+\index{Lora@{Lora}!request\_send@{request\_send}}
+\index{request\_send@{request\_send}!Lora@{Lora}}
+\doxysubsubsection{\texorpdfstring{request\_send()}{request\_send()}}
+{\footnotesize\ttfamily void Lora\+::request\+\_\+send (\begin{DoxyParamCaption}\item[{int8\+\_\+t $\ast$}]{payload,  }\item[{uint8\+\_\+t}]{port }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Request payload be sent over Lo\+Ra\+WAN. 
+
+Interface between LMIC functions and \mbox{\hyperlink{class_lora}{Lora}} class. Used so the LMIC sendjob varaible doesn\textquotesingle{}t have to be passed around. 
+\begin{DoxyParams}{Parameters}
+{\em payload} & Payload to send. \\
+\hline
+{\em port} & The f\+Port (TTN) to use -\/ used to differentiate payloads. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_lora_a033141b20026750cd116aa9fcf15f3e0}\label{class_lora_a033141b20026750cd116aa9fcf15f3e0}} 
+\index{Lora@{Lora}!set\_state@{set\_state}}
+\index{set\_state@{set\_state}!Lora@{Lora}}
+\doxysubsubsection{\texorpdfstring{set\_state()}{set\_state()}}
+{\footnotesize\ttfamily void Lora\+::set\+\_\+state (\begin{DoxyParamCaption}\item[{bool}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Set the state of transmission. 
+
+Set the state of a pending message over Lo\+Ra\+WAN. 
+\begin{DoxyParams}{Parameters}
+{\em s} & State of message transmission. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_lora_a1684cebd02af70d9e795c3eb8a088e07}\label{class_lora_a1684cebd02af70d9e795c3eb8a088e07}} 
+\index{Lora@{Lora}!test\_connection@{test\_connection}}
+\index{test\_connection@{test\_connection}!Lora@{Lora}}
+\doxysubsubsection{\texorpdfstring{test\_connection()}{test\_connection()}}
+{\footnotesize\ttfamily void Lora\+::test\+\_\+connection (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Send a test message over Lo\+Ra\+WAN. 
+
+Send a test packet to TTN. Should result in a \char`\"{}success\char`\"{} message showing up on TTN. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+firmware/static-\/weighstation/main/\mbox{\hyperlink{lora_8h}{lora.\+h}}\item 
+firmware/static-\/weighstation/main/\mbox{\hyperlink{lora_8cpp}{lora.\+cpp}}\end{DoxyCompactItemize}

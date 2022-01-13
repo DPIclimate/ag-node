@@ -1,0 +1,196 @@
+\hypertarget{class_weigh_station}{}\doxysection{Weigh\+Station Class Reference}
+\label{class_weigh_station}\index{WeighStation@{WeighStation}}
+
+
+{\ttfamily \#include $<$sensors.\+h$>$}
+
+
+
+Collaboration diagram for Weigh\+Station\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=191pt]{class_weigh_station__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_weigh_station_a01e058a2d06b4e8cd2d00fa4b1c2b5b0}{init}} ()
+\begin{DoxyCompactList}\small\item\em Setup weighscales and zero their offsets (tare) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_weigh_station_a1f5afb1672b5972f52356396923666a2}{sleep}} ()
+\begin{DoxyCompactList}\small\item\em Put the scales in low-\/power mode. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_weigh_station_ab69c16727698904d81663ba714ad485a}{wakeup}} ()
+\begin{DoxyCompactList}\small\item\em Wake up the scales from low-\/power mode. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_weigh_station_a572fd219207d9aa7bb7eaef8d23e5216}{scan}} ()
+\begin{DoxyCompactList}\small\item\em Scan each of the scales and capture any animal weights. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_weigh_station_a55b06e925a4fc338af455c937d24267f}{append\+\_\+payload}} (int8\+\_\+t $\ast$payload)
+\begin{DoxyCompactList}\small\item\em Place payload in storage to send over Lo\+Ra. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_weigh_station_aac01055e59b8ca03edf09a4806e645c1}{forward\+\_\+payload}} ()
+\begin{DoxyCompactList}\small\item\em Send waiting payloads over Lo\+Ra\+WAN. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_weigh_station_a8a15d86451067d6d1af4beac825b7d8c}{check\+\_\+state}} ()
+\begin{DoxyCompactList}\small\item\em Check if scale is currently reading. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{class_weigh_station_a19eefb61baf99e0c990853316907fde6}{tare\+\_\+scales}} ()
+\begin{DoxyCompactList}\small\item\em Zero weighscales. \end{DoxyCompactList}\item 
+static int8\+\_\+t $\ast$ \mbox{\hyperlink{class_weigh_station_a85eda5ce94748171df9235b65dd0537d}{construct\+\_\+payload}} (uint8\+\_\+t scale\+ID)
+\begin{DoxyCompactList}\small\item\em Construct payload to send over Lo\+Ra\+WAN. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const uint8\+\_\+t \mbox{\hyperlink{class_weigh_station_a3ad7b207d38f05b5b09ab8f386962189}{n\+Scales}} = 3
+\begin{DoxyCompactList}\small\item\em Create scale objects. \end{DoxyCompactList}\item 
+static uint8\+\_\+t \mbox{\hyperlink{class_weigh_station_a384e7f90bc7ac347a53943fba90602b3}{payload\+Pos}} = 0
+\begin{DoxyCompactList}\small\item\em Current position in payloads array. \end{DoxyCompactList}\item 
+static const int16\+\_\+t \mbox{\hyperlink{class_weigh_station_a264fc8c318a38f962f7b860cafe27f08}{max\+Arr\+Size}} = 6000
+\begin{DoxyCompactList}\small\item\em Arrays for holding weights and corresponding time. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_weigh_station_a55b06e925a4fc338af455c937d24267f}\label{class_weigh_station_a55b06e925a4fc338af455c937d24267f}} 
+\index{WeighStation@{WeighStation}!append\_payload@{append\_payload}}
+\index{append\_payload@{append\_payload}!WeighStation@{WeighStation}}
+\doxysubsubsection{\texorpdfstring{append\_payload()}{append\_payload()}}
+{\footnotesize\ttfamily void Weigh\+Station\+::append\+\_\+payload (\begin{DoxyParamCaption}\item[{int8\+\_\+t $\ast$}]{payload }\end{DoxyParamCaption})}
+
+
+
+Place payload in storage to send over Lo\+Ra. 
+
+Add payload to the stack to be sent over Lo\+Ra\+WAN when the next window opens. 
+\begin{DoxyParams}{Parameters}
+{\em payload} & An array consiting of a payload to send. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_weigh_station_a8a15d86451067d6d1af4beac825b7d8c}\label{class_weigh_station_a8a15d86451067d6d1af4beac825b7d8c}} 
+\index{WeighStation@{WeighStation}!check\_state@{check\_state}}
+\index{check\_state@{check\_state}!WeighStation@{WeighStation}}
+\doxysubsubsection{\texorpdfstring{check\_state()}{check\_state()}}
+{\footnotesize\ttfamily bool Weigh\+Station\+::check\+\_\+state (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Check if scale is currently reading. 
+
+Check if there is an animal on any one of the scales. \begin{DoxyReturn}{Returns}
+A bool indicating if this is true (there is an animal) or false 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_weigh_station_a85eda5ce94748171df9235b65dd0537d}\label{class_weigh_station_a85eda5ce94748171df9235b65dd0537d}} 
+\index{WeighStation@{WeighStation}!construct\_payload@{construct\_payload}}
+\index{construct\_payload@{construct\_payload}!WeighStation@{WeighStation}}
+\doxysubsubsection{\texorpdfstring{construct\_payload()}{construct\_payload()}}
+{\footnotesize\ttfamily int8\+\_\+t $\ast$ Weigh\+Station\+::construct\+\_\+payload (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{scale\+ID }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Construct payload to send over Lo\+Ra\+WAN. 
+
+Construct payload to send over Lo\+Ra\+WAN and calculate weighscale reading parameters. 
+\begin{DoxyParams}{Parameters}
+{\em scale\+ID} & ID of scale which these reading correspond to. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+payload A payload to send over Lo\+Ra\+WAN. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_weigh_station_aac01055e59b8ca03edf09a4806e645c1}\label{class_weigh_station_aac01055e59b8ca03edf09a4806e645c1}} 
+\index{WeighStation@{WeighStation}!forward\_payload@{forward\_payload}}
+\index{forward\_payload@{forward\_payload}!WeighStation@{WeighStation}}
+\doxysubsubsection{\texorpdfstring{forward\_payload()}{forward\_payload()}}
+{\footnotesize\ttfamily void Weigh\+Station\+::forward\+\_\+payload (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Send waiting payloads over Lo\+Ra\+WAN. 
+
+Pop a payload off the pending stack and send it over Lo\+Ra\+WAN. Decrement the payload position to lower down the stack. \mbox{\Hypertarget{class_weigh_station_a01e058a2d06b4e8cd2d00fa4b1c2b5b0}\label{class_weigh_station_a01e058a2d06b4e8cd2d00fa4b1c2b5b0}} 
+\index{WeighStation@{WeighStation}!init@{init}}
+\index{init@{init}!WeighStation@{WeighStation}}
+\doxysubsubsection{\texorpdfstring{init()}{init()}}
+{\footnotesize\ttfamily void Weigh\+Station\+::init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Setup weighscales and zero their offsets (tare) 
+
+Initialise the weighstation. Set their calibration factors. Zero them (tare). \mbox{\Hypertarget{class_weigh_station_a572fd219207d9aa7bb7eaef8d23e5216}\label{class_weigh_station_a572fd219207d9aa7bb7eaef8d23e5216}} 
+\index{WeighStation@{WeighStation}!scan@{scan}}
+\index{scan@{scan}!WeighStation@{WeighStation}}
+\doxysubsubsection{\texorpdfstring{scan()}{scan()}}
+{\footnotesize\ttfamily void Weigh\+Station\+::scan (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Scan each of the scales and capture any animal weights. 
+
+Main function within \mbox{\hyperlink{class_weigh_station}{Weigh\+Station}} class. Handles the functioning of each scale and keeps track of data. \mbox{\Hypertarget{class_weigh_station_a1f5afb1672b5972f52356396923666a2}\label{class_weigh_station_a1f5afb1672b5972f52356396923666a2}} 
+\index{WeighStation@{WeighStation}!sleep@{sleep}}
+\index{sleep@{sleep}!WeighStation@{WeighStation}}
+\doxysubsubsection{\texorpdfstring{sleep()}{sleep()}}
+{\footnotesize\ttfamily void Weigh\+Station\+::sleep (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Put the scales in low-\/power mode. 
+
+Power down ADC\textquotesingle{}s (HX711) when in sleep mode. \mbox{\Hypertarget{class_weigh_station_a19eefb61baf99e0c990853316907fde6}\label{class_weigh_station_a19eefb61baf99e0c990853316907fde6}} 
+\index{WeighStation@{WeighStation}!tare\_scales@{tare\_scales}}
+\index{tare\_scales@{tare\_scales}!WeighStation@{WeighStation}}
+\doxysubsubsection{\texorpdfstring{tare\_scales()}{tare\_scales()}}
+{\footnotesize\ttfamily void Weigh\+Station\+::tare\+\_\+scales (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Zero weighscales. 
+
+Reset all scales to zero (tare weight). Call often as scales drift over time. \mbox{\Hypertarget{class_weigh_station_ab69c16727698904d81663ba714ad485a}\label{class_weigh_station_ab69c16727698904d81663ba714ad485a}} 
+\index{WeighStation@{WeighStation}!wakeup@{wakeup}}
+\index{wakeup@{wakeup}!WeighStation@{WeighStation}}
+\doxysubsubsection{\texorpdfstring{wakeup()}{wakeup()}}
+{\footnotesize\ttfamily void Weigh\+Station\+::wakeup (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Wake up the scales from low-\/power mode. 
+
+Power up ADC\textquotesingle{}s (HX711) when coming out of sleep mode. 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_weigh_station_a264fc8c318a38f962f7b860cafe27f08}\label{class_weigh_station_a264fc8c318a38f962f7b860cafe27f08}} 
+\index{WeighStation@{WeighStation}!maxArrSize@{maxArrSize}}
+\index{maxArrSize@{maxArrSize}!WeighStation@{WeighStation}}
+\doxysubsubsection{\texorpdfstring{maxArrSize}{maxArrSize}}
+{\footnotesize\ttfamily const int16\+\_\+t Weigh\+Station\+::max\+Arr\+Size = 6000\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Arrays for holding weights and corresponding time. 
+
+\mbox{\Hypertarget{class_weigh_station_a3ad7b207d38f05b5b09ab8f386962189}\label{class_weigh_station_a3ad7b207d38f05b5b09ab8f386962189}} 
+\index{WeighStation@{WeighStation}!nScales@{nScales}}
+\index{nScales@{nScales}!WeighStation@{WeighStation}}
+\doxysubsubsection{\texorpdfstring{nScales}{nScales}}
+{\footnotesize\ttfamily const uint8\+\_\+t Weigh\+Station\+::n\+Scales = 3\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Create scale objects. 
+
+\mbox{\Hypertarget{class_weigh_station_a384e7f90bc7ac347a53943fba90602b3}\label{class_weigh_station_a384e7f90bc7ac347a53943fba90602b3}} 
+\index{WeighStation@{WeighStation}!payloadPos@{payloadPos}}
+\index{payloadPos@{payloadPos}!WeighStation@{WeighStation}}
+\doxysubsubsection{\texorpdfstring{payloadPos}{payloadPos}}
+{\footnotesize\ttfamily uint8\+\_\+t Weigh\+Station\+::payload\+Pos = 0\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Current position in payloads array. 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+firmware/static-\/weighstation/main/\mbox{\hyperlink{sensors_8h}{sensors.\+h}}\item 
+firmware/static-\/weighstation/main/\mbox{\hyperlink{sensors_8cpp}{sensors.\+cpp}}\end{DoxyCompactItemize}

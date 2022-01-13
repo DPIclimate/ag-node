@@ -1,0 +1,146 @@
+\hypertarget{structparameters__t}{}\doxysection{parameters\+\_\+t Struct Reference}
+\label{structparameters__t}\index{parameters\_t@{parameters\_t}}
+
+
+{\ttfamily \#include $<$sensors.\+h$>$}
+
+
+
+Collaboration diagram for parameters\+\_\+t\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=178pt]{structparameters__t__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+uint32\+\_\+t \mbox{\hyperlink{structparameters__t_ab4351267a159181e1aeec8beb7e5d7cf}{unix\+Time}}
+\begin{DoxyCompactList}\small\item\em Unix time the recording finished. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{structparameters__t_abc630171406397caed8abbc49c5b037d}{scale\+ID}}
+\begin{DoxyCompactList}\small\item\em The scale that was used. \end{DoxyCompactList}\item 
+int16\+\_\+t \mbox{\hyperlink{structparameters__t_a93f282dface05e0826495b37ee1d81c7}{start\+Weight}}
+\begin{DoxyCompactList}\small\item\em The weight at 25\% of time\+On\+Scale. \end{DoxyCompactList}\item 
+int16\+\_\+t \mbox{\hyperlink{structparameters__t_a9ad7c11b3c7496f0b2b6064874805522}{middle\+Weight}}
+\begin{DoxyCompactList}\small\item\em The weight at 50\% of time\+On\+Scale. \end{DoxyCompactList}\item 
+int16\+\_\+t \mbox{\hyperlink{structparameters__t_a7a61d88b4ab20cd5a7b6d6ae837c763e}{end\+Weight}}
+\begin{DoxyCompactList}\small\item\em The weight at 75\% of time\+On\+Scale. \end{DoxyCompactList}\item 
+int16\+\_\+t \mbox{\hyperlink{structparameters__t_ac29a3d9a3822a46f2a59b9724580c860}{av\+Weight}}
+\begin{DoxyCompactList}\small\item\em The average weight between 25\% and 75\% of time\+On\+Scale. \end{DoxyCompactList}\item 
+int16\+\_\+t \mbox{\hyperlink{structparameters__t_a764695918128e8692088ae9cc76abb71}{stdev\+Weight}}
+\begin{DoxyCompactList}\small\item\em The SD weight between 25\% and 75\% of time\+On\+Scale. \end{DoxyCompactList}\item 
+int16\+\_\+t \mbox{\hyperlink{structparameters__t_a8a8e0cba7cd93ce3bc708b8ad37d5a1e}{delta\+Weight}}
+\begin{DoxyCompactList}\small\item\em Difference between end\+Weight and start\+Weight. \end{DoxyCompactList}\item 
+int16\+\_\+t \mbox{\hyperlink{structparameters__t_ab60dfee5974f0dfa94a9c124a2d3050a}{estimated\+Weight}}
+\begin{DoxyCompactList}\small\item\em Best estimate weight. \end{DoxyCompactList}\item 
+int32\+\_\+t \mbox{\hyperlink{structparameters__t_a85e9cc2e8d132d7ec843ff85eb50cc8d}{time\+On\+Scale}}
+\begin{DoxyCompactList}\small\item\em The time a sheep spent on the scale. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structparameters__t_ac29a3d9a3822a46f2a59b9724580c860}\label{structparameters__t_ac29a3d9a3822a46f2a59b9724580c860}} 
+\index{parameters\_t@{parameters\_t}!avWeight@{avWeight}}
+\index{avWeight@{avWeight}!parameters\_t@{parameters\_t}}
+\doxysubsubsection{\texorpdfstring{avWeight}{avWeight}}
+{\footnotesize\ttfamily int16\+\_\+t parameters\+\_\+t\+::av\+Weight}
+
+
+
+The average weight between 25\% and 75\% of time\+On\+Scale. 
+
+\mbox{\Hypertarget{structparameters__t_a8a8e0cba7cd93ce3bc708b8ad37d5a1e}\label{structparameters__t_a8a8e0cba7cd93ce3bc708b8ad37d5a1e}} 
+\index{parameters\_t@{parameters\_t}!deltaWeight@{deltaWeight}}
+\index{deltaWeight@{deltaWeight}!parameters\_t@{parameters\_t}}
+\doxysubsubsection{\texorpdfstring{deltaWeight}{deltaWeight}}
+{\footnotesize\ttfamily int16\+\_\+t parameters\+\_\+t\+::delta\+Weight}
+
+
+
+Difference between end\+Weight and start\+Weight. 
+
+\mbox{\Hypertarget{structparameters__t_a7a61d88b4ab20cd5a7b6d6ae837c763e}\label{structparameters__t_a7a61d88b4ab20cd5a7b6d6ae837c763e}} 
+\index{parameters\_t@{parameters\_t}!endWeight@{endWeight}}
+\index{endWeight@{endWeight}!parameters\_t@{parameters\_t}}
+\doxysubsubsection{\texorpdfstring{endWeight}{endWeight}}
+{\footnotesize\ttfamily int16\+\_\+t parameters\+\_\+t\+::end\+Weight}
+
+
+
+The weight at 75\% of time\+On\+Scale. 
+
+\mbox{\Hypertarget{structparameters__t_ab60dfee5974f0dfa94a9c124a2d3050a}\label{structparameters__t_ab60dfee5974f0dfa94a9c124a2d3050a}} 
+\index{parameters\_t@{parameters\_t}!estimatedWeight@{estimatedWeight}}
+\index{estimatedWeight@{estimatedWeight}!parameters\_t@{parameters\_t}}
+\doxysubsubsection{\texorpdfstring{estimatedWeight}{estimatedWeight}}
+{\footnotesize\ttfamily int16\+\_\+t parameters\+\_\+t\+::estimated\+Weight}
+
+
+
+Best estimate weight. 
+
+\mbox{\Hypertarget{structparameters__t_a9ad7c11b3c7496f0b2b6064874805522}\label{structparameters__t_a9ad7c11b3c7496f0b2b6064874805522}} 
+\index{parameters\_t@{parameters\_t}!middleWeight@{middleWeight}}
+\index{middleWeight@{middleWeight}!parameters\_t@{parameters\_t}}
+\doxysubsubsection{\texorpdfstring{middleWeight}{middleWeight}}
+{\footnotesize\ttfamily int16\+\_\+t parameters\+\_\+t\+::middle\+Weight}
+
+
+
+The weight at 50\% of time\+On\+Scale. 
+
+\mbox{\Hypertarget{structparameters__t_abc630171406397caed8abbc49c5b037d}\label{structparameters__t_abc630171406397caed8abbc49c5b037d}} 
+\index{parameters\_t@{parameters\_t}!scaleID@{scaleID}}
+\index{scaleID@{scaleID}!parameters\_t@{parameters\_t}}
+\doxysubsubsection{\texorpdfstring{scaleID}{scaleID}}
+{\footnotesize\ttfamily uint8\+\_\+t parameters\+\_\+t\+::scale\+ID}
+
+
+
+The scale that was used. 
+
+\mbox{\Hypertarget{structparameters__t_a93f282dface05e0826495b37ee1d81c7}\label{structparameters__t_a93f282dface05e0826495b37ee1d81c7}} 
+\index{parameters\_t@{parameters\_t}!startWeight@{startWeight}}
+\index{startWeight@{startWeight}!parameters\_t@{parameters\_t}}
+\doxysubsubsection{\texorpdfstring{startWeight}{startWeight}}
+{\footnotesize\ttfamily int16\+\_\+t parameters\+\_\+t\+::start\+Weight}
+
+
+
+The weight at 25\% of time\+On\+Scale. 
+
+\mbox{\Hypertarget{structparameters__t_a764695918128e8692088ae9cc76abb71}\label{structparameters__t_a764695918128e8692088ae9cc76abb71}} 
+\index{parameters\_t@{parameters\_t}!stdevWeight@{stdevWeight}}
+\index{stdevWeight@{stdevWeight}!parameters\_t@{parameters\_t}}
+\doxysubsubsection{\texorpdfstring{stdevWeight}{stdevWeight}}
+{\footnotesize\ttfamily int16\+\_\+t parameters\+\_\+t\+::stdev\+Weight}
+
+
+
+The SD weight between 25\% and 75\% of time\+On\+Scale. 
+
+\mbox{\Hypertarget{structparameters__t_a85e9cc2e8d132d7ec843ff85eb50cc8d}\label{structparameters__t_a85e9cc2e8d132d7ec843ff85eb50cc8d}} 
+\index{parameters\_t@{parameters\_t}!timeOnScale@{timeOnScale}}
+\index{timeOnScale@{timeOnScale}!parameters\_t@{parameters\_t}}
+\doxysubsubsection{\texorpdfstring{timeOnScale}{timeOnScale}}
+{\footnotesize\ttfamily int32\+\_\+t parameters\+\_\+t\+::time\+On\+Scale}
+
+
+
+The time a sheep spent on the scale. 
+
+\mbox{\Hypertarget{structparameters__t_ab4351267a159181e1aeec8beb7e5d7cf}\label{structparameters__t_ab4351267a159181e1aeec8beb7e5d7cf}} 
+\index{parameters\_t@{parameters\_t}!unixTime@{unixTime}}
+\index{unixTime@{unixTime}!parameters\_t@{parameters\_t}}
+\doxysubsubsection{\texorpdfstring{unixTime}{unixTime}}
+{\footnotesize\ttfamily uint32\+\_\+t parameters\+\_\+t\+::unix\+Time}
+
+
+
+Unix time the recording finished. 
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+firmware/static-\/weighstation/main/\mbox{\hyperlink{sensors_8h}{sensors.\+h}}\end{DoxyCompactItemize}

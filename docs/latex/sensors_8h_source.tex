@@ -1,0 +1,124 @@
+\hypertarget{sensors_8h_source}{}\doxysection{sensors.\+h}
+\label{sensors_8h_source}\index{firmware/static-\/weighstation/main/sensors.h@{firmware/static-\/weighstation/main/sensors.h}}
+\mbox{\hyperlink{sensors_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef SENSORS}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define SENSORS}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{comment}{// External libraries}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <Wire.h>}}
+\DoxyCodeLine{6 \textcolor{comment}{// Weigh scales}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <HX711.h>}}
+\DoxyCodeLine{8 \textcolor{comment}{// Time keeping}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <DS1307RTC.h>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <TimeLib.h>}}
+\DoxyCodeLine{11 \textcolor{comment}{// Power monitoring}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include <Adafruit\_INA219.h>}}
+\DoxyCodeLine{13 \textcolor{preprocessor}{\#include "{}Arduino.h"{}}}
+\DoxyCodeLine{14 \textcolor{comment}{// Temperature}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include <DallasTemperature.h>}}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{comment}{// Internal libraries}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{config_8h}{config.h}}"{}}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{memory_8h}{memory.h}}"{}}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#ifdef ENABLE\_LORAWAN}}
+\DoxyCodeLine{21 \textcolor{preprocessor}{  \#include "{}\mbox{\hyperlink{lora_8h}{lora.h}}"{}}}
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24 \textcolor{comment}{/* }}
+\DoxyCodeLine{25 \textcolor{comment}{Struct that holds all desired variables from weight reading}}
+\DoxyCodeLine{26 \textcolor{comment}{*/}}
+\DoxyCodeLine{27 \textcolor{keyword}{struct }\mbox{\hyperlink{structparameters__t}{parameters\_t}} \{}
+\DoxyCodeLine{28   uint32\_t \mbox{\hyperlink{structparameters__t_ab4351267a159181e1aeec8beb7e5d7cf}{unixTime}}; }
+\DoxyCodeLine{29   uint8\_t \mbox{\hyperlink{structparameters__t_abc630171406397caed8abbc49c5b037d}{scaleID}}; }
+\DoxyCodeLine{30   int16\_t \mbox{\hyperlink{structparameters__t_a93f282dface05e0826495b37ee1d81c7}{startWeight}}; }
+\DoxyCodeLine{31   int16\_t \mbox{\hyperlink{structparameters__t_a9ad7c11b3c7496f0b2b6064874805522}{middleWeight}}; }
+\DoxyCodeLine{32   int16\_t \mbox{\hyperlink{structparameters__t_a7a61d88b4ab20cd5a7b6d6ae837c763e}{endWeight}}; }
+\DoxyCodeLine{33   int16\_t \mbox{\hyperlink{structparameters__t_ac29a3d9a3822a46f2a59b9724580c860}{avWeight}}; }
+\DoxyCodeLine{34   int16\_t \mbox{\hyperlink{structparameters__t_a764695918128e8692088ae9cc76abb71}{stdevWeight}}; }
+\DoxyCodeLine{35   int16\_t \mbox{\hyperlink{structparameters__t_a8a8e0cba7cd93ce3bc708b8ad37d5a1e}{deltaWeight}}; }
+\DoxyCodeLine{36   int16\_t \mbox{\hyperlink{structparameters__t_ab60dfee5974f0dfa94a9c124a2d3050a}{estimatedWeight}}; }
+\DoxyCodeLine{37   int32\_t \mbox{\hyperlink{structparameters__t_a85e9cc2e8d132d7ec843ff85eb50cc8d}{timeOnScale}}; }
+\DoxyCodeLine{38 \};}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40 \textcolor{keyword}{class }\mbox{\hyperlink{class_sensors}{Sensors}} \{}
+\DoxyCodeLine{41   \textcolor{keyword}{public}:}
+\DoxyCodeLine{42   \textcolor{keyword}{static} int8\_t* \mbox{\hyperlink{class_sensors_af6e7213acaa8050fe13fa3c00d38710b}{construct\_payload}}(); }
+\DoxyCodeLine{43 \};}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45 \textcolor{keyword}{class }\mbox{\hyperlink{class_weigh_station}{WeighStation}} \{}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47   \textcolor{keyword}{const} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} SCALE\_AVERAGES = 1; }
+\DoxyCodeLine{48 }
+\DoxyCodeLine{49   \textcolor{keyword}{const} \textcolor{keywordtype}{float} ZERO\_THRESHOLD = 0.5; }
+\DoxyCodeLine{50 }
+\DoxyCodeLine{51   \textcolor{keyword}{const} \textcolor{keywordtype}{float} triggerWeight = 5; }
+\DoxyCodeLine{52 }
+\DoxyCodeLine{53   int8\_t payloads[\mbox{\hyperlink{config_8h_a9b57ad07e79980a46d149c0fe97a434d}{STORED\_PAYLOAD\_SIZE}}][\mbox{\hyperlink{config_8h_a2d49fd8b33cf2b041d1e6d18d3e98fbf}{WEIGH\_PAYLOAD\_SIZE}}]; }
+\DoxyCodeLine{54 }
+\DoxyCodeLine{55   \textcolor{keyword}{public}:}
+\DoxyCodeLine{56   }
+\DoxyCodeLine{57   \textcolor{keyword}{static} \textcolor{keyword}{const} uint8\_t \mbox{\hyperlink{class_weigh_station_a3ad7b207d38f05b5b09ab8f386962189}{nScales}} = 3; }
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59   \textcolor{keyword}{static} uint8\_t \mbox{\hyperlink{class_weigh_station_a384e7f90bc7ac347a53943fba90602b3}{payloadPos}}; }
+\DoxyCodeLine{60 }
+\DoxyCodeLine{61   \textcolor{keyword}{static} \textcolor{keyword}{const} int16\_t \mbox{\hyperlink{class_weigh_station_a264fc8c318a38f962f7b860cafe27f08}{maxArrSize}} = 6000; }
+\DoxyCodeLine{62 }
+\DoxyCodeLine{63   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_weigh_station_a01e058a2d06b4e8cd2d00fa4b1c2b5b0}{init}}(); }
+\DoxyCodeLine{64 }
+\DoxyCodeLine{65   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_weigh_station_a19eefb61baf99e0c990853316907fde6}{tare\_scales}}(); }
+\DoxyCodeLine{66 }
+\DoxyCodeLine{67   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_weigh_station_a1f5afb1672b5972f52356396923666a2}{sleep}}(); }
+\DoxyCodeLine{68 }
+\DoxyCodeLine{69   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_weigh_station_ab69c16727698904d81663ba714ad485a}{wakeup}}(); }
+\DoxyCodeLine{70   }
+\DoxyCodeLine{71   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_weigh_station_a572fd219207d9aa7bb7eaef8d23e5216}{scan}}(); }
+\DoxyCodeLine{72 }
+\DoxyCodeLine{73   \textcolor{keyword}{static} int8\_t* \mbox{\hyperlink{class_weigh_station_a85eda5ce94748171df9235b65dd0537d}{construct\_payload}}(uint8\_t scaleID); }
+\DoxyCodeLine{74 }
+\DoxyCodeLine{75   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_weigh_station_a55b06e925a4fc338af455c937d24267f}{append\_payload}}(int8\_t* payload); }
+\DoxyCodeLine{76 }
+\DoxyCodeLine{77   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_weigh_station_aac01055e59b8ca03edf09a4806e645c1}{forward\_payload}}(); }
+\DoxyCodeLine{78 }
+\DoxyCodeLine{79   \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_weigh_station_a8a15d86451067d6d1af4beac825b7d8c}{check\_state}}(); }
+\DoxyCodeLine{80 }
+\DoxyCodeLine{81 \};}
+\DoxyCodeLine{82 }
+\DoxyCodeLine{83 \textcolor{keyword}{class }\mbox{\hyperlink{class_monitoring}{Monitoring}} \{}
+\DoxyCodeLine{84   \textcolor{keyword}{public}:}
+\DoxyCodeLine{85     \textcolor{comment}{// Power monitoring addresses}}
+\DoxyCodeLine{86     \textcolor{keyword}{static} \textcolor{keyword}{const} uint8\_t \mbox{\hyperlink{class_monitoring_afb03ae07fdaeb0d7f7baa0f28a7ea793}{batteryAddr}} = 0x40;}
+\DoxyCodeLine{87     \textcolor{keyword}{static} \textcolor{keyword}{const} uint8\_t \mbox{\hyperlink{class_monitoring_a007f4bd60e18e3cd30e3c7890e1ab526}{solarAddr}} = 0x44;}
+\DoxyCodeLine{88 }
+\DoxyCodeLine{89     \textcolor{comment}{// Monitoring connection states}}
+\DoxyCodeLine{90     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_monitoring_af4c7560e3abe66ef2730165025c5934c}{batteryConnected}};}
+\DoxyCodeLine{91     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_monitoring_a492ff13ae1f5b4623a20621e4bcb869b}{solarConnected}};}
+\DoxyCodeLine{92     }
+\DoxyCodeLine{93     \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_monitoring_a693875934e185fb6c98ecedac42f05c9}{init}}(); }
+\DoxyCodeLine{94     }
+\DoxyCodeLine{95     \textcolor{keyword}{static} int16\_t \mbox{\hyperlink{class_monitoring_afbd651c1381c16b0abf7e1c0ec0aee04}{voltage}}(\textcolor{keywordtype}{char} type); }
+\DoxyCodeLine{96     }
+\DoxyCodeLine{97     \textcolor{keyword}{static} int16\_t \mbox{\hyperlink{class_monitoring_acdb5a722905269a131e928ed2982603d}{current}}(\textcolor{keywordtype}{char} type); }
+\DoxyCodeLine{98     }
+\DoxyCodeLine{99     \textcolor{keyword}{static} int16\_t \mbox{\hyperlink{class_monitoring_a828d67b5f5e7b835217e286c4c6385ab}{power}}(\textcolor{keywordtype}{char} type); }
+\DoxyCodeLine{100 \};}
+\DoxyCodeLine{101 }
+\DoxyCodeLine{102 \textcolor{keyword}{class }\mbox{\hyperlink{class_temperature}{Temperature}} \{}
+\DoxyCodeLine{103   \textcolor{keyword}{static} int8\_t \textcolor{keyword}{const} TEMPERATURE\_RESOLUTION = 9; }
+\DoxyCodeLine{104   \textcolor{keyword}{public}:}
+\DoxyCodeLine{105     \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_temperature_af0683dd8e7c2ccd61907fdd0832aaa56}{init}}(DallasTemperature \mbox{\hyperlink{sensors_8cpp_a806174e1ebf9b917c7be92aa2a37b021}{sensor}}); }
+\DoxyCodeLine{106     \textcolor{keyword}{static} int16\_t \mbox{\hyperlink{class_temperature_a45bbeb8f6938a0848e530aa7c3f86ef8}{measure}}(); }
+\DoxyCodeLine{107 \};}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{109 }
+\DoxyCodeLine{110 \textcolor{keyword}{class }\mbox{\hyperlink{class_real_time_clock}{RealTimeClock}} \{}
+\DoxyCodeLine{111   }
+\DoxyCodeLine{112   \textcolor{keyword}{public}:}
+\DoxyCodeLine{113   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_real_time_clock_aa7b5e8f3c3e85854b3fde7bc6fdc10b0}{init}}(); }
+\DoxyCodeLine{114 }
+\DoxyCodeLine{115   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_real_time_clock_a5950299e17c1cabbf576df9f599a2449}{set\_time}}(); }
+\DoxyCodeLine{116 \};}
+\DoxyCodeLine{117 }
+\DoxyCodeLine{118 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

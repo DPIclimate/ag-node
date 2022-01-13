@@ -1,0 +1,101 @@
+\hypertarget{lora_8cpp}{}\doxysection{firmware/static-\/weighstation/main/lora.cpp File Reference}
+\label{lora_8cpp}\index{firmware/static-\/weighstation/main/lora.cpp@{firmware/static-\/weighstation/main/lora.cpp}}
+{\ttfamily \#include \char`\"{}lora.\+h\char`\"{}}\newline
+Include dependency graph for lora.\+cpp\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=231pt]{lora_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{lora_8cpp_abdfe3ba4efb567c2899b3cb1fc11a67b}{lorawan\+\_\+send}} (osjob\+\_\+t $\ast$j, int8\+\_\+t $\ast$payload, uint8\+\_\+t port)
+\item 
+void \mbox{\hyperlink{lora_8cpp_a749d288bbaa1d524c7de5c497a653794}{print\+Hex2}} (unsigned v)
+\item 
+void \mbox{\hyperlink{lora_8cpp_aaead836f5e0f65f5906b7ce269e92436}{on\+Event}} (ev\+\_\+t ev)
+\item 
+void \mbox{\hyperlink{lora_8cpp_ad00e5aa32f425c7cf5b551edbe4e2018}{os\+\_\+get\+Art\+Eui}} (u1\+\_\+t $\ast$buf)
+\item 
+void \mbox{\hyperlink{lora_8cpp_a59f8459c9afe001b9d082b88f24bbc06}{os\+\_\+get\+Dev\+Eui}} (u1\+\_\+t $\ast$buf)
+\item 
+void \mbox{\hyperlink{lora_8cpp_a876d512ca10c7f577c86f5dc1894bc49}{os\+\_\+get\+Dev\+Key}} (u1\+\_\+t $\ast$buf)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const lmic\+\_\+pinmap \mbox{\hyperlink{lora_8cpp_a82b2c57ed09941537a4e8bf84b35a5eb}{lmic\+\_\+pins}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{lora_8cpp_abdfe3ba4efb567c2899b3cb1fc11a67b}\label{lora_8cpp_abdfe3ba4efb567c2899b3cb1fc11a67b}} 
+\index{lora.cpp@{lora.cpp}!lorawan\_send@{lorawan\_send}}
+\index{lorawan\_send@{lorawan\_send}!lora.cpp@{lora.cpp}}
+\doxysubsubsection{\texorpdfstring{lorawan\_send()}{lorawan\_send()}}
+{\footnotesize\ttfamily void lorawan\+\_\+send (\begin{DoxyParamCaption}\item[{osjob\+\_\+t $\ast$}]{j,  }\item[{int8\+\_\+t $\ast$}]{payload,  }\item[{uint8\+\_\+t}]{port }\end{DoxyParamCaption})}
+
+Send payload (packet) over Lo\+Ra\+WAN. 
+\begin{DoxyParams}{Parameters}
+{\em j} & The LMIC job (sendjob). \\
+\hline
+{\em payload} & The payload to send. \\
+\hline
+{\em port} & The f\+Port (TTN) to use -\/ used to differentiate payloads. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{lora_8cpp_aaead836f5e0f65f5906b7ce269e92436}\label{lora_8cpp_aaead836f5e0f65f5906b7ce269e92436}} 
+\index{lora.cpp@{lora.cpp}!onEvent@{onEvent}}
+\index{onEvent@{onEvent}!lora.cpp@{lora.cpp}}
+\doxysubsubsection{\texorpdfstring{onEvent()}{onEvent()}}
+{\footnotesize\ttfamily void on\+Event (\begin{DoxyParamCaption}\item[{ev\+\_\+t}]{ev }\end{DoxyParamCaption})}
+
+LMIC function to identify Lo\+Ra\+WAN state. \mbox{\Hypertarget{lora_8cpp_ad00e5aa32f425c7cf5b551edbe4e2018}\label{lora_8cpp_ad00e5aa32f425c7cf5b551edbe4e2018}} 
+\index{lora.cpp@{lora.cpp}!os\_getArtEui@{os\_getArtEui}}
+\index{os\_getArtEui@{os\_getArtEui}!lora.cpp@{lora.cpp}}
+\doxysubsubsection{\texorpdfstring{os\_getArtEui()}{os\_getArtEui()}}
+{\footnotesize\ttfamily void os\+\_\+get\+Art\+Eui (\begin{DoxyParamCaption}\item[{u1\+\_\+t $\ast$}]{buf }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{lora_8cpp_a59f8459c9afe001b9d082b88f24bbc06}\label{lora_8cpp_a59f8459c9afe001b9d082b88f24bbc06}} 
+\index{lora.cpp@{lora.cpp}!os\_getDevEui@{os\_getDevEui}}
+\index{os\_getDevEui@{os\_getDevEui}!lora.cpp@{lora.cpp}}
+\doxysubsubsection{\texorpdfstring{os\_getDevEui()}{os\_getDevEui()}}
+{\footnotesize\ttfamily void os\+\_\+get\+Dev\+Eui (\begin{DoxyParamCaption}\item[{u1\+\_\+t $\ast$}]{buf }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{lora_8cpp_a876d512ca10c7f577c86f5dc1894bc49}\label{lora_8cpp_a876d512ca10c7f577c86f5dc1894bc49}} 
+\index{lora.cpp@{lora.cpp}!os\_getDevKey@{os\_getDevKey}}
+\index{os\_getDevKey@{os\_getDevKey}!lora.cpp@{lora.cpp}}
+\doxysubsubsection{\texorpdfstring{os\_getDevKey()}{os\_getDevKey()}}
+{\footnotesize\ttfamily void os\+\_\+get\+Dev\+Key (\begin{DoxyParamCaption}\item[{u1\+\_\+t $\ast$}]{buf }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{lora_8cpp_a749d288bbaa1d524c7de5c497a653794}\label{lora_8cpp_a749d288bbaa1d524c7de5c497a653794}} 
+\index{lora.cpp@{lora.cpp}!printHex2@{printHex2}}
+\index{printHex2@{printHex2}!lora.cpp@{lora.cpp}}
+\doxysubsubsection{\texorpdfstring{printHex2()}{printHex2()}}
+{\footnotesize\ttfamily void print\+Hex2 (\begin{DoxyParamCaption}\item[{unsigned}]{v }\end{DoxyParamCaption})}
+
+LMIC function to convert key to HEX 
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{lora_8cpp_a82b2c57ed09941537a4e8bf84b35a5eb}\label{lora_8cpp_a82b2c57ed09941537a4e8bf84b35a5eb}} 
+\index{lora.cpp@{lora.cpp}!lmic\_pins@{lmic\_pins}}
+\index{lmic\_pins@{lmic\_pins}!lora.cpp@{lora.cpp}}
+\doxysubsubsection{\texorpdfstring{lmic\_pins}{lmic\_pins}}
+{\footnotesize\ttfamily const lmic\+\_\+pinmap lmic\+\_\+pins}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{= \{}
+\DoxyCodeLine{  }
+\DoxyCodeLine{  .nss = 10,}
+\DoxyCodeLine{  .rxtx = LMIC\_UNUSED\_PIN,}
+\DoxyCodeLine{  .rst = 9,}
+\DoxyCodeLine{  .dio = \{ 2, 5, 6 \},}
+\DoxyCodeLine{  .rxtx\_rx\_active = 0,}
+\DoxyCodeLine{  .rssi\_cal = 0,}
+\DoxyCodeLine{  .spi\_freq = 1000000,}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}

@@ -1,0 +1,33 @@
+\hypertarget{lora_8h_source}{}\doxysection{lora.\+h}
+\label{lora_8h_source}\index{firmware/static-\/weighstation/main/lora.h@{firmware/static-\/weighstation/main/lora.h}}
+\mbox{\hyperlink{lora_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{ * Static functions for communications between Feather M0 and node. }}
+\DoxyCodeLine{3 \textcolor{comment}{ */}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#ifndef LORA}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#define LORA}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{comment}{// LoRaWAN library imports}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include "{}lmic.h"{}}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <hal/hal.h>}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include <SPI.h>}}
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{config_8h}{config.h}}"{}}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15 \textcolor{keyword}{class }\mbox{\hyperlink{class_lora}{Lora}} \{}
+\DoxyCodeLine{16   \textcolor{keyword}{static} \textcolor{keyword}{const} int8\_t IRQ = 0;}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18 \textcolor{keyword}{public}:}
+\DoxyCodeLine{19   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_lora_ad6aea7e92b36611ae109038ef09f775f}{init}}(); }
+\DoxyCodeLine{20   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_lora_a1684cebd02af70d9e795c3eb8a088e07}{test\_connection}}(); }
+\DoxyCodeLine{21   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_lora_ad691dba553e96576ed21ae9bfcce9a9d}{request\_send}}(int8\_t* payload, }
+\DoxyCodeLine{22           uint8\_t port); }
+\DoxyCodeLine{23   \textcolor{keyword}{static} \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_lora_ad648bbf34c8f195ec143979484034940}{check\_state}}(); }
+\DoxyCodeLine{24   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_lora_a033141b20026750cd116aa9fcf15f3e0}{set\_state}}(\textcolor{keywordtype}{bool} s); }
+\DoxyCodeLine{25 \};}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

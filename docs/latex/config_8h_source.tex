@@ -1,0 +1,82 @@
+\hypertarget{config_8h_source}{}\doxysection{config.\+h}
+\label{config_8h_source}\index{firmware/static-\/weighstation/main/config.h@{firmware/static-\/weighstation/main/config.h}}
+\mbox{\hyperlink{config_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef CONFIG}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define CONFIG}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 }
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#ifndef DEBUG}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#define DEBUG}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13 }
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#ifndef TEST\_DEVICE}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#define TEST\_DEVICE}}
+\DoxyCodeLine{20 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22 }
+\DoxyCodeLine{27 \textcolor{comment}{//\#ifndef LOW\_POWER}}
+\DoxyCodeLine{28 \textcolor{comment}{//\#define LOW\_POWER}}
+\DoxyCodeLine{29 \textcolor{comment}{//\#endif}}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31 }
+\DoxyCodeLine{36 \textcolor{comment}{//\#ifndef ENABLE\_LORAWAN}}
+\DoxyCodeLine{37 \textcolor{comment}{//\#define ENABLE\_LORAWAN}}
+\DoxyCodeLine{38 \textcolor{comment}{//\#endif}}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40 }
+\DoxyCodeLine{44 \textcolor{preprocessor}{\#ifndef WEIGH\_PAYLOAD\_SIZE}}
+\DoxyCodeLine{45 \textcolor{preprocessor}{\#define WEIGH\_PAYLOAD\_SIZE 24}}
+\DoxyCodeLine{46 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48 }
+\DoxyCodeLine{52 \textcolor{preprocessor}{\#ifndef STORED\_PAYLOAD\_SIZE}}
+\DoxyCodeLine{53 \textcolor{preprocessor}{\#define STORED\_PAYLOAD\_SIZE 100}}
+\DoxyCodeLine{54 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56 }
+\DoxyCodeLine{60 \textcolor{preprocessor}{\#ifndef SENSORS\_PAYLOAD\_SIZE}}
+\DoxyCodeLine{61 \textcolor{preprocessor}{\#define SENSORS\_PAYLOAD\_SIZE 19}}
+\DoxyCodeLine{62 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64 }
+\DoxyCodeLine{65 \textcolor{preprocessor}{\#include "{}lmic.h"{}}}
+\DoxyCodeLine{66 \textcolor{preprocessor}{\#include <hal/hal.h>}}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{75 \textcolor{preprocessor}{\#ifdef TEST\_DEVICE}}
+\DoxyCodeLine{76   \textcolor{keyword}{const} u1\_t PROGMEM \mbox{\hyperlink{config_8h_afcf8b8e5be92015eb67bfb62cfd58f9d}{APPEUI}}[8] = \{ 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 \}; \textcolor{comment}{// test device}}
+\DoxyCodeLine{77 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{78   \textcolor{keyword}{const} u1\_t PROGMEM \mbox{\hyperlink{config_8h_afcf8b8e5be92015eb67bfb62cfd58f9d}{APPEUI}}[8] = \{ 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 \};}
+\DoxyCodeLine{79 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{80 }
+\DoxyCodeLine{84 \textcolor{preprocessor}{\#ifdef TEST\_DEVICE}}
+\DoxyCodeLine{85   \textcolor{keyword}{const} u1\_t PROGMEM \mbox{\hyperlink{config_8h_ae0d33d8b5058a7434c78ad1a95c23b3c}{DEVEUI}}[8] = \{ 0x51, 0x58, 0x04, 0xD0, 0x7E, 0xD5, 0xB3, 0x70 \}; \textcolor{comment}{// test device}}
+\DoxyCodeLine{86 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{87   \textcolor{keyword}{const} u1\_t PROGMEM \mbox{\hyperlink{config_8h_ae0d33d8b5058a7434c78ad1a95c23b3c}{DEVEUI}}[8] = \{ 0x96, 0x51, 0x04, 0xD0, 0x7E, 0xD5, 0xB3, 0x70 \};}
+\DoxyCodeLine{88 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{89 }
+\DoxyCodeLine{93 \textcolor{preprocessor}{\#ifdef TEST\_DEVICE}}
+\DoxyCodeLine{94   \textcolor{keyword}{const} u1\_t PROGMEM \mbox{\hyperlink{config_8h_a8e12962261b3e671df829c323016f629}{APPKEY}}[16] = \{ 0xF5, 0x07, 0xB7, 0x41, 0xF1, 0x7D, 0x47, 0x8C, 0x84, 0x93, 0x73, 0x8F, 0x24, 0xB2, 0x54, 0xCB \}; \textcolor{comment}{// test device}}
+\DoxyCodeLine{95 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{96   \textcolor{keyword}{const} u1\_t PROGMEM \mbox{\hyperlink{config_8h_a8e12962261b3e671df829c323016f629}{APPKEY}}[16] = \{ 0x66, 0x6E, 0x40, 0x03, 0x05, 0x8E, 0x52, 0xE2, 0xA1, 0x03, 0xD2, 0x16, 0xFE, 0xD0, 0x59, 0x89 \};}
+\DoxyCodeLine{97 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{98 }
+\DoxyCodeLine{99 }
+\DoxyCodeLine{103 \textcolor{preprocessor}{\#ifndef RAW\_DATA\_FILENAME}}
+\DoxyCodeLine{104 \textcolor{preprocessor}{\#define RAW\_DATA\_FILENAME "{}raw.txt"{}}}
+\DoxyCodeLine{105 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{106 }
+\DoxyCodeLine{110 \textcolor{preprocessor}{\#ifndef PARAMETERS\_FILENAME}}
+\DoxyCodeLine{111 \textcolor{preprocessor}{\#define PARAMETERS\_FILENAME "{}para.txt"{}}}
+\DoxyCodeLine{112 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{113 }
+\DoxyCodeLine{114 }
+\DoxyCodeLine{120 \textcolor{preprocessor}{\#ifndef ONE\_WIRE\_BUS}}
+\DoxyCodeLine{121 \textcolor{preprocessor}{\#define ONE\_WIRE\_BUS 38}}
+\DoxyCodeLine{122 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{123 }
+\DoxyCodeLine{124 }
+\DoxyCodeLine{125 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

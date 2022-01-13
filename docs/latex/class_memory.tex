@@ -1,0 +1,79 @@
+\hypertarget{class_memory}{}\doxysection{Memory Class Reference}
+\label{class_memory}\index{Memory@{Memory}}
+
+
+{\ttfamily \#include $<$memory.\+h$>$}
+
+
+
+Collaboration diagram for Memory\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=187pt]{class_memory__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{class_memory_aa9b352ba73f5a07175cfe7cb4383a000}{init}} ()
+\begin{DoxyCompactList}\small\item\em Initailse SD-\/\+Card function. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{class_memory_afdff1061b4254a4a9aebb9ef7f322caa}{write\+\_\+weigh\+\_\+data}} (int16\+\_\+t $\ast$weights, int32\+\_\+t $\ast$time\+Stamps, int8\+\_\+t $\ast$payload, struct \mbox{\hyperlink{structparameters__t}{parameters\+\_\+t}} \&parameters)
+\begin{DoxyCompactList}\small\item\em Write data. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{class_memory_a64d2071d661fea452dec337f361fe666}{read\+\_\+data}} (const char $\ast$file\+Name)
+\begin{DoxyCompactList}\small\item\em Read data (DEBUG) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_memory_aa9b352ba73f5a07175cfe7cb4383a000}\label{class_memory_aa9b352ba73f5a07175cfe7cb4383a000}} 
+\index{Memory@{Memory}!init@{init}}
+\index{init@{init}!Memory@{Memory}}
+\doxysubsubsection{\texorpdfstring{init()}{init()}}
+{\footnotesize\ttfamily void Memory\+::init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Initailse SD-\/\+Card function. 
+
+Initialise memory card to see if it is plugged in and available. \mbox{\Hypertarget{class_memory_a64d2071d661fea452dec337f361fe666}\label{class_memory_a64d2071d661fea452dec337f361fe666}} 
+\index{Memory@{Memory}!read\_data@{read\_data}}
+\index{read\_data@{read\_data}!Memory@{Memory}}
+\doxysubsubsection{\texorpdfstring{read\_data()}{read\_data()}}
+{\footnotesize\ttfamily void Memory\+::read\+\_\+data (\begin{DoxyParamCaption}\item[{const char $\ast$}]{file\+Name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Read data (DEBUG) 
+
+Prints out contents of file to serial monitor. 
+\begin{DoxyParams}{Parameters}
+{\em file\+Name} & Name of .txt file. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_memory_afdff1061b4254a4a9aebb9ef7f322caa}\label{class_memory_afdff1061b4254a4a9aebb9ef7f322caa}} 
+\index{Memory@{Memory}!write\_weigh\_data@{write\_weigh\_data}}
+\index{write\_weigh\_data@{write\_weigh\_data}!Memory@{Memory}}
+\doxysubsubsection{\texorpdfstring{write\_weigh\_data()}{write\_weigh\_data()}}
+{\footnotesize\ttfamily void Memory\+::write\+\_\+weigh\+\_\+data (\begin{DoxyParamCaption}\item[{int16\+\_\+t $\ast$}]{weights,  }\item[{int32\+\_\+t $\ast$}]{time\+Stamps,  }\item[{int8\+\_\+t $\ast$}]{payload,  }\item[{struct \mbox{\hyperlink{structparameters__t}{parameters\+\_\+t}} \&}]{parameters }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Write data. 
+
+Write weights and timestamps to build in SD-\/card. Also appends caluclated parameters. 
+\begin{DoxyParams}{Parameters}
+{\em weights} & Weights array from scale. \\
+\hline
+{\em time\+Stamps} & Corresponding timestamps for each weight reading. \\
+\hline
+{\em payload} & Raw payload to add to table. \\
+\hline
+{\em parameters} & Parameters struct with calculated variables from corresponding scale reading. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+firmware/static-\/weighstation/main/\mbox{\hyperlink{memory_8h}{memory.\+h}}\item 
+firmware/static-\/weighstation/main/\mbox{\hyperlink{memory_8cpp}{memory.\+cpp}}\end{DoxyCompactItemize}
