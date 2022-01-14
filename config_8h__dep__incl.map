@@ -1,0 +1,9 @@
+<map id="firmware/static&#45;weighstation/main/config.h" name="firmware/static&#45;weighstation/main/config.h">
+<area shape="rect" id="node1" title=" " alt="" coords="293,5,479,47"/>
+<area shape="rect" id="node2" href="$lora_8h.html" title=" " alt="" coords="45,95,231,136"/>
+<area shape="rect" id="node4" href="$memory_8h.html" title=" " alt="" coords="293,95,479,136"/>
+<area shape="rect" id="node6" href="$sensors_8h.html" title=" " alt="" coords="424,184,609,225"/>
+<area shape="rect" id="node3" href="$lora_8cpp.html" title=" " alt="" coords="5,184,191,225"/>
+<area shape="rect" id="node5" href="$memory_8cpp.html" title=" " alt="" coords="215,184,400,225"/>
+<area shape="rect" id="node7" href="$sensors_8cpp.html" title=" " alt="" coords="424,273,609,315"/>
+</map>
