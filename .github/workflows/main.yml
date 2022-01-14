@@ -39,7 +39,7 @@ jobs:
         run: |
           wget -O doxygen-awesome-css.tar.gz https://github.com/jothepro/doxygen-awesome-css/archive/refs/tags/v1.6.1.tar.gz
           mkdir doxygen-awesome-css
-          tar -xvzf doxygen-awesome-css.tar.gz -C doxygen-awesome-css
+          tar -xvzf doxygen-awesome-css.tar.gz -C doxygen-awesome-css --strip-components=1
         shell: bash
         
       # Generate documentaiton in docs/html folder
