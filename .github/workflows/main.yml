@@ -31,14 +31,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y graphviz libclang-cpp1-9 libclang1-9
           wget https://www.doxygen.nl/files/doxygen-1.9.2.linux.bin.tar.gz
-          tar -xvzf doxygen-1.9.2.linux.bin.tar.gz
+          tar -xvzf doxygen-1.9.2.linux.bin.tar.gz 
           ln -s doxygen-1.9.2/bin/doxygen doxygen
 
       # Download alternative style
       - name: Install doxygen-awesome
         run: |
           wget -O doxygen-awesome-css.tar.gz https://github.com/jothepro/doxygen-awesome-css/archive/refs/tags/v1.6.1.tar.gz
-          tar -xvzf doxygen-awesome-css.tar.gz
+          tar -xvzf doxygen-awesome-css.tar.gz -C doxygen-awesome-css
         shell: bash
         
       # Generate documentaiton in docs/html folder
