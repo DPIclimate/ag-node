@@ -3,42 +3,13 @@
 <img src="imgs/IMG_0249.jpg" style="display: flex; align-items: center; justify-content: space-around;"/>
 
 ## Description
-The Universal Agriculture Node (AgU-Node) is a device aimed at providing a range of environmental and biological telemetry from a single device. It is capable of reading from three weigh stations simultaneously using dedicated low-powered micro-controllers (ATMega328) while maintaining expandability for external sensors such as trough level sensors, weather stations, soil moisture probes etc.
 
-## Features
-- Teensy 3.6 as master controller
-- Three ATmega328 micro-controllers and dedicated HX711 weigh scale readers for asynchronous readings 
-- LoRaWAN communications
-- Onboard SD card storage
-- Debug mode
-- Solar charger:
-	- Fault and charging LED indicators
-	- Reverse polarity protection
-	- Adjustable solar input voltages
-	- ON/OFF switch to shut-off system
-	- Adjustable current output
-- Regulated outputs:
-	- 5 volt:
-		- Always on when battery or solar connected
-		- LED indicator (desolder for low-power mode)
-	- 9 volt:
-		- Programatically enabled (allowing shut-off when not in use)
-		- Adjustable output (9 - 18 V)
-		- LED indicator
-- Battery:
-	- 3 x 18650
-	- Reverse polarity protection
-	- On PCB test points
-	- Protection:
-		- Push button switch to activate protection
-		- Over-discharge/charge
-- Weigh scale amplifier (HX711)
-	- Screw terminal input
-	- Adjustable frequency (10 Hz default, 80 Hz with jumper cut)
-- SDI-12 inputs:
-	- 5 V always on
-	- 9 V can turn off
-	- Useful for weather stations, soil moisture probes, tank level sensors etc.
-- Power isolation for unneeded components
+The ag-node is an automatic multi-weigh-station for measuring the live-weight of sheep  in remote locations. The station can be situated against a trough for which sheep weights will be recorded as they access feed or water. An in-built LoRaWAN radio sends data (containing live-weight information) back to a local gateway and onto the end user. Additional interfaces are provided, including; SDI-12, I<sub>2</sub>C and OneWire to allow for various sensors to be connected to the device (such as trough level sensors, temperature monitors etc.).
+
+## Documentation
+
+Firmware documentation can be found at [https://dpiclimate.github.io/ag-node](https://dpiclimate.github.io/ag-node)
+
+![hello](https://github.com/DPIClimate/ag-node/actions/workflows/main.yml/badge.svg)
 
 
