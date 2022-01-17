@@ -187,7 +187,12 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
   
   // === Get weights from within array (drop zeros to improve averaging accuracy) ===
   uint16_t pos; // Location within weight array
+  parameters.maxWeight = 0;
   for(pos = 0; pos < (WeighStation::maxArrSize - 1); pos++){
+    // Set maxium weight
+    if(parameters.maxWeight < weights[scaleID][pos]){
+      parameters.maxWeight = weights[scaleID][pos];
+    }
     if(weights[scaleID][pos] == 0 and pos > 10) break;
   }
 
@@ -285,9 +290,12 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
   // Most "accurate" weight reading
   parameters.estimatedWeight = 0;
 
+
+  uint8_t estWeightFlag = 0;
   // Use average weight as stdev is low
   if((parameters.stdevWeight / 100.0f) < 2.0f){
     parameters.estimatedWeight = parameters.avWeight;
+    estWeightFlag = 0;
     #ifdef DEBUG
       Serial.print("Estimated weight (average weight):\t");
       Serial.print(parameters.estimatedWeight / 100.0f);
@@ -296,8 +304,9 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
   }
   else {
     // Use last weight
-    if((parameters.deltaWeight / 100.0f) > 5.0f){
+    if((parameters.deltaWeight / 100.0f) > 2.0f){
       parameters.estimatedWeight = weights[scaleID][p75];
+      estWeightFlag = 1;
       #ifdef DEBUG
         Serial.print("Estimated weight (p75 weight):\t");
         Serial.print(parameters.estimatedWeight / 100.0f);
@@ -305,18 +314,46 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
       #endif
     }
     // Use first weight
-    else if((parameters.deltaWeight / 100.0f) < 5.0f){
+    else if((parameters.deltaWeight / 100.0f) < 2.0f){
       parameters.estimatedWeight = weights[scaleID][p25];
+      estWeightFlag = 2;
       #ifdef DEBUG
         Serial.print("Estimated weight (p25 weight):\t");
         Serial.print(parameters.estimatedWeight / 100.0f);
         Serial.println(" kg");
       #endif
     }
+    else{
+      // Use maxiumum weight (from the three points)
+      parameters.estimatedWeight = parameters.startWeight;
+      
+      if(parameters.estimatedWeight < parameters.endWeight){
+        parameters.estimatedWeight = parameters.endWeight;
+      }
+      
+      if(parameters.estimatedWeight < parameters.middleWeight){
+        parameters.estimatedWeight = parameters.middleWeight;
+      }
+      
+      estWeightFlag = 3;
+      #ifdef DEBUG
+        Serial.print("Estimated weight (maximum weight):\t");
+        Serial.print(parameters.estimatedWeight / 100.0f);
+        Serial.println(" kg");
+      #endif
+    }
   }
 
+  // Add estimatedWeight to payload
   payload[22] = parameters.estimatedWeight;
   payload[23] = parameters.estimatedWeight >> 8;
+
+  // Add estimated weight flag (0 = SD, 1 = end, 2 = start, 3 = max)
+  payload[24] = estWeightFlag;
+
+  // Add maxWeight to payload
+  payload[25] = parameters.maxWeight;
+  payload[26] = parameters.maxWeight >> 8;
 
   #ifdef DEBUG
     Serial.print("Payload:\t");

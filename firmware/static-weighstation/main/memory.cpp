@@ -95,6 +95,12 @@ void Memory::write_weigh_data(int16_t* weights, int32_t* timeStamps, int8_t* pay
     concatData += ",";
     concatData += String((float)(parameters.deltaWeight / 100.0));
     concatData += ",";
+    concatData += String((float)(parameters.estimatedWeight / 100.0));
+    concatData += ",";
+    concatData += String((float)(parameters.maxWeight / 100.0));
+    concatData += ",";
+    concatData += String((float)parameters.estWeightFlag);
+    concatData += ",";
     concatData += String((float)(parameters.timeOnScale / 1000.0)); // convert to seconds
     root.println(concatData);
     

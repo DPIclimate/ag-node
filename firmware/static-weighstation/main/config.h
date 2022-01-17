@@ -42,7 +42,7 @@ Comment out if not in use
 Number of bytes to send over LoRaWAN
 */
 #ifndef WEIGH_PAYLOAD_SIZE
-#define WEIGH_PAYLOAD_SIZE 24
+#define WEIGH_PAYLOAD_SIZE 27
 #endif
 
 

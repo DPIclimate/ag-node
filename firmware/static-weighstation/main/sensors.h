@@ -34,6 +34,8 @@ struct parameters_t {
   int16_t stdevWeight; ///< The SD weight between 25% and 75% of timeOnScale
   int16_t deltaWeight; ///< Difference between endWeight and startWeight
   int16_t estimatedWeight; ///< Best estimate weight
+  int16_t maxWeight; ///< Maxiumum reading (regardless of position)
+  uint8_t estWeightFlag; ///< Flag used to describe which parameter is used for estimatedWeight
   int32_t timeOnScale; ///< The time a sheep spent on the scale
 };
 
