@@ -4,6 +4,8 @@ var structparameters__t =
     [ "deltaWeight", "structparameters__t.html#a8a8e0cba7cd93ce3bc708b8ad37d5a1e", null ],
     [ "endWeight", "structparameters__t.html#a7a61d88b4ab20cd5a7b6d6ae837c763e", null ],
     [ "estimatedWeight", "structparameters__t.html#ab60dfee5974f0dfa94a9c124a2d3050a", null ],
+    [ "estWeightFlag", "structparameters__t.html#ac0fcb9e3a79c8d2eac0ff99e455c000c", null ],
+    [ "maxWeight", "structparameters__t.html#adee48c66cab1e472ead78fc489cfb7c1", null ],
     [ "middleWeight", "structparameters__t.html#a9ad7c11b3c7496f0b2b6064874805522", null ],
     [ "scaleID", "structparameters__t.html#abc630171406397caed8abbc49c5b037d", null ],
     [ "startWeight", "structparameters__t.html#a93f282dface05e0826495b37ee1d81c7", null ],
