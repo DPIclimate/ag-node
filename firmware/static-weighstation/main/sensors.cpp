@@ -20,7 +20,7 @@ static constexpr uint8_t scaleClock[WeighStation::nScales] = {3, 20, 29};
 static bool overtime[WeighStation::nScales] = {false, false, false};
 
 // Set calibration factor for scale (see calibration script)
-static constexpr int16_t calibrationFactors[WeighStation::nScales] = {-1770, -1760, -1770};
+static constexpr int16_t calibrationFactors[WeighStation::nScales] = {-1750, -1730, -1730};
 
 // Initalise HX711 library
 static HX711 scaleOne;
@@ -45,7 +45,7 @@ static Adafruit_INA219 solar(Monitoring::solarAddr);
 // DallasTemperature (oneWire)
 DallasTemperature sensor;
 
-uint32_t unixTime = 1640124900; // Current UNIX time
+uint32_t unixTime = 1642893120; // Current UNIX time
 
 // Current position in payloads array
 uint8_t WeighStation::payloadPos = 0;

@@ -2,12 +2,21 @@
 
 #include "HX711.h"
 
+// Scale 1 -1750
+//#define DOUT  4 // SDA
+//#define CLK  3 // SCL
+
+//// Scale 2 -1730
+//#define DOUT  21 // SDA
+//#define CLK  20 // SCL
+
+//// Scale 3 -1730
 #define DOUT  30 // SDA
 #define CLK  29 // SCL
 
 HX711 scale;
 
-int CALIBRATION_FACTOR = -1770;
+int CALIBRATION_FACTOR = -1730;
 
 void setup() {
   Serial.begin(9600);
@@ -33,4 +42,6 @@ void loop() {
     String command = Serial.readStringUntil('\n');
     CALIBRATION_FACTOR = command.toInt();
   }
+
+  delay(1000);
 }

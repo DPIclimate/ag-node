@@ -6,18 +6,18 @@
 DEBUG mode
 Comment out if not needed
 */
-#ifndef DEBUG
-#define DEBUG
-#endif
+//#ifndef DEBUG
+//#define DEBUG
+//#endif
 
 
 /**
 TEST_DEVICE mode
 Used for testing devices (with different LoRaWAN keys)
 */
-#ifndef TEST_DEVICE
-#define TEST_DEVICE
-#endif
+//#ifndef TEST_DEVICE
+//#define TEST_DEVICE
+//#endif
 
 
 /**
@@ -33,9 +33,9 @@ Comment out if not needed
 LoRaWAN Mode
 Comment out if not in use
 */
-//#ifndef ENABLE_LORAWAN
-//#define ENABLE_LORAWAN
-//#endif
+#ifndef ENABLE_LORAWAN
+#define ENABLE_LORAWAN
+#endif
 
 
 /**

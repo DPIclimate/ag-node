@@ -103,8 +103,10 @@ void loop() {
   // Reset sensor payload send state - prevents multiple packets
   if(timer >= messageSpacing && sensorPayload) sensorPayload = false;
 
-  // Every 15 min send sensor payload (monitoring and temperature)
-  if(minute() % 5 == 0 && !sensorPayload) {
+  // Every 5 min send sensor payload (monitoring and temperature)
+  if(minute() % 5 =
+  
+  = 0 && !sensorPayload) {
     #ifdef ENABLE_LORAWAN
       int8_t* sensorsPayload = Sensors::construct_payload();
       Lora::request_send(sensorsPayload, 2);
