@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['debug_0',['DEBUG',['../config_8h.html#ad72dbcf6d0153db1b8d8a58001feed83',1,'config.h']]]
+  ['enable_5florawan_0',['ENABLE_LORAWAN',['../config_8h.html#a7c549ad35d3d55e9d914c856ead0f4ff',1,'config.h']]]
 ];
