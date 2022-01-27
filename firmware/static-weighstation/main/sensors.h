@@ -39,6 +39,12 @@ struct parameters_t {
   int32_t timeOnScale; ///< The time a sheep spent on the scale
 };
 
+struct fit_t {
+  int16_t maxStableWeight; ///< Maximum stable weight in time-series readings
+  int32_t timeStable; ///< Time that MSW was obtained
+  int16_t rmse; ///< RMSE of maximum stable weight
+};
+
 class Sensors {
   public:
   static int8_t* construct_payload(); ///< Sensors payload 
@@ -56,11 +62,11 @@ class WeighStation {
 
   public:
   
-  static const uint8_t nScales = 3; ///< Create scale objects
+  static constexpr uint8_t nScales = 3; ///< Create scale objects
 
   static uint8_t payloadPos; ///< Current position in payloads array
 
-  static const int16_t maxArrSize = 6000; ///< Arrays for holding weights and corresponding time
+  static constexpr int16_t maxArrSize = 6000; ///< Arrays for holding weights and corresponding time
 
   void init(); ///< Setup weighscales and zero their offsets (tare)
 
@@ -79,6 +85,14 @@ class WeighStation {
   void forward_payload(); ///< Send waiting payloads over LoRaWAN
 
   bool check_state(); ///< Check if scale is currently reading
+
+  static inline float findSlope(float x1, float x2, float y1, float y2) { return (y2 - y1) / (x2 - x1); };
+
+  template <size_t SIZE>
+  static float root_mean_sqare_error(int32_t (&ts)[SIZE], int16_t (&weights)[SIZE], float slope, float yIntercept);
+
+  template <size_t SIZE>
+  static fit_t find_plateau(int32_t (&ts)[SIZE], int16_t (&weights)[SIZE], int16_t inputLength);
 
 };
 

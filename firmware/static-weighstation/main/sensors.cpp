@@ -71,6 +71,100 @@ void WeighStation::init() {
   Serial.println(" success");
 }
 
+/**
+Calculate root mean square error of fitted plateau.
+@param ts Timestamps.
+@param weights Corresponding liveweights.
+@param slope The slope of the line.
+@param yIntercept The y-intercept of the line.
+@returns rmse The root mean square error.
+*/
+template <size_t SIZE>
+float WeighStation::root_mean_sqare_error(int32_t (&ts)[SIZE], int16_t (&weights)[SIZE], 
+                                        float slope, float yIntercept){
+  float sum = 0.0f;
+  for(unsigned int i = 0; i < SIZE; i++){
+    float predicted = slope * ts[i] + yIntercept;
+    sum += pow(predicted - weights[i], 2);
+  }
+
+  float rmse = sqrt(sum / SIZE);
+  
+  return rmse; 
+}
+
+/**
+Find areas in the timeseries measurments where the weights plateau, indicating a stable reading.
+@param ts Timestamps.
+@param weights Corresponding liveweights.
+@param inputLength The length of values within weights array that contain values.
+@returns fit Of type fit_t, containing fitting parameters from weight readings.
+*/
+template <size_t SIZE>
+fit_t WeighStation::find_plateau(int32_t (&ts)[SIZE], int16_t (&weights)[SIZE], int16_t inputLength){
+ 
+  float slopeBound = 0.10f;
+  int16_t maxStableWeight = 0;
+
+  float timeStable = 0.0f;
+  float minRmse = 0.0f;
+  bool initRmse = false;
+
+  const uint8_t vals = 5;
+  for(int16_t i = 0; i < (inputLength - vals); i++){
+    
+    int32_t x[vals] = {ts[i], ts[i+1], ts[i+2], ts[i+3], ts[i+4]};
+    int16_t y[vals] = {weights[i], weights[i+1], weights[i+2], weights[i+3], weights[i+4]};
+
+    // Get slope
+    float slope = findSlope(ts[i], ts[i+4], weights[i], weights[i+4]);
+    float yIntercept = weights[i] - (slope * ts[i]);
+
+    // Calc root mean square error
+    float rmse = WeighStation::root_mean_sqare_error(x, y, slope, yIntercept);
+
+    // Calc average
+    int32_t sum = 0;
+    for(int z = 0; z < vals; z++){
+      sum += y[z];
+    }
+    int16_t avgWeight = sum / vals;
+
+    // Initialise parameters
+    if(!initRmse){
+      maxStableWeight = avgWeight;
+      timeStable = ts[i];
+      minRmse = rmse;
+      initRmse = true;
+    }
+
+    // Replace parameters if a better fit is found
+    if(abs(slope) < slopeBound && avgWeight >= maxStableWeight && rmse < minRmse){
+      maxStableWeight = avgWeight;
+      timeStable = ts[i];
+      minRmse = rmse;
+    }
+
+  }
+
+  fit_t fit;
+  fit.maxStableWeight = maxStableWeight;
+  fit.timeStable = timeStable;
+  fit.rmse = minRmse;
+
+  #ifdef DEBUG
+    Serial.print("Max Stable Weight: ");
+    Serial.print(fit.maxStableWeight / 100.0f);
+    Serial.print(" kg p.m. ");
+    Serial.print(fit.rmse  / 100.0f);
+    Serial.print(" kg at: ");
+    Serial.print(fit.timeStable  / 1000.0f);
+    Serial.println("s");
+  #endif // DEBUG
+
+  return fit;
+}
+
 
 /**
 Reset all scales to zero (tare weight).
@@ -84,6 +178,7 @@ void WeighStation::tare_scales() {
     scales[i]->tare(); // Reset to zero
   }
 }
+
 
 /**
 Power down ADC's (HX711) when in sleep mode.
@@ -141,7 +236,9 @@ void WeighStation::scan(){
       append_payload(payload); // Append payload to stack (to send over LoRaWAN)
       Memory::write_weigh_data(weights[i], timeStamps[i], payload, parameters);
       #ifdef DEBUG
-        Serial.println("[WEIGH STATION]: Scale one finished.");
+        Serial.print("[WEIGH STATION]: Scale ");
+        Serial.print(scaleActive[i]);
+        Serial.println(" finished.");
       #endif
       // Reset varaibles and arrays to initial values
       scaleActive[i] = false;
@@ -186,7 +283,7 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
   payload[4] = parameters.unixTime >> 24;
   
   // === Get weights from within array (drop zeros to improve averaging accuracy) ===
-  uint16_t pos; // Location within weight array
+  int16_t pos; // Location within weight array
   parameters.maxWeight = 0;
   for(pos = 0; pos < (WeighStation::maxArrSize - 1); pos++){
     // Set maxium weight
@@ -366,6 +463,20 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
     } Serial.println("");
   #endif
 
+  // Fit linear trend to weights (providing reading is > 10 seconds)
+  fit_t fit = WeighStation::find_plateau(timeStamps[scaleID], weights[scaleID], pos);
+  
+  payload[27] = fit.maxStableWeight;
+  payload[28] = fit.maxStableWeight >> 8;
+  
+  payload[29] = fit.timeStable;
+  payload[30] = fit.timeStable >> 8;
+  payload[31] = fit.timeStable >> 16;
+  payload[32] = fit.timeStable >> 24;
+
+  payload[33] = fit.rmse;
+  payload[34] = fit.rmse >> 8;
+  
   return payload;
 }
 
