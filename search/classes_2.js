@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['parameters_5ft_0',['parameters_t',['../structparameters__t.html',1,'']]]
+  ['memory_0',['Memory',['../class_memory.html',1,'']]],
+  ['monitoring_1',['Monitoring',['../class_monitoring.html',1,'']]]
 ];

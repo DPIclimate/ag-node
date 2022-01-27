@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['temperature_0',['Temperature',['../class_temperature.html',1,'']]]
+  ['sensors_0',['Sensors',['../class_sensors.html',1,'']]]
 ];

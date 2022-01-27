@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['lora_0',['Lora',['../class_lora.html',1,'']]]
+  ['fit_5ft_0',['fit_t',['../structfit__t.html',1,'']]]
 ];

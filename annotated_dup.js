@@ -1,5 +1,6 @@
 var annotated_dup =
 [
+    [ "fit_t", "structfit__t.html", "structfit__t" ],
     [ "Lora", "class_lora.html", null ],
     [ "Memory", "class_memory.html", null ],
     [ "Monitoring", "class_monitoring.html", null ],

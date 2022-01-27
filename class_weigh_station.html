@@ -98,7 +98,8 @@ $(document).ready(function(){initNavTree('class_weigh_station.html',''); initRes
 <div class="dynheader">
 Collaboration diagram for WeighStation:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="class_weigh_station__coll__graph.svg" width="159" height="235"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="class_weigh_station__coll__graph.svg" width="210" height="279"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -133,18 +134,26 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a85eda5ce94748171df9235b65dd0537d"><td class="memItemLeft" align="right" valign="top">static int8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_weigh_station.html#a85eda5ce94748171df9235b65dd0537d">construct_payload</a> (uint8_t scaleID)</td></tr>
 <tr class="memdesc:a85eda5ce94748171df9235b65dd0537d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct payload to send over LoRaWAN.  <a href="class_weigh_station.html#a85eda5ce94748171df9235b65dd0537d">More...</a><br /></td></tr>
 <tr class="separator:a85eda5ce94748171df9235b65dd0537d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5aade59d58589284fae6632947ece0fb"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_weigh_station.html#a5aade59d58589284fae6632947ece0fb">findSlope</a> (float x1, float x2, float y1, float y2)</td></tr>
+<tr class="separator:a5aade59d58589284fae6632947ece0fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba7bbc802c53d1266ef6eb3c71871d48"><td class="memTemplParams" colspan="2">template&lt;size_t SIZE&gt; </td></tr>
+<tr class="memitem:aba7bbc802c53d1266ef6eb3c71871d48"><td class="memTemplItemLeft" align="right" valign="top">static float&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_weigh_station.html#aba7bbc802c53d1266ef6eb3c71871d48">root_mean_sqare_error</a> (int32_t(&amp;ts)[SIZE], int16_t(&amp;weights)[SIZE], float slope, float yIntercept)</td></tr>
+<tr class="separator:aba7bbc802c53d1266ef6eb3c71871d48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a477839bc25a09ae76d0fc3cb0c086c4c"><td class="memTemplParams" colspan="2">template&lt;size_t SIZE&gt; </td></tr>
+<tr class="memitem:a477839bc25a09ae76d0fc3cb0c086c4c"><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="structfit__t.html">fit_t</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_weigh_station.html#a477839bc25a09ae76d0fc3cb0c086c4c">find_plateau</a> (int32_t(&amp;ts)[SIZE], int16_t(&amp;weights)[SIZE], int16_t inputLength)</td></tr>
+<tr class="separator:a477839bc25a09ae76d0fc3cb0c086c4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a3ad7b207d38f05b5b09ab8f386962189"><td class="memItemLeft" align="right" valign="top">static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_weigh_station.html#a3ad7b207d38f05b5b09ab8f386962189">nScales</a> = 3</td></tr>
-<tr class="memdesc:a3ad7b207d38f05b5b09ab8f386962189"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create scale objects.  <a href="class_weigh_station.html#a3ad7b207d38f05b5b09ab8f386962189">More...</a><br /></td></tr>
-<tr class="separator:a3ad7b207d38f05b5b09ab8f386962189"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:accd1f09163740354beb91c91aca08cef"><td class="memItemLeft" align="right" valign="top">static constexpr uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_weigh_station.html#accd1f09163740354beb91c91aca08cef">nScales</a> = 3</td></tr>
+<tr class="memdesc:accd1f09163740354beb91c91aca08cef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create scale objects.  <a href="class_weigh_station.html#accd1f09163740354beb91c91aca08cef">More...</a><br /></td></tr>
+<tr class="separator:accd1f09163740354beb91c91aca08cef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a384e7f90bc7ac347a53943fba90602b3"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_weigh_station.html#a384e7f90bc7ac347a53943fba90602b3">payloadPos</a> = 0</td></tr>
 <tr class="memdesc:a384e7f90bc7ac347a53943fba90602b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current position in payloads array.  <a href="class_weigh_station.html#a384e7f90bc7ac347a53943fba90602b3">More...</a><br /></td></tr>
 <tr class="separator:a384e7f90bc7ac347a53943fba90602b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a264fc8c318a38f962f7b860cafe27f08"><td class="memItemLeft" align="right" valign="top">static const int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_weigh_station.html#a264fc8c318a38f962f7b860cafe27f08">maxArrSize</a> = 6000</td></tr>
-<tr class="memdesc:a264fc8c318a38f962f7b860cafe27f08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Arrays for holding weights and corresponding time.  <a href="class_weigh_station.html#a264fc8c318a38f962f7b860cafe27f08">More...</a><br /></td></tr>
-<tr class="separator:a264fc8c318a38f962f7b860cafe27f08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ca3591a7ebde7c7c803c6dba571b8f8"><td class="memItemLeft" align="right" valign="top">static constexpr int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_weigh_station.html#a1ca3591a7ebde7c7c803c6dba571b8f8">maxArrSize</a> = 6000</td></tr>
+<tr class="memdesc:a1ca3591a7ebde7c7c803c6dba571b8f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Arrays for holding weights and corresponding time.  <a href="class_weigh_station.html#a1ca3591a7ebde7c7c803c6dba571b8f8">More...</a><br /></td></tr>
+<tr class="separator:a1ca3591a7ebde7c7c803c6dba571b8f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a55b06e925a4fc338af455c937d24267f" name="a55b06e925a4fc338af455c937d24267f"></a>
@@ -228,6 +237,107 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a477839bc25a09ae76d0fc3cb0c086c4c" name="a477839bc25a09ae76d0fc3cb0c086c4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a477839bc25a09ae76d0fc3cb0c086c4c">&#9670;&nbsp;</a></span>find_plateau()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;size_t SIZE&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structfit__t.html">fit_t</a> WeighStation::find_plateau </td>
+          <td>(</td>
+          <td class="paramtype">int32_t(&amp;)&#160;</td>
+          <td class="paramname"><em>ts</em>[SIZE], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t(&amp;)&#160;</td>
+          <td class="paramname"><em>weights</em>[SIZE], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t&#160;</td>
+          <td class="paramname"><em>inputLength</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p >Find areas in the timeseries measurments where the weights plateau, indicating a stable reading. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ts</td><td>Timestamps. </td></tr>
+    <tr><td class="paramname">weights</td><td>Corresponding liveweights. </td></tr>
+    <tr><td class="paramname">inputLength</td><td>The length of values within weights array that contain values. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>fit Of type <a class="el" href="structfit__t.html">fit_t</a>, containing fitting parameters from weight readings. </dd></dl>
+
+</div>
+</div>
+<a id="a5aade59d58589284fae6632947ece0fb" name="a5aade59d58589284fae6632947ece0fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5aade59d58589284fae6632947ece0fb">&#9670;&nbsp;</a></span>findSlope()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static float WeighStation::findSlope </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>x2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>y2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aac01055e59b8ca03edf09a4806e645c1" name="aac01055e59b8ca03edf09a4806e645c1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aac01055e59b8ca03edf09a4806e645c1">&#9670;&nbsp;</a></span>forward_payload()</h2>
 
@@ -265,6 +375,66 @@ Static Public Attributes</h2></td></tr>
 
 <p>Setup weighscales and zero their offsets (tare) </p>
 <p >Initialise the weighstation. Set their calibration factors. Zero them (tare). </p>
+
+</div>
+</div>
+<a id="aba7bbc802c53d1266ef6eb3c71871d48" name="aba7bbc802c53d1266ef6eb3c71871d48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba7bbc802c53d1266ef6eb3c71871d48">&#9670;&nbsp;</a></span>root_mean_sqare_error()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;size_t SIZE&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float WeighStation::root_mean_sqare_error </td>
+          <td>(</td>
+          <td class="paramtype">int32_t(&amp;)&#160;</td>
+          <td class="paramname"><em>ts</em>[SIZE], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int16_t(&amp;)&#160;</td>
+          <td class="paramname"><em>weights</em>[SIZE], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>slope</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>yIntercept</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p >Calculate root mean square error of fitted plateau. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ts</td><td>Timestamps. </td></tr>
+    <tr><td class="paramname">weights</td><td>Corresponding liveweights. </td></tr>
+    <tr><td class="paramname">slope</td><td>The slope of the line. </td></tr>
+    <tr><td class="paramname">yIntercept</td><td>The y-intercept of the line. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>rmse The root mean square error. </dd></dl>
 
 </div>
 </div>
@@ -357,8 +527,8 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a264fc8c318a38f962f7b860cafe27f08" name="a264fc8c318a38f962f7b860cafe27f08"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a264fc8c318a38f962f7b860cafe27f08">&#9670;&nbsp;</a></span>maxArrSize</h2>
+<a id="a1ca3591a7ebde7c7c803c6dba571b8f8" name="a1ca3591a7ebde7c7c803c6dba571b8f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ca3591a7ebde7c7c803c6dba571b8f8">&#9670;&nbsp;</a></span>maxArrSize</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -367,12 +537,12 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const int16_t WeighStation::maxArrSize = 6000</td>
+          <td class="memname">constexpr int16_t WeighStation::maxArrSize = 6000</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -381,8 +551,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a3ad7b207d38f05b5b09ab8f386962189" name="a3ad7b207d38f05b5b09ab8f386962189"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3ad7b207d38f05b5b09ab8f386962189">&#9670;&nbsp;</a></span>nScales</h2>
+<a id="accd1f09163740354beb91c91aca08cef" name="accd1f09163740354beb91c91aca08cef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#accd1f09163740354beb91c91aca08cef">&#9670;&nbsp;</a></span>nScales</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -391,12 +561,12 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const uint8_t WeighStation::nScales = 3</td>
+          <td class="memname">constexpr uint8_t WeighStation::nScales = 3</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

@@ -12,6 +12,7 @@ var dir_b4977c4a90d89ad7d5bc7bf407e4f797 =
     [ "sensors.cpp", "sensors_8cpp.html", "sensors_8cpp" ],
     [ "sensors.h", "sensors_8h.html", [
       [ "parameters_t", "structparameters__t.html", "structparameters__t" ],
+      [ "fit_t", "structfit__t.html", "structfit__t" ],
       [ "Sensors", "class_sensors.html", null ],
       [ "WeighStation", "class_weigh_station.html", "class_weigh_station" ],
       [ "Monitoring", "class_monitoring.html", null ],

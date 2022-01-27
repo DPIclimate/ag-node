@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sensors_0',['Sensors',['../class_sensors.html',1,'']]]
+  ['realtimeclock_0',['RealTimeClock',['../class_real_time_clock.html',1,'']]]
 ];
