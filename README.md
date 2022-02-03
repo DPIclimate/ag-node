@@ -12,4 +12,5 @@ Firmware documentation can be found at [https://dpiclimate.github.io/ag-node](ht
 
 ![hello](https://github.com/DPIClimate/ag-node/actions/workflows/main.yml/badge.svg)
 
-
+## License
+Ag-node is MIT licensed, as found in the [LICENSE](https://github.com/DPIclimate/ag-node/blob/master/LICENSE) file.
