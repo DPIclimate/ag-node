@@ -1,0 +1,784 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+Text Notes 7400 7500 0    79   ~ 0
+AgU-Node
+Text Notes 8200 7600 0    50   ~ 0
+7th August 2021
+Text Notes 8050 7500 0    50   ~ 0
+- Harvey Bates
+Text Notes 10650 7600 0    50   ~ 0
+0.4
+$Comp
+L UniversalNode-rescue:GND-power #PWR0120
+U 1 1 62134A4E
+P 7700 1150
+F 0 "#PWR0120" H 7700 900 50  0001 C CNN
+F 1 "GND" H 7750 1000 50  0000 R CNN
+F 2 "" H 7700 1150 50  0001 C CNN
+F 3 "" H 7700 1150 50  0001 C CNN
+	1    7700 1150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7450 1150 7700 1150
+Wire Wire Line
+	7450 1250 7450 1150
+Connection ~ 7450 1150
+Wire Wire Line
+	7450 1150 7450 1050
+Wire Wire Line
+	6950 1050 6950 1150
+Connection ~ 6950 1150
+Wire Wire Line
+	6950 1150 6950 1250
+Wire Wire Line
+	6950 1150 6700 1150
+Text Label 7350 4500 0    50   ~ 0
+SDI-12
+Text Label 5750 4500 0    50   ~ 0
+SDI-12
+$Comp
+L TBP02R2-381-03BE:TBP02R2-381-03BE J13
+U 1 1 6144756B
+P 6950 4500
+F 0 "J13" H 6843 4867 50  0000 C CNN
+F 1 "TBP02R2-381-03BE" H 6843 4776 50  0000 C CNN
+F 2 "TBP02R2-381-03BE:CUI_TBP02R2-381-03BE" H 6950 4500 50  0001 L BNN
+F 3 "" H 6950 4500 50  0001 L BNN
+F 4 "Manufacturer Recommendations" H 6950 4500 50  0001 L BNN "STANDARD"
+F 5 "CUI" H 6950 4500 50  0001 L BNN "MANUFACTURER"
+	1    6950 4500
+	-1   0    0    -1  
+$EndComp
+$Comp
+L TBP02R2-381-03BE:TBP02R2-381-03BE J11
+U 1 1 613ECF4B
+P 5350 4500
+F 0 "J11" H 5243 4867 50  0000 C CNN
+F 1 "TBP02R2-381-03BE" H 5243 4776 50  0000 C CNN
+F 2 "TBP02R2-381-03BE:CUI_TBP02R2-381-03BE" H 5350 4500 50  0001 L BNN
+F 3 "" H 5350 4500 50  0001 L BNN
+F 4 "Manufacturer Recommendations" H 5350 4500 50  0001 L BNN "STANDARD"
+F 5 "CUI" H 5350 4500 50  0001 L BNN "MANUFACTURER"
+	1    5350 4500
+	-1   0    0    -1  
+$EndComp
+Wire Notes Line
+	4900 3650 4900 5800
+Wire Notes Line
+	7900 3650 7900 5800
+Text Notes 5200 3950 0    118  ~ 0
+SDI-12 Interface\n
+$Comp
+L UniversalNode-rescue:Conn_02x03_Odd_Even-Connector_Generic J5
+U 1 1 620E4A64
+P 7150 1150
+F 0 "J5" H 7200 1467 50  0000 C CNN
+F 1 "Conn_02x03_Odd_Even" H 7200 1376 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_2x03_P2.54mm_Vertical" H 7150 1150 50  0001 C CNN
+F 3 "~" H 7150 1150 50  0001 C CNN
+	1    7150 1150
+	1    0    0    -1  
+$EndComp
+$Comp
+L UniversalNode-rescue:Conn_01x03_Male-Connector J7
+U 1 1 6231C5C8
+P 1300 6450
+F 0 "J7" V 1362 6594 50  0000 L CNN
+F 1 "Conn_01x03_Male" V 1453 6594 50  0000 L CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x03_P2.54mm_Vertical" H 1300 6450 50  0001 C CNN
+F 3 "~" H 1300 6450 50  0001 C CNN
+	1    1300 6450
+	0    1    1    0   
+$EndComp
+$Comp
+L UniversalNode-rescue:R-Device R43
+U 1 1 6231C5D4
+P 1500 6800
+F 0 "R43" V 1293 6800 50  0000 C CNN
+F 1 "4.7K" V 1384 6800 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 1430 6800 50  0001 C CNN
+F 3 "~" H 1500 6800 50  0001 C CNN
+	1    1500 6800
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	1400 6650 1650 6650
+Wire Wire Line
+	1650 6650 1650 6800
+$Comp
+L UniversalNode-rescue:GND-power #PWR0115
+U 1 1 6231C5DE
+P 1100 6750
+F 0 "#PWR0115" H 1100 6500 50  0001 C CNN
+F 1 "GND" H 1105 6577 50  0000 C CNN
+F 2 "" H 1100 6750 50  0001 C CNN
+F 3 "" H 1100 6750 50  0001 C CNN
+	1    1100 6750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1100 6750 1100 6650
+Wire Wire Line
+	1100 6650 1200 6650
+Connection ~ 1650 6800
+Wire Wire Line
+	1650 6800 1650 6950
+Wire Wire Line
+	1300 6650 1300 6800
+Wire Wire Line
+	1300 6800 1350 6800
+Connection ~ 1300 6800
+Wire Wire Line
+	1300 6800 1300 6950
+Wire Wire Line
+	7250 2950 7400 2950
+Text Label 7400 2950 0    39   ~ 0
+5V_OUT
+Text Label 6150 2950 0    50   ~ 0
+12V_IN
+Wire Wire Line
+	6050 2950 6450 2950
+$Comp
+L UniversalNode-rescue:GND-power #PWR0107
+U 1 1 619989F6
+P 6850 3250
+F 0 "#PWR0107" H 6850 3000 50  0001 C CNN
+F 1 "GND" H 6855 3077 50  0000 C CNN
+F 2 "" H 6850 3250 50  0001 C CNN
+F 3 "" H 6850 3250 50  0001 C CNN
+	1    6850 3250
+	1    0    0    -1  
+$EndComp
+$Comp
+L UniversalNode-rescue:GND-power #PWR0108
+U 1 1 61998485
+P 6050 3050
+F 0 "#PWR0108" H 6050 2800 50  0001 C CNN
+F 1 "GND" H 6055 2877 50  0000 C CNN
+F 2 "" H 6050 3050 50  0001 C CNN
+F 3 "" H 6050 3050 50  0001 C CNN
+	1    6050 3050
+	1    0    0    -1  
+$EndComp
+$Comp
+L TBP02R2-381-02BE:TBP02R2-381-02BE J8
+U 1 1 61997D1D
+P 5650 3050
+F 0 "J8" H 5543 3417 50  0000 C CNN
+F 1 "Bat_Conn" H 5543 3326 50  0000 C CNN
+F 2 "TBP02R2-381-02BE:CUI_TBP02R2-381-02BE" H 5650 3050 50  0001 L BNN
+F 3 "" H 5650 3050 50  0001 L BNN
+F 4 "Manufacturer Recommendations" H 5650 3050 50  0001 L BNN "STANDARD"
+F 5 "CUI" H 5650 3050 50  0001 L BNN "MANUFACTURER"
+	1    5650 3050
+	-1   0    0    -1  
+$EndComp
+$Comp
+L UniversalNode-rescue:TSR_1-2450-Regulator_Switching U2
+U 1 1 61997505
+P 6850 3050
+F 0 "U2" H 6850 3417 50  0000 C CNN
+F 1 "TSR_1-2450" H 6850 3326 50  0000 C CNN
+F 2 "Converter_DCDC:Converter_DCDC_TRACO_TSR-1_THT" H 6850 2900 50  0001 L CIN
+F 3 "http://www.tracopower.com/products/tsr1.pdf" H 6850 3050 50  0001 C CNN
+	1    6850 3050
+	1    0    0    -1  
+$EndComp
+Text Notes 5450 2450 0    118  ~ 0
+12V or 5V input
+Text Notes 5500 3250 0    39   ~ 0
+12 V Input
+Text Notes 4000 7450 0    118  ~ 0
+I2C
+$Comp
+L UniversalNode-rescue:Conn_02x03_Odd_Even-Connector_Generic J4
+U 1 1 62064E9F
+P 4100 6800
+F 0 "J4" H 4150 7117 50  0000 C CNN
+F 1 "Conn_02x03_Odd_Even" H 4150 7026 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_2x03_P2.54mm_Vertical" H 4100 6800 50  0001 C CNN
+F 3 "~" H 4100 6800 50  0001 C CNN
+	1    4100 6800
+	1    0    0    -1  
+$EndComp
+Text Label 3900 6900 2    50   ~ 0
+SCL
+Text Label 3900 6800 2    50   ~ 0
+SCL
+Text Label 3900 6700 2    50   ~ 0
+SCL
+Text Label 4400 6900 0    50   ~ 0
+SDA
+Text Label 4400 6800 0    50   ~ 0
+SDA
+Text Label 4400 6700 0    50   ~ 0
+SDA
+Wire Notes Line
+	8050 6050 10850 6050
+Wire Notes Line
+	8050 3650 8050 6050
+Wire Notes Line
+	10850 3650 10850 6050
+Text Notes 9000 5900 0    118  ~ 0
+LoRaWAN
+Wire Notes Line
+	8050 3650 10850 3650
+$Comp
+L UniversalNode-rescue:+3.3V-power #PWR0186
+U 1 1 61CB42D2
+P 8500 4550
+F 0 "#PWR0186" H 8500 4400 50  0001 C CNN
+F 1 "+3.3V" H 8515 4723 50  0000 C CNN
+F 2 "" H 8500 4550 50  0001 C CNN
+F 3 "" H 8500 4550 50  0001 C CNN
+	1    8500 4550
+	1    0    0    -1  
+$EndComp
+$Comp
+L UniversalNode-rescue:+3.3V-power #PWR0185
+U 1 1 61CB3E96
+P 10550 4550
+F 0 "#PWR0185" H 10550 4400 50  0001 C CNN
+F 1 "+3.3V" H 10565 4723 50  0000 C CNN
+F 2 "" H 10550 4550 50  0001 C CNN
+F 3 "" H 10550 4550 50  0001 C CNN
+	1    10550 4550
+	1    0    0    -1  
+$EndComp
+$Comp
+L UniversalNode-rescue:+3.3V-power #PWR0184
+U 1 1 61C216F8
+P 8950 4250
+F 0 "#PWR0184" H 8950 4100 50  0001 C CNN
+F 1 "+3.3V" H 8965 4423 50  0000 C CNN
+F 2 "" H 8950 4250 50  0001 C CNN
+F 3 "" H 8950 4250 50  0001 C CNN
+	1    8950 4250
+	1    0    0    -1  
+$EndComp
+Text Notes 8200 3900 0    118  ~ 0
+Communications
+Text Label 10300 4750 0    50   ~ 0
+G0
+Text Label 9100 5150 2    50   ~ 0
+MISO
+Text Label 9100 5050 2    50   ~ 0
+MOSI
+Text Label 8400 4850 2    50   ~ 0
+Lora_CS
+Text Label 8850 4550 2    50   ~ 0
+Reset
+Text Label 10300 4850 0    50   ~ 0
+G1
+Text Label 10300 4950 0    50   ~ 0
+G2
+$Comp
+L RFM69HCW:COM-13909 U4
+U 1 1 60E55C5B
+P 9700 4950
+F 0 "U4" H 9700 5617 50  0000 C CNN
+F 1 "COM-13909" H 9700 5526 50  0000 C CNN
+F 2 "RFM69HCW:MOD_COM-13909" H 9700 4950 50  0001 L BNN
+F 3 "" H 9700 4950 50  0001 L BNN
+F 4 "SparkFun Electronics" H 9700 4950 50  0001 L BNN "MANUFACTURER"
+	1    9700 4950
+	1    0    0    -1  
+$EndComp
+NoConn ~ 10300 5050
+NoConn ~ 10300 5150
+NoConn ~ 10300 5250
+$Comp
+L UniversalNode-rescue:R-Device R19
+U 1 1 60EAA21A
+P 8950 4400
+F 0 "R19" H 8880 4354 50  0000 R CNN
+F 1 "100K" H 8880 4445 50  0000 R CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 8880 4400 50  0001 C CNN
+F 3 "~" H 8950 4400 50  0001 C CNN
+	1    8950 4400
+	-1   0    0    1   
+$EndComp
+$Comp
+L UniversalNode-rescue:R-Device R15
+U 1 1 60ECE3EB
+P 8500 4700
+F 0 "R15" H 8430 4654 50  0000 R CNN
+F 1 "100K" H 8430 4745 50  0000 R CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 8430 4700 50  0001 C CNN
+F 3 "~" H 8500 4700 50  0001 C CNN
+	1    8500 4700
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	8950 4550 9100 4550
+Wire Wire Line
+	8850 4550 8950 4550
+Connection ~ 8950 4550
+Wire Wire Line
+	8500 4850 9100 4850
+Wire Wire Line
+	8400 4850 8500 4850
+Connection ~ 8500 4850
+Text Label 9100 4950 2    50   ~ 0
+SCK
+$Comp
+L CONUFL001-SMD-T:CONUFL001-SMD-T J3
+U 1 1 6100024A
+P 8550 5450
+F 0 "J3" H 8544 5757 50  0000 C CNN
+F 1 "CONUFL001-SMD-T" H 8544 5666 50  0000 C CNN
+F 2 "CONUFL001-SMD-T:LINX_CONUFL001-SMD-T" H 8550 5450 50  0001 L BNN
+F 3 "" H 8550 5450 50  0001 L BNN
+F 4 "B" H 8550 5450 50  0001 L BNN "PARTREV"
+F 5 "Linx Technologies" H 8550 5450 50  0001 L BNN "MANUFACTURER"
+F 6 "Manufacturer Recommendations" H 8550 5450 50  0001 L BNN "STANDARD"
+	1    8550 5450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8650 5350 9100 5350
+$Comp
+L UniversalNode-rescue:C-Device C12
+U 1 1 610BB9D4
+P 10500 5000
+F 0 "C12" H 10615 5046 50  0000 L CNN
+F 1 "10uF" H 10615 4955 50  0000 L CNN
+F 2 "Capacitor_SMD:CP_Elec_5x5.4" H 10538 4850 50  0001 C CNN
+F 3 "~" H 10500 5000 50  0001 C CNN
+	1    10500 5000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10500 5150 10500 5450
+Wire Wire Line
+	10300 5450 10500 5450
+Wire Wire Line
+	10500 4850 10500 4550
+Wire Wire Line
+	10500 4550 10550 4550
+Wire Wire Line
+	10300 4550 10500 4550
+Connection ~ 10500 4550
+$Comp
+L UniversalNode-rescue:GND-power #PWR0137
+U 1 1 61D1B657
+P 5750 5500
+F 0 "#PWR0137" H 5750 5250 50  0001 C CNN
+F 1 "GND" H 5755 5327 50  0000 C CNN
+F 2 "" H 5750 5500 50  0001 C CNN
+F 3 "" H 5750 5500 50  0001 C CNN
+	1    5750 5500
+	1    0    0    -1  
+$EndComp
+$Comp
+L TBP02R2-381-03BE:TBP02R2-381-03BE J12
+U 1 1 613A732A
+P 5350 5400
+F 0 "J12" H 5243 5767 50  0000 C CNN
+F 1 "TBP02R2-381-03BE" H 5243 5676 50  0000 C CNN
+F 2 "TBP02R2-381-03BE:CUI_TBP02R2-381-03BE" H 5350 5400 50  0001 L BNN
+F 3 "" H 5350 5400 50  0001 L BNN
+F 4 "Manufacturer Recommendations" H 5350 5400 50  0001 L BNN "STANDARD"
+F 5 "CUI" H 5350 5400 50  0001 L BNN "MANUFACTURER"
+	1    5350 5400
+	-1   0    0    -1  
+$EndComp
+Text Notes 6000 4950 0    50   ~ 0
+Powered by Battery
+$Comp
+L UniversalNode-rescue:GND-power #PWR0135
+U 1 1 6144755A
+P 7350 5500
+F 0 "#PWR0135" H 7350 5250 50  0001 C CNN
+F 1 "GND" H 7355 5327 50  0000 C CNN
+F 2 "" H 7350 5500 50  0001 C CNN
+F 3 "" H 7350 5500 50  0001 C CNN
+	1    7350 5500
+	1    0    0    -1  
+$EndComp
+$Comp
+L TBP02R2-381-03BE:TBP02R2-381-03BE J14
+U 1 1 61447563
+P 6950 5400
+F 0 "J14" H 6843 5767 50  0000 C CNN
+F 1 "TBP02R2-381-03BE" H 6843 5676 50  0000 C CNN
+F 2 "TBP02R2-381-03BE:CUI_TBP02R2-381-03BE" H 6950 5400 50  0001 L BNN
+F 3 "" H 6950 5400 50  0001 L BNN
+F 4 "Manufacturer Recommendations" H 6950 5400 50  0001 L BNN "STANDARD"
+F 5 "CUI" H 6950 5400 50  0001 L BNN "MANUFACTURER"
+	1    6950 5400
+	-1   0    0    -1  
+$EndComp
+Text Label 7350 5400 0    50   ~ 0
+SDI-12
+Text Label 5750 5400 0    50   ~ 0
+SDI-12
+$Comp
+L UniversalNode-rescue:Conn_01x03_Male-Connector J1
+U 1 1 62126E6F
+P 2500 6450
+F 0 "J1" V 2562 6594 50  0000 L CNN
+F 1 "Conn_01x03_Male" V 2653 6594 50  0000 L CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x03_P2.54mm_Vertical" H 2500 6450 50  0001 C CNN
+F 3 "~" H 2500 6450 50  0001 C CNN
+	1    2500 6450
+	0    1    1    0   
+$EndComp
+$Comp
+L UniversalNode-rescue:R-Device R1
+U 1 1 62126E7B
+P 2700 6800
+F 0 "R1" V 2493 6800 50  0000 C CNN
+F 1 "4.7K" V 2584 6800 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 2630 6800 50  0001 C CNN
+F 3 "~" H 2700 6800 50  0001 C CNN
+	1    2700 6800
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	2600 6650 2850 6650
+Wire Wire Line
+	2850 6650 2850 6800
+$Comp
+L UniversalNode-rescue:GND-power #PWR0101
+U 1 1 62126E83
+P 2300 6750
+F 0 "#PWR0101" H 2300 6500 50  0001 C CNN
+F 1 "GND" H 2305 6577 50  0000 C CNN
+F 2 "" H 2300 6750 50  0001 C CNN
+F 3 "" H 2300 6750 50  0001 C CNN
+	1    2300 6750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2300 6750 2300 6650
+Wire Wire Line
+	2300 6650 2400 6650
+Text Label 2500 6950 3    50   ~ 0
+OneWire_2
+Connection ~ 2850 6800
+Wire Wire Line
+	2850 6800 2850 6950
+Wire Wire Line
+	2500 6650 2500 6800
+Wire Wire Line
+	2500 6800 2550 6800
+Connection ~ 2500 6800
+Wire Wire Line
+	2500 6800 2500 6950
+Text Label 1300 6950 3    50   ~ 0
+OneWire_1
+Text Label 1650 6950 3    39   ~ 0
+5V
+Text Label 2850 6950 3    39   ~ 0
+5V
+Text Notes 900  6300 0    118  ~ 0
+Peripherals
+Wire Notes Line
+	750  6050 5050 6050
+Wire Notes Line
+	5050 7650 750  7650
+Text Notes 900  7550 0    118  ~ 0
+OneWire
+Wire Notes Line
+	750  6050 750  7650
+Wire Notes Line
+	5050 6050 5050 7650
+Text Label 6700 1150 2    39   ~ 0
+5V
+Text Label 5750 5300 0    50   ~ 0
+12V_IN
+Text Label 7350 4400 0    50   ~ 0
+12V_IN
+Text Label 5750 4400 0    50   ~ 0
+12V_IN
+Text Label 7350 5300 0    50   ~ 0
+12V_IN
+$Comp
+L UniversalNode-rescue:GND-power #PWR0102
+U 1 1 6213E370
+P 7350 4600
+F 0 "#PWR0102" H 7350 4350 50  0001 C CNN
+F 1 "GND" H 7355 4427 50  0000 C CNN
+F 2 "" H 7350 4600 50  0001 C CNN
+F 3 "" H 7350 4600 50  0001 C CNN
+	1    7350 4600
+	1    0    0    -1  
+$EndComp
+$Comp
+L UniversalNode-rescue:GND-power #PWR0103
+U 1 1 6213E6A7
+P 5750 4600
+F 0 "#PWR0103" H 5750 4350 50  0001 C CNN
+F 1 "GND" H 5755 4427 50  0000 C CNN
+F 2 "" H 5750 4600 50  0001 C CNN
+F 3 "" H 5750 4600 50  0001 C CNN
+	1    5750 4600
+	1    0    0    -1  
+$EndComp
+Wire Notes Line
+	4900 5800 7900 5800
+Wire Notes Line
+	4900 3650 7900 3650
+Text Label 900  2000 0    39   ~ 0
+5V
+Text Label 1300 1900 0    39   ~ 0
+5V
+Text Label 4400 2200 0    50   ~ 0
+SDI-12
+$Comp
+L UniversalNode-rescue:GND-power #PWR0105
+U 1 1 621188EB
+P 1800 4600
+F 0 "#PWR0105" H 1800 4350 50  0001 C CNN
+F 1 "GND" V 1805 4427 50  0000 C CNN
+F 2 "" H 1800 4600 50  0001 C CNN
+F 3 "" H 1800 4600 50  0001 C CNN
+	1    1800 4600
+	0    1    1    0   
+$EndComp
+$Comp
+L UniversalNode-rescue:+3.3V-power #PWR0193
+U 1 1 61FE6474
+P 1800 5100
+F 0 "#PWR0193" H 1800 4950 50  0001 C CNN
+F 1 "+3.3V" V 1800 5350 50  0000 C CNN
+F 2 "" H 1800 5100 50  0001 C CNN
+F 3 "" H 1800 5100 50  0001 C CNN
+	1    1800 5100
+	0    -1   -1   0   
+$EndComp
+Text Label 1800 5200 2    39   ~ 0
+5V
+Connection ~ 900  2300
+Wire Wire Line
+	1800 2300 900  2300
+Connection ~ 1300 2200
+Wire Wire Line
+	1800 2200 1300 2200
+$Comp
+L GF-123-0054:GF-123-0054 S2
+U 1 1 61EF73C0
+P 1500 5500
+F 0 "S2" H 1500 5450 50  0000 C CNN
+F 1 "GF-123-0054" H 1500 5350 50  0000 C CNN
+F 2 "GF-123-0054:SW_GF-123-0054" H 1500 5500 50  0001 L BNN
+F 3 "" H 1500 5500 50  0001 L BNN
+F 4 "May 20, 2003" H 1500 5500 50  0001 L BNN "PARTREV"
+F 5 "CW Industries" H 1500 5500 50  0001 L BNN "MANUFACTURER"
+F 6 "14.96 mm" H 1500 5500 50  0001 L BNN "MAXIMUM_PACKAGE_HIEGHT"
+F 7 "Manufacturer Recommendations" H 1500 5500 50  0001 L BNN "STANDARD"
+	1    1500 5500
+	-1   0    0    -1  
+$EndComp
+Text Label 4400 1500 0    50   ~ 0
+OneWire_2
+Text Label 4400 1400 0    50   ~ 0
+OneWire_1
+Text Label 1100 5500 2    39   ~ 0
+5V_OUT
+Wire Wire Line
+	1200 5500 1100 5500
+Text Label 4400 1900 0    50   ~ 0
+Reset
+Text Label 4400 2000 0    50   ~ 0
+Lora_CS
+Text Label 4400 5400 0    50   ~ 0
+SCK
+Text Label 4400 5200 0    50   ~ 0
+MISO
+Text Label 4400 1700 0    50   ~ 0
+G2
+Text Label 4400 1600 0    50   ~ 0
+G1
+Text Label 4400 1200 0    50   ~ 0
+G0
+Wire Wire Line
+	1300 2200 1200 2200
+Wire Wire Line
+	900  2300 750  2300
+$Comp
+L UniversalNode-rescue:R-Device R24
+U 1 1 61DA47FD
+P 900 2150
+F 0 "R24" H 970 2196 50  0000 L CNN
+F 1 "4.7K" H 970 2105 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 830 2150 50  0001 C CNN
+F 3 "~" H 900 2150 50  0001 C CNN
+	1    900  2150
+	-1   0    0    -1  
+$EndComp
+Text Label 750  2300 2    50   ~ 0
+SCL
+$Comp
+L UniversalNode-rescue:R-Device R7
+U 1 1 6082BC57
+P 1300 2050
+F 0 "R7" H 1370 2096 50  0000 L CNN
+F 1 "4.7K" H 1370 2005 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 1230 2050 50  0001 C CNN
+F 3 "~" H 1300 2050 50  0001 C CNN
+	1    1300 2050
+	-1   0    0    -1  
+$EndComp
+Text Label 1200 2200 2    50   ~ 0
+SDA
+Text Label 4400 5300 0    50   ~ 0
+MOSI
+$Comp
+L UniversalNode-rescue:R-Device R23
+U 1 1 61F3B592
+P 4750 1800
+F 0 "R23" V 4950 1750 50  0000 L CNN
+F 1 "2.7K" V 4850 1700 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 4680 1800 50  0001 C CNN
+F 3 "~" H 4750 1800 50  0001 C CNN
+	1    4750 1800
+	0    1    -1   0   
+$EndComp
+Wire Wire Line
+	5600 1800 5500 1800
+$Comp
+L PTS636_SM43J_SMTR_LFS:PTS636_SM43J_SMTR_LFS S1
+U 1 1 61F5E7D7
+P 5200 1800
+F 0 "S1" H 5200 2049 50  0000 C CNN
+F 1 "LoRa SEND" H 5200 1958 50  0000 C CNN
+F 2 "PTS636_SM43J_SMTR_LFS:SW_PTS636_SM43J_SMTR_LFS" H 5200 1800 50  0001 L BNN
+F 3 "" H 5200 1800 50  0001 L BNN
+F 4 "27 mar 19" H 5200 1800 50  0001 L BNN "PARTREV"
+F 5 "C&K" H 5200 1800 50  0001 L BNN "MANUFACTURER"
+F 6 "4.3 mm" H 5200 1800 50  0001 L BNN "MAXIMUM_PACKAGE_HEIGHT"
+F 7 "Manufacturer Recommendations" H 5200 1800 50  0001 L BNN "STANDARD"
+	1    5200 1800
+	-1   0    0    -1  
+$EndComp
+Text Notes 5750 1500 2    50   ~ 0
+LoRa Test (Debug)
+$Comp
+L MEM2075-00-140-01-A:MEM2075-00-140-01-A J2
+U 1 1 620A43D7
+P 9100 2050
+F 0 "J2" H 9100 2617 50  0000 C CNN
+F 1 "MEM2075-00-140-01-A" H 9100 2526 50  0000 C CNN
+F 2 "MEM2075-00-140-01-A:GCT_MEM2075-00-140-01-A" H 9100 2050 50  0001 L BNN
+F 3 "" H 9100 2050 50  0001 L BNN
+F 4 "A" H 9100 2050 50  0001 L BNN "PARTREV"
+F 5 "GCT" H 9100 2050 50  0001 L BNN "MANUFACTURER"
+F 6 "Manufacturer recommendations" H 9100 2050 50  0001 L BNN "STANDARD"
+	1    9100 2050
+	1    0    0    -1  
+$EndComp
+Text Label 8400 1750 2    50   ~ 0
+SCK
+Text Label 8400 1850 2    50   ~ 0
+MOSI
+Text Label 8400 2050 2    50   ~ 0
+MISO
+NoConn ~ 8400 2150
+NoConn ~ 8400 2250
+Text Label 8400 2350 2    50   ~ 0
+SD_CS
+Text Label 4400 1300 0    50   ~ 0
+SD_CS
+Wire Wire Line
+	9800 1750 10100 1750
+Text Label 10100 1750 0    39   ~ 0
+5V
+Wire Wire Line
+	9800 2250 9800 2300
+$Comp
+L UniversalNode-rescue:GND-power #PWR0106
+U 1 1 620A9AE6
+P 9800 2300
+F 0 "#PWR0106" H 9800 2050 50  0001 C CNN
+F 1 "GND" H 9805 2127 50  0000 C CNN
+F 2 "" H 9800 2300 50  0001 C CNN
+F 3 "" H 9800 2300 50  0001 C CNN
+	1    9800 2300
+	0    -1   -1   0   
+$EndComp
+Connection ~ 9800 2300
+Wire Wire Line
+	9800 2300 9800 2350
+$Comp
+L UniversalNode-rescue:GND-power #PWR0109
+U 1 1 620A9FC5
+P 8650 5450
+F 0 "#PWR0109" H 8650 5200 50  0001 C CNN
+F 1 "GND" H 8655 5277 50  0000 C CNN
+F 2 "" H 8650 5450 50  0001 C CNN
+F 3 "" H 8650 5450 50  0001 C CNN
+	1    8650 5450
+	0    -1   -1   0   
+$EndComp
+$Comp
+L UniversalNode-rescue:GND-power #PWR0110
+U 1 1 620AC564
+P 10500 5450
+F 0 "#PWR0110" H 10500 5200 50  0001 C CNN
+F 1 "GND" H 10505 5277 50  0000 C CNN
+F 2 "" H 10500 5450 50  0001 C CNN
+F 3 "" H 10500 5450 50  0001 C CNN
+	1    10500 5450
+	1    0    0    -1  
+$EndComp
+Connection ~ 10500 5450
+$Comp
+L arduino:Arduino_Mega2560_Shield XA1
+U 1 1 620D70E7
+P 3100 3350
+F 0 "XA1" H 3100 969 60  0000 C CNN
+F 1 "Arduino_Mega2560_Shield" H 3100 863 60  0000 C CNN
+F 2 "Arduino:Arduino_Mega2560_Shield" H 3800 6100 60  0001 C CNN
+F 3 "https://store.arduino.cc/arduino-mega-2560-rev3" H 3800 6100 60  0001 C CNN
+	1    3100 3350
+	1    0    0    -1  
+$EndComp
+$Comp
+L UniversalNode-rescue:GND-power #PWR0104
+U 1 1 6211927A
+P 1800 4800
+F 0 "#PWR0104" H 1800 4550 50  0001 C CNN
+F 1 "GND" V 1805 4627 50  0000 C CNN
+F 2 "" H 1800 4800 50  0001 C CNN
+F 3 "" H 1800 4800 50  0001 C CNN
+	1    1800 4800
+	0    1    1    0   
+$EndComp
+Text Label 1800 5300 2    39   ~ 0
+5V
+Wire Wire Line
+	4400 1800 4600 1800
+NoConn ~ 9800 2050
+Wire Wire Line
+	1800 4600 1800 4700
+Connection ~ 1800 4600
+Connection ~ 1800 4700
+Wire Wire Line
+	1800 4700 1800 4800
+Connection ~ 1800 4800
+Wire Wire Line
+	1800 4800 1800 4900
+Connection ~ 1800 4900
+Wire Wire Line
+	1800 4900 1800 5000
+Wire Wire Line
+	1800 5200 1800 5300
+Text Label 5600 1800 0    39   ~ 0
+5V
+$EndSCHEMATC

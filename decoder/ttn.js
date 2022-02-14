@@ -29,9 +29,9 @@ function decodeUplink(input) {
 		var estimatedWeight = (input.bytes[22] | (input.bytes[23] << 8)) / 100.0;
 		var estWeightFlag = input.bytes[24];
 		var maxWeight = (input.bytes[25] | (input.bytes[26] << 8)) / 100.0;
-		var maxStableWeight = (input.bytes[27] | (input.bytes[28] << 8) / 100.0);
+		var maxStableWeight = ((input.bytes[27] | (input.bytes[28] << 8)) / 100.0);
 		var stableTime = (input.bytes[29] | (input.bytes[30] << 8) | (input.bytes[31] << 16) | (input.bytes[32] << 24))  / 1000.0;
-		var rmse = (input.bytes[33] | (input.bytes[34] << 8) / 100.0);
+		var rmse = ((input.bytes[33] | (input.bytes[34] << 8)) / 100.0);
 		return {
 			data: {
 				"bytes": input.bytes,
