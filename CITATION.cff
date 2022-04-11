@@ -1,10 +1,12 @@
 cff-version: 1.2.0
-message: "Please cite it as below."
+message: "Please cite this work as below."
 authors:
 - family-names: "Bates"
   given-names: "Harvey"
   orcid: "https://orcid.org/0000-0002-9619-6356"
+- family-names: "Taylor"
+  given-names: "David"
 title: "Ag-node"
-version: 0.5
-date-released: 2022-01-10
+version: 0.5.1
+date-released: 2022-04-12
 url: "https://github.com/DPIclimate/ag-node"
