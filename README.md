@@ -48,9 +48,11 @@ The protocol is explained below and a visual representation is provided.
 
 6. An evaluation of the new weight is made against previous slices (see figure below under the Method `Evaluate` for an equation that represents this)
 
-
-
-![algo](figures/weigh-algorithm.png)
+<html>
+    <div align="middle"> 
+        <img src="figures/weigh-algorithm.png" style="width: 70%;">
+    </div>
+</html>
 
 ## Firmware Docs
 
