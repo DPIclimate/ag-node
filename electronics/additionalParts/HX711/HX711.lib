@@ -1,0 +1,39 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#SamacSys ECAD Model HX711
+#/2439248/303374/2.49/16/4/Integrated Circuit
+DEF HX711 IC 0 30 Y Y 1 F N
+F0 "IC" 1050 300 50 H V L CNN
+F1 "HX711" 1050 200 50 H V L CNN
+F2 "SOIC127P600X160-16N" 1050 100 50 H I L CNN
+F3 "https://cdn.sparkfun.com/datasheets/Sensors/ForceFlex/hx711_english.pdf" 1050 0 50 H I L CNN
+F4 "24-Bit Analog-to-Digital Converter (ADC) for Weigh Scale" 1050 -100 50 H I L CNN "Description"
+F5 "1.6" 1050 -200 50 H I L CNN "Height"
+F6 "AVIA Semiconductor" 1050 -300 50 H I L CNN "Manufacturer_Name"
+F7 "HX711" 1050 -400 50 H I L CNN "Manufacturer_Part_Number"
+F8 "" 1050 -500 50 H I L CNN "Mouser Part Number"
+F9 "" 1050 -600 50 H I L CNN "Mouser Price/Stock"
+F10 "" 1050 -700 50 H I L CNN "Arrow Part Number"
+F11 "" 1050 -800 50 H I L CNN "Arrow Price/Stock"
+DRAW
+X VSUP 1 0 0 200 R 50 50 0 0 P
+X BASE 2 0 -100 200 R 50 50 0 0 P
+X AVDD 3 0 -200 200 R 50 50 0 0 P
+X VFB 4 0 -300 200 R 50 50 0 0 P
+X AGND 5 0 -400 200 R 50 50 0 0 P
+X VBG 6 0 -500 200 R 50 50 0 0 P
+X INNA 7 0 -600 200 R 50 50 0 0 P
+X INPA 8 0 -700 200 R 50 50 0 0 P
+X DVDD 16 1200 0 200 L 50 50 0 0 P
+X RATE 15 1200 -100 200 L 50 50 0 0 P
+X XI 14 1200 -200 200 L 50 50 0 0 P
+X XO 13 1200 -300 200 L 50 50 0 0 P
+X DOUT 12 1200 -400 200 L 50 50 0 0 P
+X PD_SCK 11 1200 -500 200 L 50 50 0 0 P
+X INPB 10 1200 -600 200 L 50 50 0 0 P
+X INNB 9 1200 -700 200 L 50 50 0 0 P
+P 5 0 1 6 200 100 1000 100 1000 -800 200 -800 200 100 N
+ENDDRAW
+ENDDEF
+#
+#End Library

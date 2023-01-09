@@ -1,0 +1,37 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#(c) SnapEDA 2016 (snapeda.com)
+#This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA) with Design Exception 1.0
+#
+# MMBT4403L
+#
+DEF MMBT4403L T 0 40 N N 1 L N
+F0 "T" 300 200 50 H V L BNN
+F1 "MMBT4403L" 300 100 50 H V L BNN
+F2 "SOT23" 0 0 50 H I L BNN
+F3 "" 0 0 50 H I L BNN
+F4 "MMBT4403LT1G" 0 0 50 H I L BNN "TME"
+F5 "0.6 A" 0 0 50 H I L BNN "CURRENT"
+F6 "ON Semiconductor" 0 0 50 H I L BNN "MANUFACTOR"
+F7 "SOT-23" 0 0 50 H I L BNN "PACKAGE"
+F8 "P-bipolar" 0 0 50 H I L BNN "TYPE"
+F9 "40" 0 0 50 H I L BNN "VOLT"
+DRAW
+P 2 0 0 10 0 100 0 50 N
+P 2 0 0 10 0 50 0 0 N
+P 2 0 0 10 0 0 0 -50 N
+P 2 0 0 10 0 -50 0 -100 N
+P 2 0 0 10 0 50 100 150 N
+P 2 0 0 10 0 -50 100 -150 N
+P 2 0 0 10 100 -150 100 -200 N
+P 2 0 0 10 100 150 100 200 N
+P 3 0 0 10 25 -125 25 -75 75 -75 f
+C 100 0 200 0 0 10 N
+P 2 0 0 10 0 0 -100 0 N
+X ~ 1 -200 0 100 R 40 40 0 0 B 
+X ~ 3 100 300 100 D 40 40 0 0 B 
+X ~ 2 100 -300 100 U 40 40 0 0 B 
+ENDDRAW
+ENDDEF
+#
+# End Library

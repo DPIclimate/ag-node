@@ -1,0 +1,30 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#(c) SnapEDA 2016 (snapeda.com)
+#This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA) with Design Exception 1.0
+#
+# 9C-8.000MEEJ-T
+#
+DEF 9C-8.000MEEJ-T Y 0 40 N N 1 L N
+F0 "Y" -200 90 50 H V L BNN
+F1 "9C-8.000MEEJ-T" -220 -150 50 H V L BNN
+F2 "XTAL_9C-8.000MEEJ-T" 0 0 50 H I L BNN
+F3 "" 0 0 50 H I L BNN
+F4 "Manufacturer Recommendations" 0 0 50 H I L BNN "STANDARD"
+F5 "" 0 0 50 H I L BNN "PARTREV"
+F6 "TXC" 0 0 50 H I L BNN "MANUFACTURER"
+DRAW
+P 2 0 0 6 50 0 100 0 N
+P 2 0 0 6 -100 0 -50 0 N
+P 2 0 0 10 -25 60 -25 -60 N
+P 2 0 0 10 -25 -60 25 -60 N
+P 2 0 0 10 25 -60 25 60 N
+P 2 0 0 10 25 60 -25 60 N
+P 2 0 0 10 50 30 50 -30 N
+P 2 0 0 10 -50 30 -50 -30 N
+X ~ 2 200 0 100 L 40 40 0 0 P 
+X ~ 1 -200 0 100 R 40 40 0 0 P 
+ENDDRAW
+ENDDEF
+#
+# End Library

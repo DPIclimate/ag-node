@@ -1,0 +1,30 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#(c) SnapEDA 2016 (snapeda.com)
+#This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA) with Design Exception 1.0
+#
+# KS11R21CQD
+#
+DEF KS11R21CQD S 0 40 Y N 1 L N
+F0 "S" 0 200 50 H V L BNN
+F1 "KS11R21CQD" 0 -200 50 H V L BNN
+F2 "SW_KS11R21CQD" 0 0 50 H I L BNN
+F3 "" 0 0 50 H I L BNN
+F4 "CnK" 0 0 50 H I L BNN "MANUFACTURER"
+DRAW
+C 30 100 20 0 0 10 N
+C 30 -100 20 0 0 10 N
+P 2 0 0 10 -20 130 -20 0 N
+P 2 0 0 10 -20 0 -20 -130 N
+P 2 0 0 10 -20 0 -100 0 N
+P 2 0 0 10 30 100 100 100 N
+P 2 0 0 10 30 -100 100 -100 N
+P 5 0 0 10 10 -100 30 -100 30 -80 50 -100 30 -120 f
+P 3 0 0 10 30 -80 10 -100 30 -90 f
+P 4 0 0 10 10 100 30 120 50 100 30 80 f
+X ~ 1 100 100 0 L 40 40 0 0 P 
+X ~ 3 100 -100 0 L 40 40 0 0 P 
+ENDDRAW
+ENDDEF
+#
+# End Library
