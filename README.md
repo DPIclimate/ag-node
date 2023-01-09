@@ -28,7 +28,9 @@ The devices schematic can be found at: [schematic.pdf](https://github.com/DPIcli
 
 Basic components are summarised in the below image. Where A is the analog-to-digital converter, B is the LoRaWAN communication infrastructure and C is the peripheral sensor connectors (I<sub>2</sub>C, OneWire and SDI-12).
 
-![schematic](figures/schematic.png)
+<div align="middle"> 
+	<img src="https://raw.githubusercontent.com/DPIclimate/ag-node/master/figures/schematic.png" style="width: 70%;">
+</div>
 
 ## Protocol / Algorithm
 
@@ -48,11 +50,9 @@ The protocol is explained below and a visual representation is provided.
 
 6. An evaluation of the new weight is made against previous slices (see figure below under the Method `Evaluate` for an equation that represents this)
 
-<html>
-    <div align="middle"> 
-        <img src="figures/weigh-algorithm.png" style="width: 70%;">
-    </div>
-</html>
+<div align="middle"> 
+	<img src="https://raw.githubusercontent.com/DPIclimate/ag-node/master/figures/weigh-algorithm.png" style="width: 70%;">
+</div>
 
 ## Firmware Docs
 
@@ -60,7 +60,9 @@ Firmware documentation can be found [here](https://dpiclimate.github.io/ag-node)
 
 An illustration of the devices operations can be found below:
 
-![flowchart](figures/flow-chart.png)
+<div align="middle"> 
+	<img src="https://raw.githubusercontent.com/DPIclimate/ag-node/master/figures/flow-chart.png" style="width: 70%;">
+</div>
 
 ## License
 

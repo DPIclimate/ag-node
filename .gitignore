@@ -1,9 +1,11 @@
 # Folders
 # Electronics/additionalParts
 doxygen-awesome-css
+docs
 
 # Temp
 *.html
+*.htm
 
 # User Specified 
 *.DS_Store
