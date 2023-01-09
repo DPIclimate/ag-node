@@ -27,6 +27,11 @@ var NAVTREE =
   [ "Static-weighstation", "index.html", [
     [ "Todo List", "todo.html", null ],
     [ "Classes", "annotated.html", [
+      [ "About", "index.html#autotoc_md0", null ],
+      [ "Schematic", "index.html#autotoc_md1", null ],
+      [ "Protocol / Algorithm", "index.html#autotoc_md2", null ],
+      [ "Firmware Docs", "index.html#autotoc_md3", null ],
+      [ "License", "index.html#autotoc_md4", null ],
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
       [ "Class Members", "functions.html", [

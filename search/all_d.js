@@ -13,6 +13,7 @@ var searchData=
   ['solaraddr_10',['solarAddr',['../class_monitoring.html#a007f4bd60e18e3cd30e3c7890e1ab526',1,'Monitoring']]],
   ['solarconnected_11',['solarConnected',['../class_monitoring.html#a492ff13ae1f5b4623a20621e4bcb869b',1,'Monitoring']]],
   ['startweight_12',['startWeight',['../structparameters__t.html#a93f282dface05e0826495b37ee1d81c7',1,'parameters_t']]],
-  ['stdevweight_13',['stdevWeight',['../structparameters__t.html#a764695918128e8692088ae9cc76abb71',1,'parameters_t']]],
-  ['stored_5fpayload_5fsize_14',['STORED_PAYLOAD_SIZE',['../config_8h.html#a9b57ad07e79980a46d149c0fe97a434d',1,'config.h']]]
+  ['static_2dweighstation_13',['Static-weighstation',['../index.html',1,'']]],
+  ['stdevweight_14',['stdevWeight',['../structparameters__t.html#a764695918128e8692088ae9cc76abb71',1,'parameters_t']]],
+  ['stored_5fpayload_5fsize_15',['STORED_PAYLOAD_SIZE',['../config_8h.html#a9b57ad07e79980a46d149c0fe97a434d',1,'config.h']]]
 ];
