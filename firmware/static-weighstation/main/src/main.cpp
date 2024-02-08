@@ -19,22 +19,35 @@ DallasTemperature sensors(&oneWire);
 bool sensorPayload = true; // Has payload been sent over LoRa
 uint8_t tareScales = 0; // Tare scales after 255 readings
 
-// Time related variables for distributing LoRaWAN paylaods
+// Time related variables for distributing LoRaWAN payloads
 uint32_t timer = 0;
 uint32_t lastMessage = 0;
 uint32_t messageSpacing = 1000 * 60; // ms
 
 WeighStation weighStation; // Create weighstation object
 
+void watchDogReset() {
+#ifdef ARDUINO_TEENSY36
+  noInterrupts();
+  WDOG_REFRESH = 0xA602;
+  WDOG_REFRESH = 0xB480;
+  interrupts();
+#else
+#ifdef ARDUINO_TEENSY41
+#pragma message "Add watchdog support for Teensy 4.1"
+#endif
+#endif
+}
+
 void setup() {
   Serial.begin(57600);
-  
+
   #ifdef DEBUG
     while(!Serial) delay(100);
   #endif
 
   pinMode(LED_BUILTIN, OUTPUT);
-  
+
   #ifdef ENABLE_LORAWAN
     Lora::init();
     while(!Lora::check_state()) {
@@ -57,54 +70,47 @@ void setup() {
   watchDogReset();
 }
 
-
-void watchDogReset(){
-  noInterrupts();
-  WDOG_REFRESH = 0xA602;
-  WDOG_REFRESH = 0xB480;
-  interrupts();
-}
-
-
 void loop() {
-  
+
   // Keep track of when the last message was sent
   timer = millis() - lastMessage;
 
   // ======== Weight Payload ========
-  
+
   // Scan scales to see if animal is on scale
   weighStation.scan();
 
-  // Reset scale to zero (every 255 readings) - providing there isn't an animal on scale
-  if(tareScales == 255 && !weighStation.check_state()) {
+  // Reset scale to zero (every 255 readings) - providing there isn't an animal on the scale
+  if (tareScales == 255 && !weighStation.check_state()) {
     WeighStation::tare_scales();
     tareScales++;
   } else tareScales++;
 
   // Send stored weigh payloads over LoRa
-  if(!weighStation.check_state() && weighStation.payloadPos != 0 && timer >= messageSpacing) {
+  if (!weighStation.check_state() && weighStation.payloadPos != 0 && timer >= messageSpacing) {
     weighStation.forward_payload();
-    // Reset timer - prevents slow LoRa transimission
+    // Reset timer - prevents slow LoRa transmission
     lastMessage = millis();
-    // Reset scales timer (just incase there is now an animal on scale)
-    tareScales = 0; 
+    // Reset scales timer (just in case there is now an animal on the scale)
+    tareScales = 0;
   }
 
-  // Small delay to prevent high current usage 
-  if(!weighStation.check_state()) {
+  // Small delay to prevent high current usage
+  if (!weighStation.check_state()) {
     delay(200);
   }
 
   watchDogReset(); // Reset watchdog timer
 
   // ======== Sensor Payload ========
-  
+
   // Reset sensor payload send state - prevents multiple packets
-  if(timer >= messageSpacing && sensorPayload) sensorPayload = false;
+  if (timer >= messageSpacing && sensorPayload) {
+    sensorPayload = false;
+  }
 
   // Every 5 min send sensor payload (monitoring and temperature)
-  if(minute() % 5 == 0 && !sensorPayload) {
+  if (minute() % 5 == 0 && !sensorPayload) {
     #ifdef ENABLE_LORAWAN
       int8_t* sensorsPayload = Sensors::construct_payload();
       Lora::request_send(sensorsPayload, 2);
@@ -117,12 +123,12 @@ void loop() {
     #endif
     // Reset timer - preventing slow LoRa transmission
     lastMessage = millis();
-    // Reset scales timer - just incase there is now an animal on scale
-    tareScales = 0; 
+    // Reset scales timer - just in case there is now an animal on the scale
+    tareScales = 0;
   }
 
   // ======== Sleep (Night-time) ========
-  
+
   #ifdef LOW_POWER
     // Between 6 pm and 6 am
     while(hour() >= 18 || hour() < 6) {
@@ -132,7 +138,7 @@ void loop() {
       // Send a payload
       int8_t* sensorsPayload = Sensors::construct_payload();
       #ifdef ENABLE_LORAWAN
-        Lora::request_send(sensorsPayload, 2); 
+        Lora::request_send(sensorsPayload, 2);
         while(!Lora::check_state()){
           os_runloop_once();
         }
@@ -146,11 +152,13 @@ void loop() {
 
 #ifdef __cplusplus
 extern "C" {
-void startup_early_hook();
+void startup_early_hook(void);
 }
+
 extern "C" {
 #endif
-  void startup_early_hook() {
+  void startup_early_hook(void) {
+#ifdef ARDUINO_TEENSY36
 #if 1
     // clock source 0 LPO 1khz, 60 s timeout
     WDOG_TOVALL = 60000; // The next 2 lines sets the time-out value. This is the value that the watchdog timer compare itself to.
@@ -164,6 +172,11 @@ extern "C" {
     WDOG_STCTRLH = (WDOG_STCTRLH_ALLOWUPDATE | WDOG_STCTRLH_CLKSRC | WDOG_STCTRLH_WDOGEN | WDOG_STCTRLH_WAITEN | WDOG_STCTRLH_STOPEN);
 #endif
     WDOG_PRESC = 0; // prescaler
+#else
+#ifdef ARDUINO_TEENSY41
+#pragma message "Add watchdog support for Teensy 4.1"
+#endif
+#endif
   }
 #ifdef __cplusplus
 }

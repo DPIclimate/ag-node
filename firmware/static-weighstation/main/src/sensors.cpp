@@ -5,7 +5,7 @@ Weighstation data, temperature monitoring, power monitoring and payload handling
 
 #include "sensors.h"
 
-// Struct of parameters to store on SD card and send over LoRaWAN 
+// Struct of parameters to store on SD card and send over LoRaWAN
 static parameters_t parameters;
 
 // Weights and timeStamps
@@ -22,7 +22,7 @@ static bool overtime[WeighStation::nScales] = {false, false, false};
 // Set calibration factor for scale (see calibration script)
 static constexpr int16_t calibrationFactors[WeighStation::nScales] = {-1750, -1730, -1730};
 
-// Initalise HX711 library
+// Initialise HX711 library
 static HX711 scaleOne;
 static HX711 scaleTwo;
 static HX711 scaleThree;
@@ -38,7 +38,7 @@ static uint32_t weighStartTime[WeighStation::nScales] = {0, 0, 0};
 // Position in weights array
 static uint16_t readingPos[WeighStation::nScales] = {0, 0, 0};
 
-// Initialse INA219 (power monitoring) library 
+// Initialise INA219 (power monitoring) library
 static Adafruit_INA219 battery(Monitoring::batteryAddr);
 static Adafruit_INA219 solar(Monitoring::solarAddr);
 
@@ -56,7 +56,7 @@ bool Monitoring::solarConnected = false;
 
 
 /**
-Initialise the weighstation. 
+Initialise the weighstation.
 Set their calibration factors.
 Zero them (tare).
 */
@@ -74,13 +74,13 @@ void WeighStation::init() {
 /**
 Calculate root mean square error of fitted plateau.
 @param ts Timestamps.
-@param weights Corresponding liveweights.
+@param weights Corresponding live weights.
 @param slope The slope of the line.
 @param yIntercept The y-intercept of the line.
 @returns rmse The root mean square error.
 */
 template <size_t SIZE>
-float WeighStation::root_mean_sqare_error(int32_t (&ts)[SIZE], int16_t (&weights)[SIZE], 
+float WeighStation::root_mean_sqare_error(int32_t (&ts)[SIZE], int16_t (&weights)[SIZE],
                                         float slope, float yIntercept){
   float sum = 0.0f;
   for(unsigned int i = 0; i < SIZE; i++){
@@ -89,20 +89,20 @@ float WeighStation::root_mean_sqare_error(int32_t (&ts)[SIZE], int16_t (&weights
   }
 
   float rmse = sqrt(sum / SIZE);
-  
-  return rmse; 
+
+  return rmse;
 }
 
 /**
-Find areas in the timeseries measurments where the weights plateau, indicating a stable reading.
+Find areas in the timeseries measurements where the weights plateau, indicating a stable reading.
 @param ts Timestamps.
-@param weights Corresponding liveweights.
+@param weights Corresponding live weights.
 @param inputLength The length of values within weights array that contain values.
 @returns fit Of type fit_t, containing fitting parameters from weight readings.
 */
 template <size_t SIZE>
 fit_t WeighStation::find_plateau(int32_t (&ts)[SIZE], int16_t (&weights)[SIZE], int16_t inputLength){
- 
+
   float slopeBound = 0.10f;
   int16_t maxStableWeight = 0;
 
@@ -112,7 +112,7 @@ fit_t WeighStation::find_plateau(int32_t (&ts)[SIZE], int16_t (&weights)[SIZE], 
 
   const uint8_t vals = 5;
   for(int16_t i = 0; i < (inputLength - vals); i++){
-    
+
     int32_t x[vals] = {ts[i], ts[i+1], ts[i+2], ts[i+3], ts[i+4]};
     int16_t y[vals] = {weights[i], weights[i+1], weights[i+2], weights[i+3], weights[i+4]};
 
@@ -205,7 +205,7 @@ Handles the functioning of each scale and keeps track of data.
 */
 void WeighStation::scan(){
   for(uint8_t i = 0; i < nScales; i++){
-    float weight = scales[i]->get_units(SCALE_AVERAGES);  
+    float weight = scales[i]->get_units(SCALE_AVERAGES);
     if(weight >= triggerWeight){
       if(!scaleActive[i]){
         weighStartTime[i] = millis();
@@ -263,14 +263,14 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
   Serial.println("[WEIGH STATION]: Creating payload...");
 
   /*
-   * Loop through array to find first zero value. 
+   * Loop through array to find first zero value.
    * This puts the array in context by ignoring all following zeros and focusing on actual values.
    */
 
   // === Payload identifier ===
   int8_t payloadType = 0;
   payload[0] = payloadType;
-  
+
   // === Get current time as a UNIX epoch format ===
   parameters.unixTime = now();
   #ifdef DEBUG
@@ -281,7 +281,7 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
   payload[2] = parameters.unixTime >> 8;
   payload[3] = parameters.unixTime >> 16;
   payload[4] = parameters.unixTime >> 24;
-  
+
   // === Get weights from within array (drop zeros to improve averaging accuracy) ===
   int16_t pos; // Location within weight array
   parameters.maxWeight = 0;
@@ -321,10 +321,10 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
   payload[5] = parameters.scaleID;
   payload[6] = parameters.startWeight;
   payload[7] = parameters.startWeight >> 8;
-  
+
   payload[8] = parameters.middleWeight;
   payload[9] = parameters.middleWeight >> 8;
-  
+
   payload[10] = parameters.endWeight;
   payload[11] = parameters.endWeight >> 8;
 
@@ -334,7 +334,7 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
     sumWeights += weights[scaleID][i];
   }
   parameters.avWeight = sumWeights / (p75 - p25);
-  
+
   #ifdef DEBUG
     Serial.print("AV Weight:\t");
     Serial.print(parameters.avWeight / 100.0f);
@@ -374,7 +374,7 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
   }
 
   parameters.stdevWeight = sqrt((1.0f/lenSum) * stdevSum);
-  
+
   #ifdef DEBUG
     Serial.print("StDev Weight:\t");
     Serial.print(parameters.stdevWeight / 100.0f);
@@ -421,17 +421,17 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
       #endif
     }
     else{
-      // Use maxiumum weight (from the three points)
+      // Use maximum weight (from the three points)
       parameters.estimatedWeight = parameters.startWeight;
-      
+
       if(parameters.estimatedWeight < parameters.endWeight){
         parameters.estimatedWeight = parameters.endWeight;
       }
-      
+
       if(parameters.estimatedWeight < parameters.middleWeight){
         parameters.estimatedWeight = parameters.middleWeight;
       }
-      
+
       estWeightFlag = 3;
       #ifdef DEBUG
         Serial.print("Estimated weight (maximum weight):\t");
@@ -465,10 +465,10 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
 
   // Fit linear trend to weights (providing reading is > 10 seconds)
   fit_t fit = WeighStation::find_plateau(timeStamps[scaleID], weights[scaleID], pos);
-  
+
   payload[27] = fit.maxStableWeight;
   payload[28] = fit.maxStableWeight >> 8;
-  
+
   payload[29] = fit.timeStable;
   payload[30] = fit.timeStable >> 8;
   payload[31] = fit.timeStable >> 16;
@@ -476,14 +476,14 @@ int8_t* WeighStation::construct_payload(uint8_t scaleID) {
 
   payload[33] = fit.rmse;
   payload[34] = fit.rmse >> 8;
-  
+
   return payload;
 }
 
 
 /**
 Add payload to the stack to be sent over LoRaWAN when the next window opens.
-@param payload An array consiting of a payload to send.
+@param payload An array consisting of a payload to send.
 */
 void WeighStation::append_payload(int8_t* payload) {
 
@@ -529,8 +529,8 @@ Check if there is an animal on any one of the scales.
 @returns A bool indicating if this is true (there is an animal) or false
 */
 bool WeighStation::check_state() {
-   for(int i = 0; i < nScales; i++){
-    if(scaleActive[i]){
+   for (int i = 0; i < nScales; i++) {
+    if (scaleActive[i]) {
       return true;
     }
    }
@@ -543,18 +543,22 @@ Initialise power monitoring for battery and solar power.
 */
 void Monitoring::init() {
   Serial.print("[MONITORING]: initialising battery... ");
-  if(battery.begin()) {
+  if (battery.begin()) {
     Monitoring::batteryConnected = true;
     battery.setCalibration_16V_400mA();
     Serial.println("success");
-  } else Serial.println("failed");
+  } else {
+    Serial.println("failed");
+  }
 
   Serial.print("[MONITORING]: initialising solar... ");
-  if(solar.begin()) {
+  if (solar.begin()) {
     Monitoring::solarConnected = true;
     solar.setCalibration_32V_1A();
     Serial.println("success");
-  } else Serial.println("failed");
+  } else {
+    Serial.println("failed");
+  }
 }
 
 
@@ -565,12 +569,12 @@ Get the voltage of either the battery or solar panel.
 */
 int16_t Monitoring::voltage(char type) {
   float volts = 0;
-  if(type == 'b') {
+  if (type == 'b') {
     volts = battery.getBusVoltage_V() + (battery.getShuntVoltage_mV() / 1000.0f);
-  } 
-  else if(type == 's') {
+  }
+  else if (type == 's') {
     volts = solar.getBusVoltage_V() + (solar.getShuntVoltage_mV() / 1000.0f);
-  } else{
+  } else {
     #ifdef DEBUG
       Serial.println("[MONITORING]: Unknown device type.");
     #endif
@@ -591,10 +595,10 @@ Get the current of either the battery or solar panel.
 */
 int16_t Monitoring::current(char type) {
   float curr = 0;
-  if(type == 'b') {
+  if (type == 'b') {
     curr = battery.getCurrent_mA();
-  } 
-  else if(type == 's') {
+  }
+  else if (type == 's') {
     curr = solar.getCurrent_mA();
   } else {
     #ifdef DEBUG
@@ -617,12 +621,12 @@ Get the power of either the battery or solar panel.
 */
 int16_t Monitoring::power(char type) {
   float watts = 0;
-  if(type == 'b') {
+  if (type == 'b') {
     watts = battery.getPower_mW();
   }
-  else if(type == 's') {
+  else if (type == 's') {
     watts = solar.getPower_mW();
-  } else{
+  } else {
     #ifdef DEBUG
       Serial.println("[MONITORING]: Unknown device type.");
     #endif
@@ -653,7 +657,7 @@ Measure the current temperature.
 int16_t Temperature::measure() {
   sensor.requestTemperatures();
   float tempC = sensor.getTempCByIndex(0);
-  #ifdef DEBUG 
+  #ifdef DEBUG
     Serial.print("[TEMPERATURE]: Temperature:\t");
     Serial.print(tempC);
     Serial.println("\u02DAC");
@@ -666,7 +670,7 @@ int16_t Temperature::measure() {
 Initialise real time clock (RTC).
 */
 void RealTimeClock::init() {
-  if(timeStatus() != timeSet) {
+  if (timeStatus() != timeSet) {
     Serial.println("[RTC]: Unable to sync.");
     set_time();
   } else {
@@ -679,7 +683,7 @@ void RealTimeClock::init() {
 Set the time of the RTC in UNIX epoch time.
 */
 void RealTimeClock::set_time() {
-  
+
   #ifdef DEBUG
   bool configuredTime = false;
   Serial.println("[RTC]: User must set unix time (format = T1631254602):");
@@ -712,7 +716,7 @@ Construct the sensor payload - sensors, monitoring, temperature and RTC.
 */
 int8_t* Sensors::construct_payload() {
   Serial.println("[SENSORS]: Creating payload...");
-  
+
   static int8_t payload[SENSORS_PAYLOAD_SIZE];
 
   // === Payload identifier ===
@@ -735,12 +739,12 @@ int8_t* Sensors::construct_payload() {
   int16_t batteryV = 0;
   int16_t batteryA = 0;
   int16_t batteryW = 0;
-  if(Monitoring::batteryConnected){
+  if (Monitoring::batteryConnected) {
     batteryV = Monitoring::voltage('b');
     batteryA = Monitoring::current('b');
     batteryW = Monitoring::power('b');
   }
-  
+
   payload[5] = batteryV;
   payload[6] = batteryV >> 8;
   payload[7] = batteryA;
@@ -752,7 +756,7 @@ int8_t* Sensors::construct_payload() {
   int16_t solarV = 0;
   int16_t solarA = 0;
   int16_t solarW = 0;
-  if(Monitoring::solarConnected){
+  if (Monitoring::solarConnected) {
     solarV = Monitoring::voltage('s');
     solarA = Monitoring::current('s');
     solarW = Monitoring::power('s');

@@ -8,7 +8,7 @@ Functions for communications between node and TTN.
 static bool state = false;
 
 // LMIC job
-static osjob_t sendjob; 
+static osjob_t sendjob;
 
 
 /**
@@ -19,7 +19,7 @@ void Lora::init() {
   #ifdef DEBUG
     Serial.print("[LORAWAN]: Initialising... ");
   #endif
-  
+
   // LoRaMAC-in-C (LMIC) init
   os_init();
   // Reset the MAC state. Session and pending data transfers will be discarded.
@@ -28,7 +28,7 @@ void Lora::init() {
   LMIC_setClockError(MAX_CLOCK_ERROR * 1 / 100);
   // Disable link-check mode and ADR, because ADR tends to complicate testing.
   LMIC_setLinkCheckMode(0);
-  // Set the data rate to Spreading Factor 7.  This is the fastest supported rate for 125 kHz channels, 
+  // Set the data rate to Spreading Factor 7.  This is the fastest supported rate for 125 kHz channels,
   // and it minimizes air time and battery power. Set the transmission power to 14 dBi (25 mW).
   LMIC_setDrTxpow(DR_SF7,14);
   // US ONLY, with TTN, it saves join time if we start on subband 1 (channels 8-15). This will
@@ -36,18 +36,18 @@ void Lora::init() {
   // networks or in other regions, this will need to be changed.
 //  LMIC_selectSubBand(1);
   // Disable data rate adaptation
-  // This mode optimises data rates for transmission 
-  // See: https://www.thethingsnetwork.org/docs/lorawan/adaptive-data-rate.html 
+  // This mode optimises data rates for transmission
+  // See: https://www.thethingsnetwork.org/docs/lorawan/adaptive-data-rate.html
   LMIC_setAdrMode(0);
 
   // Send connection message to start comms with TTN
   int8_t connect[4] = {1, 2, 3, 4};
   Lora::request_send(connect, 3);
-  
+
   // Setup interrupt button
   pinMode(IRQ, INPUT_PULLDOWN);
   attachInterrupt(IRQ, Lora::test_connection, RISING);
-  
+
   #ifdef DEBUG
     Serial.println("success");
   #endif
@@ -55,17 +55,17 @@ void Lora::init() {
 
 
 /**
-Send a test packet to TTN. Should result in a "success" 
+Send a test packet to TTN. Should result in a "success"
 message showing up on TTN.
 */
 void Lora::test_connection() {
   #ifdef DEBUG
     Serial.println("[LORAWAN]: Sending test message");
   #endif
-  
+
   int8_t connect[4] = {1, 2, 3, 4};
   Lora::request_send(connect, 3);
-  
+
   while(!Lora::check_state()) {
     os_runloop_once();
   }
@@ -92,7 +92,7 @@ void lorawan_send(osjob_t* j, int8_t* payload, uint8_t port) {
       // Send sensor data over LoRaWAN port 1
       // sizeof(payload) doesn't work here as its a pointer to an array
       LMIC_setTxData2(port, (uint8_t*)payload, SENSORS_PAYLOAD_SIZE, 0);
-    } 
+    }
     else{
       LMIC_setTxData2(port, (uint8_t*)payload, sizeof(payload), 0);
     }
@@ -173,18 +173,21 @@ void onEvent (ev_t ev) {
         break;
     case EV_TXCOMPLETE:
         Serial.println(F("EV_TXCOMPLETE (includes waiting for RX windows)"));
-        if (LMIC.txrxFlags & TXRX_ACK)
+        if (LMIC.txrxFlags & TXRX_ACK) {
           Serial.println(F("Received ack"));
+        }
+
         if (LMIC.dataLen) {
           Serial.println(F("Received "));
           Serial.println(LMIC.dataLen);
           Serial.println(F(" bytes of payload"));
         }
+
         Serial.println();
-        // Transmission was competed successfully 
+        // Transmission was competed successfully
         // TODO: This is probably blocking if the gateway cannot be reached
         Lora::set_state(true);
-        
+
         break;
     case EV_LOST_TSYNC:
         Serial.println(F("EV_LOST_TSYNC"));

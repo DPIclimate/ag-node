@@ -13,19 +13,19 @@ File root;
 Initialise memory card to see if it is plugged in and available.
 */
 void Memory::init() {
-  Serial.print("[MEMORY]: Intialising memory card... ");
-  if(!SD.begin(chipSelect)) {
+  Serial.print("[MEMORY]: Initialising memory card... ");
+  if (!SD.begin(chipSelect)) {
     Serial.println("failed");
     return;
   }
-  else{
+  else {
     Serial.println("success");
   }
 }
 
 
 /**
-Write weights and timestamps to build in SD-card. Also appends caluclated parameters.
+Write weights and timestamps to build in SD-card. Also appends calculated parameters.
 @param weights Weights array from scale.
 @param timeStamps Corresponding timestamps for each weight reading.
 @param payload Raw payload to add to table.
@@ -34,19 +34,21 @@ Write weights and timestamps to build in SD-card. Also appends caluclated parame
 void Memory::write_weigh_data(int16_t* weights, int32_t* timeStamps, int8_t* payload, struct parameters_t &parameters) {
   // Open SD card file
   root = SD.open(RAW_DATA_FILENAME, FILE_WRITE);
-  if(root) {
+  if (root) {
     // Concatenate a single line string of data
     String concatData;
     root.println((String)parameters.unixTime);
     // Loop over arrays and append to file
-    for(uint16_t i = 0; i < WeighStation::maxArrSize; i++) {
+    for (uint16_t i = 0; i < WeighStation::maxArrSize; i++) {
       String row;
-      row += (String)(timeStamps[i] / 1000.0f); 
+      row += (String)(timeStamps[i] / 1000.0f);
       row += ",";
       row += (String)(weights[i] / 100.0f);
       row += ";";
       root.println(row);
-      if(weights[i] == 0) break;
+      if (weights[i] == 0) {
+        break;
+      }
     }
     root.close();
     #ifdef DEBUG
@@ -59,7 +61,7 @@ void Memory::write_weigh_data(int16_t* weights, int32_t* timeStamps, int8_t* pay
     #endif
   }
 
-  // Do the same as above to all parameters (in a seperate file) 
+  // Do the same as above to all parameters (in a separate file)
   root = SD.open(PARAMETERS_FILENAME, FILE_WRITE);
   if(root) {
     // Concatenate a single line string of data
@@ -68,7 +70,7 @@ void Memory::write_weigh_data(int16_t* weights, int32_t* timeStamps, int8_t* pay
     concatData += ",";
 
     // Append raw payload
-    for(uint8_t i = 0; i < WEIGH_PAYLOAD_SIZE; i++) {
+    for (uint8_t i = 0; i < WEIGH_PAYLOAD_SIZE; i++) {
       if (i != 0) {
         concatData += '-';
       }
@@ -80,7 +82,7 @@ void Memory::write_weigh_data(int16_t* weights, int32_t* timeStamps, int8_t* pay
     }
     concatData += ",";
 
-    // Add parameters to concatenated string 
+    // Add parameters to concatenated string
     concatData += String(parameters.scaleID);
     concatData += ",";
     concatData += String((float)(parameters.startWeight / 100.0)); // convert to kg
@@ -103,7 +105,7 @@ void Memory::write_weigh_data(int16_t* weights, int32_t* timeStamps, int8_t* pay
     concatData += ",";
     concatData += String((float)(parameters.timeOnScale / 1000.0)); // convert to seconds
     root.println(concatData);
-    
+
     root.close();
     #ifdef DEBUG
       Serial.print("[MEMORY]: Parameters data written to ");
